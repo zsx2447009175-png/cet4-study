@@ -1041,7 +1041,7 @@ function renderVocab() {
       '<span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#' + (start + i + 1) + '</span>' +
       '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
         '<div style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;">' + v.w + '</div>' +
-        '<span onclick="event.stopPropagation();speakWord(\'' + v.w + '\')" style="font-size:18px;cursor:pointer;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6" title="点击发音">🔊</span>' +
+        '<span data-w="\'' + v.w + '\'" onclick="event.stopPropagation();speakWord(this.getAttribute(\'data-w\'))" style="font-size:18px;cursor:pointer;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6" title="点击发音">🔊</span>' +
         (v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : '') +
       '</div>' +
       '<div style="font-size:13px;color:#999;margin-bottom:4px;letter-spacing:0.5px;">' + v.p + '</div>' +
