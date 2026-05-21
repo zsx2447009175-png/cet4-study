@@ -282,6 +282,13 @@ textarea:disabled { opacity: 0.85; }
 .stat-num { font-size: 28px; font-weight: 800; color: var(--pink-500); }
 .stat-lbl { font-size: 12px; color: var(--text-light); margin-top: 2px; }
 
+
+/* 释义显隐 */
+.wc-hidden { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.wc-visible { max-height: 500px !important; }
+.word-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.10) !important; transform: translateY(-2px); }
+.word-card .hint-text { transition: opacity 0.3s; }
+
 /* Footer */
 .footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-light); margin-top: 10px; }
 .footer .heart { color: var(--pink-500); animation: heartbeat 1.4s ease-in-out infinite; display: inline-block; }
@@ -1027,117 +1034,27 @@ function renderVocab() {
   count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
   badge.textContent = `${all.length}词`;
 
-  grid.innerHTML = page.map((v, i) => `
-    <div class="word-card" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;">
-      <span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#${start + i + 1}</span>
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
-        <div style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;">${v.w}</div>
-        ${v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;margin-top:4px;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : ''}
-      </div>
-      <div style="font-size:13px;color:#999;margin-bottom:12px;letter-spacing:0.5px;">${v.p}</div>
-      <div style="font-size:16px;color:#333;font-weight:600;margin-bottom:8px;">${v.m}</div>
-      ${v.ex ? '<div style="height:1px;background:linear-gradient(90deg,transparent,#e0e0e0,transparent);margin:10px 0;"></div><div style="font-size:13px;color:#555;font-style:italic;line-height:1.7;margin-bottom:4px;">"' + v.ex + '"</div>' : ''}
-      ${v.excn ? '<div style="font-size:12px;color:#999;margin-bottom:8px;">' + v.excn + '</div>' : ''}
-      ${v.c ? '<div style="font-size:12px;color:#ec407a;padding:4px 0;">📌 ' + v.c + '</div>' : ''}
-    </div>
-  `).join('');
-
-  if (totalPages <= 1) { pagination.innerHTML = ''; return; }
-  pagination.innerHTML = `
-    <button class="page-btn" onclick="vocabPage=${vocabPage-1};renderVocab()" ${vocabPage===1?'disabled style="opacity:0.4"':''}>◀</button>
-    <span class="page-info">${vocabPage} / ${totalPages}</span>
-    <button class="page-btn" onclick="vocabPage=${vocabPage+1};renderVocab()" ${vocabPage===totalPages?'disabled style="opacity:0.4"':''}>▶</button>
-  `;
-}
-
-// ============================================================
-// 日期切换
-// ============================================================
-function changeDay(delta) {
-  const next = new Date(currentDate);
-  next.setDate(next.getDate() + delta);
-  if (next > TODAY) return; // 不能超过今天
-  if (next < START_DATE) return; // 不能早于第一天
-  currentDate = next;
-  filteredVocab = [];
-  vocabPage = 1;
-  updateUI();
-}
-
-function updateUI() {
-  document.getElementById('dateLabel').textContent = formatDate(currentDate);
-  document.getElementById('sweetNoteDate').textContent = formatDate(TODAY);
-  document.getElementById('examDateLabel').textContent = formatDate(currentDate);
-  // 更新天数和寄语
-  var dn = dayIndex(currentDate) + 1;
-  var sweet = document.getElementById('sweet-note');
-  if (sweet) sweet.textContent = getDailyQuote(currentDate);
-  renderVocab();
-  document.getElementById('statVocab').textContent = getCurrentVocab().length;
-  renderHistoryScores();
-}
-
-// ============================================================
-// 考试逻辑
-// ============================================================
-let examStarted = false;
-let examSubmitted = false;
-let examTimer = null;
-let examRemaining = 30 * 60; // 30 min in seconds
-
-function startExam() {
-  if (examStarted) return;
-  examStarted = true;
-  examSubmitted = false;
-  examRemaining = 30 * 60;
-
-  document.getElementById('examPre').style.display = 'none';
-  document.getElementById('examBody').style.display = 'block';
-  document.getElementById('resultCard').style.display = 'none';
-  document.getElementById('submitBtn').disabled = false;
-  document.getElementById('submitBtn').textContent = '📤 交卷';
-
-  renderExamQuestions();
-  startTimer();
-}
-
-function startTimer() {
-  const timerEl = document.getElementById('timer');
-  const progEl = document.getElementById('timerProg');
-  const total = 30 * 60;
-
-  if (examTimer) clearInterval(examTimer);
-  examTimer = setInterval(() => {
-    if (examSubmitted) { clearInterval(examTimer); return; }
-    examRemaining--;
-    const m = Math.floor(examRemaining / 60);
-    const s = examRemaining % 60;
-    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    progEl.style.width = (examRemaining / total * 100) + '%';
-
-    timerEl.className = '';
-    if (examRemaining <= 300) timerEl.className = 'warn';
-    if (examRemaining <= 60) timerEl.className = 'danger';
-    if (examRemaining <= 0) {
-      clearInterval(examTimer);
-      timerEl.textContent = '00:00';
-      submitExam();
-    }
-  }, 1000);
-}
-
-function renderExamQuestions() {
-  let html = '';
-
-  // Part 1: 词组翻译
-  html += `<div class="card"><div class="section-title"><span class="icon">📝</span>第一部分：词组翻译 <span class="badge">10题 × 2分 = 20分</span></div>`;
-  html += exerciseData.phrases.map((p, i) => `
-    <div class="q-item">
-      <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
-      <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
-      <div class="q-score" id="sc-p1q${i+1}"></div>
-    </div>
-  `).join('');
+  grid.innerHTML = page.map((v, i) => {
+    var pid = 'm' + (start + i + 1);
+    var posBadge = (v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;margin-top:4px;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : '');
+    return '<div class="word-card" style="background:var(--w);border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;cursor:pointer;transition:all 0.3s;" onclick="toggleMeaning(this)">' +
+      '<span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#' + (start + i + 1) + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
+        '<div style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;">' + v.w + '</div>' +
+        '<span onclick="event.stopPropagation();speakWord(\'' + v.w + '\')" style="font-size:18px;cursor:pointer;opacity:0.6;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6" title="点击发音">🔊</span>' +
+        (v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : '') +
+      '</div>' +
+      '<div style="font-size:13px;color:#999;margin-bottom:4px;letter-spacing:0.5px;">' + v.p + '</div>' +
+      '<div id="' + pid + '" class="wc-hidden" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">' +
+        '<div style="height:1px;background:linear-gradient(90deg,transparent,#e0e0e0,transparent);margin:8px 0;"></div>' +
+        '<div style="font-size:16px;color:#333;font-weight:600;margin-bottom:6px;">' + v.m + '</div>' +
+        (v.ex ? '<div style="font-size:13px;color:#555;font-style:italic;line-height:1.7;margin-bottom:4px;">"' + v.ex + '"</div>' : '') +
+        (v.excn ? '<div style="font-size:12px;color:#999;margin-bottom:4px;">' + v.excn + '</div>' : '') +
+        (v.c ? '<div style="font-size:12px;color:#ec407a;padding:2px 0;">📌 ' + v.c + '</div>' : '') +
+      '</div>' +
+      '<div style="font-size:11px;color:#ccc;text-align:center;margin-top:4px;">👆 点击展开释义</div>' +
+    '</div>';
+  }).join('');
   html += `</div>`;
 
   // Part 2: 句子翻译
@@ -1184,6 +1101,25 @@ function renderExamQuestions() {
 // ============================================================
 // 评分逻辑
 // ============================================================
+
+// === 单词发音 ===
+function speakWord(word) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(word);
+  u.lang = 'en-US';
+  u.rate = 0.85;
+  u.pitch = 1;
+  speechSynthesis.speak(u);
+}
+// === 释义显隐 ===
+function toggleMeaning(card) {
+  var hidden = card.querySelector('.wc-hidden');
+  if (hidden) {
+    hidden.classList.toggle('wc-visible');
+  }
+}
+
 function contains(text, word) {
   return text.toLowerCase().includes(word.toLowerCase());
 }
