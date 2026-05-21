@@ -304,7 +304,7 @@ textarea:disabled { opacity: 0.85; }
     <div class="hero-avatar">📚</div>
     <h1>树新的四级小站</h1>
     <p class="subtitle">每天进步一点点，我在陪你 💕</p>
-    <div class="sweet-note">✨ 今天的每一份努力，都是明天更好的自己</div>
+    <div id="sweet-note" id="sweet-note" class="sweet-note"><span id="sweetText">✨ 今天的每一份努力，都是明天更好的自己</span></div>
   </div>
 
   <!-- 日期导航 -->
@@ -446,7 +446,7 @@ textarea:disabled { opacity: 0.85; }
 // ============================================================
 const WORD_POOL = [
   // A
-  {w:"abandon",p:"/əˈbændən/",m:"v. 放弃，遗弃",c:"abandon oneself to"},
+  {w:"abandon",ex:"He abandoned his plan halfway.",excn:"他中途放弃了他的计划。",p:"/əˈbændən/",m:"v. 放弃，遗弃",c:"abandon oneself to"},
   {w:"absorb",p:"/əbˈzɔːb/",m:"v. 吸收，吸引",c:"be absorbed in"},
   {w:"abstract",p:"/ˈæbstrækt/",m:"adj. 抽象的 n. 摘要",c:"abstract concept"},
   {w:"abundant",p:"/əˈbʌndənt/",m:"adj. 丰富的，充裕的",c:"abundant resources"},
@@ -456,13 +456,13 @@ const WORD_POOL = [
   {w:"access",p:"/ˈækses/",m:"n. 通道 v. 访问",c:"have access to"},
   {w:"accommodate",p:"/əˈkɒmədeɪt/",m:"v. 容纳，适应",c:"accommodate needs"},
   {w:"accompany",p:"/əˈkʌmpəni/",m:"v. 陪伴，伴随",c:"accompany sb"},
-  {w:"accomplish",p:"/əˈkʌmplɪʃ/",m:"v. 完成，实现",c:"accomplish a goal"},
+  {w:"accomplish",ex:"She accomplished the task on time.",excn:"她按时完成了任务。",p:"/əˈkʌmplɪʃ/",m:"v. 完成，实现",c:"accomplish a goal"},
   {w:"account",p:"/əˈkaʊnt/",m:"n. 账户 v. 解释",c:"account for"},
   {w:"accurate",p:"/ˈækjərət/",m:"adj. 准确的",c:"accurate data"},
   {w:"achieve",p:"/əˈtʃiːv/",m:"v. 达到，获得",c:"achieve success"},
   {w:"acknowledge",p:"/əkˈnɒlɪdʒ/",m:"v. 承认，认可",c:"acknowledge the fact"},
-  {w:"acquire",p:"/əˈkwaɪə(r)/",m:"v. 获得，学到",c:"acquire knowledge"},
-  {w:"adapt",p:"/əˈdæpt/",m:"v. 适应，改编",c:"adapt to"},
+  {w:"acquire",ex:"She acquired new skills quickly.",excn:"她很快掌握了新技能。",p:"/əˈkwaɪə(r)/",m:"v. 获得，学到",c:"acquire knowledge"},
+  {w:"adapt",ex:"He adapted to the new environment.",excn:"他适应了新环境。",p:"/əˈdæpt/",m:"v. 适应，改编",c:"adapt to"},
   {w:"adequate",p:"/ˈædɪkwət/",m:"adj. 足够的，适当的",c:"adequate supply"},
   {w:"adjust",p:"/əˈdʒʌst/",m:"v. 调整，适应",c:"adjust to"},
   {w:"administration",p:"/ədˌmɪnɪˈstreɪʃn/",m:"n. 管理，行政",c:"public administration"},
@@ -475,11 +475,11 @@ const WORD_POOL = [
   {w:"affect",p:"/əˈfekt/",m:"v. 影响，感动",c:"affect the outcome"},
   {w:"afford",p:"/əˈfɔːd/",m:"v. 负担得起",c:"cannot afford"},
   {w:"aggressive",p:"/əˈɡresɪv/",m:"adj. 侵略的，好斗的",c:"aggressive behavior"},
-  {w:"allocate",p:"/ˈæləkeɪt/",m:"v. 分配",c:"allocate resources"},
-  {w:"alternative",p:"/ɔːlˈtɜːnətɪv/",m:"n./adj. 替代选择",c:"alternative solution"},
+  {w:"allocate",ex:"Funds were allocated to education.",excn:"资金被分配给了教育。",p:"/ˈæləkeɪt/",m:"v. 分配",c:"allocate resources"},
+  {w:"alternative",ex:"We need an alternative approach.",excn:"我们需要替代方案。",p:"/ɔːlˈtɜːnətɪv/",m:"n./adj. 替代选择",c:"alternative solution"},
   {w:"amaze",p:"/əˈmeɪz/",m:"v. 使惊奇",c:"be amazed at"},
   {w:"ambition",p:"/æmˈbɪʃn/",m:"n. 雄心，野心",c:"political ambition"},
-  {w:"analyze",p:"/ˈænəlaɪz/",m:"v. 分析",c:"analyze data"},
+  {w:"analyze",ex:"We need to analyze the results.",excn:"我们需要分析结果。",p:"/ˈænəlaɪz/",m:"v. 分析",c:"analyze data"},
   {w:"anniversary",p:"/ˌænɪˈvɜːsəri/",m:"n. 周年纪念",c:"wedding anniversary"},
   {w:"annual",p:"/ˈænjuəl/",m:"adj. 每年的",c:"annual report"},
   {w:"anticipate",p:"/ænˈtɪsɪpeɪt/",m:"v. 预期",c:"anticipate problems"},
@@ -489,16 +489,16 @@ const WORD_POOL = [
   {w:"appetite",p:"/ˈæpɪtaɪt/",m:"n. 食欲，胃口",c:"lose appetite"},
   {w:"appliance",p:"/əˈplaɪəns/",m:"n. 电器，设备",c:"household appliances"},
   {w:"application",p:"/ˌæplɪˈkeɪʃn/",m:"n. 申请，应用",c:"job application"},
-  {w:"appreciate",p:"/əˈpriːʃieɪt/",m:"v. 欣赏，感激",c:"appreciate your help"},
-  {w:"approach",p:"/əˈprəʊtʃ/",m:"n./v. 接近，方法",c:"a new approach"},
-  {w:"appropriate",p:"/əˈprəʊpriət/",m:"adj. 适当的",c:"appropriate measures"},
+  {w:"appreciate",ex:"I appreciate your efforts.",excn:"我感谢你的努力。",p:"/əˈpriːʃieɪt/",m:"v. 欣赏，感激",c:"appreciate your help"},
+  {w:"approach",ex:"A different approach is needed.",excn:"需要不同的方法。",p:"/əˈprəʊtʃ/",m:"n./v. 接近，方法",c:"a new approach"},
+  {w:"appropriate",ex:"That is not appropriate behavior.",excn:"那是不恰当行为。",p:"/əˈprəʊpriət/",m:"adj. 适当的",c:"appropriate measures"},
   {w:"approve",p:"/əˈpruːv/",m:"v. 批准，赞成",c:"approve of"},
   {w:"arise",p:"/əˈraɪz/",m:"v. 出现，产生",c:"problems arise"},
   {w:"arouse",p:"/əˈraʊz/",m:"v. 唤起，引起",c:"arouse interest"},
   {w:"artificial",p:"/ˌɑːtɪˈfɪʃl/",m:"adj. 人工的",c:"artificial intelligence"},
   {w:"aspect",p:"/ˈæspekt/",m:"n. 方面",c:"every aspect"},
   {w:"assemble",p:"/əˈsembl/",m:"v. 集合，组装",c:"assemble the team"},
-  {w:"assess",p:"/əˈses/",m:"v. 评估",c:"assess the situation"},
+  {w:"assess",ex:"We need to assess the situation.",excn:"我们需要评估情况。",p:"/əˈses/",m:"v. 评估",c:"assess the situation"},
   {w:"assign",p:"/əˈsaɪn/",m:"v. 分配",c:"assign a task"},
   {w:"assist",p:"/əˈsɪst/",m:"v. 帮助",c:"assist sb with"},
   {w:"associate",p:"/əˈsəʊʃieɪt/",m:"v. 联系，关联",c:"associate with"},
@@ -512,7 +512,7 @@ const WORD_POOL = [
   {w:"attribute",p:"/ˈætrɪbjuːt/",m:"n. 属性 v. 归因于",c:"attribute to"},
   {w:"authority",p:"/ɔːˈθɒrəti/",m:"n. 权威",c:"local authority"},
   {w:"automatic",p:"/ˌɔːtəˈmætɪk/",m:"adj. 自动的",c:"automatic system"},
-  {w:"available",p:"/əˈveɪləbl/",m:"adj. 可用的",c:"available resources"},
+  {w:"available",ex:"The service is available online.",excn:"该服务可在线使用。",p:"/əˈveɪləbl/",m:"adj. 可用的",c:"available resources"},
   {w:"avenue",p:"/ˈævənjuː/",m:"n. 大街，途径",c:"explore avenues"},
   {w:"average",p:"/ˈævərɪdʒ/",m:"adj. 平均的 n. 平均",c:"on average"},
   {w:"avoid",p:"/əˈvɔɪd/",m:"v. 避免",c:"avoid doing"},
@@ -523,7 +523,7 @@ const WORD_POOL = [
   {w:"ban",p:"/bæn/",m:"v./n. 禁止",c:"ban smoking"},
   {w:"barrier",p:"/ˈbæriə(r)/",m:"n. 障碍",c:"language barrier"},
   {w:"behavior",p:"/bɪˈheɪvjə(r)/",m:"n. 行为",c:"social behavior"},
-  {w:"beneficial",p:"/ˌbenɪˈfɪʃl/",m:"adj. 有益的",c:"beneficial to"},
+  {w:"beneficial",ex:"Exercise is beneficial to health.",excn:"运动有益健康。",p:"/ˌbenɪˈfɪʃl/",m:"adj. 有益的",c:"beneficial to"},
   {w:"benefit",p:"/ˈbenɪfɪt/",m:"n. 利益 v. 受益",c:"benefit from"},
   {w:"blame",p:"/bleɪm/",m:"v./n. 责备",c:"blame sb for"},
   {w:"boom",p:"/buːm/",m:"n./v. 繁荣",c:"economic boom"},
@@ -531,7 +531,7 @@ const WORD_POOL = [
   {w:"budget",p:"/ˈbʌdʒɪt/",m:"n. 预算",c:"within budget"},
   // C
   {w:"campaign",p:"/kæmˈpeɪn/",m:"n. 运动，战役",c:"advertising campaign"},
-  {w:"capable",p:"/ˈkeɪpəbl/",m:"adj. 有能力的",c:"be capable of"},
+  {w:"capable",ex:"She is capable of leading.",excn:"她有能力领导。",p:"/ˈkeɪpəbl/",m:"adj. 有能力的",c:"be capable of"},
   {w:"capacity",p:"/kəˈpæsəti/",m:"n. 能力，容量",c:"production capacity"},
   {w:"capture",p:"/ˈkæptʃə(r)/",m:"v. 捕获，吸引",c:"capture attention"},
   {w:"career",p:"/kəˈrɪə(r)/",m:"n. 职业，生涯",c:"career development"},
@@ -553,26 +553,26 @@ const WORD_POOL = [
   {w:"compensate",p:"/ˈkɒmpenseɪt/",m:"v. 补偿",c:"compensate for"},
   {w:"compete",p:"/kəmˈpiːt/",m:"v. 竞争",c:"compete with"},
   {w:"competent",p:"/ˈkɒmpɪtənt/",m:"adj. 胜任的",c:"competent in"},
-  {w:"competitive",p:"/kəmˈpetətɪv/",m:"adj. 竞争的",c:"competitive market"},
+  {w:"competitive",ex:"The industry is highly competitive.",excn:"这个行业竞争激烈。",p:"/kəmˈpetətɪv/",m:"adj. 竞争的",c:"competitive market"},
   {w:"complain",p:"/kəmˈpleɪn/",m:"v. 抱怨",c:"complain about"},
-  {w:"complex",p:"/ˈkɒmpleks/",m:"adj. 复杂的",c:"complex issue"},
+  {w:"complex",ex:"It's a complex situation.",excn:"情况复杂。",p:"/ˈkɒmpleks/",m:"adj. 复杂的",c:"complex issue"},
   {w:"component",p:"/kəmˈpəʊnənt/",m:"n. 组件",c:"key component"},
   {w:"comprehensive",p:"/ˌkɒmprɪˈhensɪv/",m:"adj. 全面的",c:"comprehensive review"},
-  {w:"concentrate",p:"/ˈkɒnsntreɪt/",m:"v. 集中",c:"concentrate on"},
+  {w:"concentrate",ex:"Concentrate on your work.",excn:"专注你的工作。",p:"/ˈkɒnsntreɪt/",m:"v. 集中",c:"concentrate on"},
   {w:"concept",p:"/ˈkɒnsept/",m:"n. 概念",c:"basic concept"},
   {w:"concern",p:"/kənˈsɜːn/",m:"n./v. 关心",c:"concern about"},
   {w:"conclude",p:"/kənˈkluːd/",m:"v. 结束，得出结论",c:"conclude that"},
   {w:"conduct",p:"/kənˈdʌkt/",m:"v. 实施",c:"conduct a survey"},
   {w:"confidence",p:"/ˈkɒnfɪdəns/",m:"n. 信心",c:"build confidence"},
-  {w:"confident",p:"/ˈkɒnfɪdənt/",m:"adj. 自信的",c:"confident in"},
+  {w:"confident",ex:"She is confident about the exam.",excn:"她对考试有信心。",p:"/ˈkɒnfɪdənt/",m:"adj. 自信的",c:"confident in"},
   {w:"confirm",p:"/kənˈfɜːm/",m:"v. 确认",c:"confirm the reservation"},
   {w:"conflict",p:"/ˈkɒnflɪkt/",m:"n. 冲突",c:"in conflict with"},
   {w:"confuse",p:"/kənˈfjuːz/",m:"v. 使困惑",c:"confuse A with B"},
   {w:"conscious",p:"/ˈkɒnʃəs/",m:"adj. 有意识的",c:"be conscious of"},
-  {w:"consequence",p:"/ˈkɒnsɪkwəns/",m:"n. 结果",c:"as a consequence"},
+  {w:"consequence",ex:"He faced the consequences.",excn:"他承担了后果。",p:"/ˈkɒnsɪkwəns/",m:"n. 结果",c:"as a consequence"},
   {w:"conservative",p:"/kənˈsɜːvətɪv/",m:"adj. 保守的",c:"conservative estimate"},
   {w:"considerable",p:"/kənˈsɪdərəbl/",m:"adj. 相当大的",c:"considerable amount"},
-  {w:"consistent",p:"/kənˈsɪstənt/",m:"adj. 一致的",c:"consistent with"},
+  {w:"consistent",ex:"Be consistent in your efforts.",excn:"保持努力的一致性。",p:"/kənˈsɪstənt/",m:"adj. 一致的",c:"consistent with"},
   {w:"constant",p:"/ˈkɒnstənt/",m:"adj. 持续的",c:"constant change"},
   {w:"construct",p:"/kənˈstrʌkt/",m:"v. 建造",c:"construct a building"},
   {w:"consume",p:"/kənˈsjuːm/",m:"v. 消耗",c:"consume energy"},
@@ -584,7 +584,7 @@ const WORD_POOL = [
   {w:"context",p:"/ˈkɒntekst/",m:"n. 背景，上下文",c:"in this context"},
   {w:"contract",p:"/ˈkɒntrækt/",m:"n. 合同",c:"sign a contract"},
   {w:"contrast",p:"/ˈkɒntrɑːst/",m:"n./v. 对比",c:"in contrast to"},
-  {w:"contribute",p:"/kənˈtrɪbjuːt/",m:"v. 贡献",c:"contribute to"},
+  {w:"contribute",ex:"Everyone contributed ideas.",excn:"每个人都贡献了想法。",p:"/kənˈtrɪbjuːt/",m:"v. 贡献",c:"contribute to"},
   {w:"controversial",p:"/ˌkɒntrəˈvɜːʃl/",m:"adj. 有争议的",c:"controversial issue"},
   {w:"convenient",p:"/kənˈviːniənt/",m:"adj. 方便的",c:"convenient for"},
   {w:"conventional",p:"/kənˈvenʃənl/",m:"adj. 传统的",c:"conventional wisdom"},
@@ -594,77 +594,77 @@ const WORD_POOL = [
   {w:"creative",p:"/kriˈeɪtɪv/",m:"adj. 创造性的",c:"creative thinking"},
   {w:"crisis",p:"/ˈkraɪsɪs/",m:"n. 危机",c:"economic crisis"},
   {w:"critical",p:"/ˈkrɪtɪkl/",m:"adj. 批评的，关键的",c:"critical thinking"},
-  {w:"crucial",p:"/ˈkruːʃl/",m:"adj. 至关重要的",c:"crucial to"},
+  {w:"crucial",ex:"This is a crucial decision.",excn:"这是关键决定。",p:"/ˈkruːʃl/",m:"adj. 至关重要的",c:"crucial to"},
   {w:"cultivate",p:"/ˈkʌltɪveɪt/",m:"v. 培养，耕作",c:"cultivate habits"},
-  {w:"current",p:"/ˈkʌrənt/",m:"adj. 当前的",c:"current situation"},
+  {w:"current",ex:"What is your current job?",excn:"你现在做什么工作？",p:"/ˈkʌrənt/",m:"adj. 当前的",c:"current situation"},
   // D
   {w:"debate",p:"/dɪˈbeɪt/",m:"n./v. 辩论",c:"heated debate"},
   {w:"decade",p:"/ˈdekeɪd/",m:"n. 十年",c:"in the past decade"},
-  {w:"decline",p:"/dɪˈklaɪn/",m:"v. 下降，拒绝",c:"decline an offer"},
+  {w:"decline",ex:"Sales declined sharply.",excn:"销售额急剧下降。",p:"/dɪˈklaɪn/",m:"v. 下降，拒绝",c:"decline an offer"},
   {w:"define",p:"/dɪˈfaɪn/",m:"v. 定义",c:"define as"},
-  {w:"demonstrate",p:"/ˈdemənstreɪt/",m:"v. 展示",c:"demonstrate the ability"},
+  {w:"demonstrate",ex:"He demonstrated the product.",excn:"他演示了产品。",p:"/ˈdemənstreɪt/",m:"v. 展示",c:"demonstrate the ability"},
   {w:"deny",p:"/dɪˈnaɪ/",m:"v. 否认",c:"deny doing"},
   {w:"deposit",p:"/dɪˈpɒzɪt/",m:"v./n. 存款，存放",c:"bank deposit"},
-  {w:"derive",p:"/dɪˈraɪv/",m:"v. 源于",c:"derive from"},
-  {w:"deserve",p:"/dɪˈzɜːv/",m:"v. 值得",c:"deserve attention"},
+  {w:"derive",ex:"The word derives from Latin.",excn:"该词源自拉丁语。",p:"/dɪˈraɪv/",m:"v. 源于",c:"derive from"},
+  {w:"deserve",ex:"You deserve a break.",excn:"你该休息了。",p:"/dɪˈzɜːv/",m:"v. 值得",c:"deserve attention"},
   {w:"despite",p:"/dɪˈspaɪt/",m:"prep. 尽管",c:"despite the fact"},
   {w:"destination",p:"/ˌdestɪˈneɪʃn/",m:"n. 目的地",c:"travel destination"},
   {w:"destruction",p:"/dɪˈstrʌkʃn/",m:"n. 破坏",c:"environmental destruction"},
-  {w:"detail",p:"/ˈdiːteɪl/",m:"n. 细节",c:"in detail"},
+  {w:"detail",ex:"Explain it in detail.",excn:"详细解释。",p:"/ˈdiːteɪl/",m:"n. 细节",c:"in detail"},
   {w:"detect",p:"/dɪˈtekt/",m:"v. 发现",c:"detect a problem"},
-  {w:"determine",p:"/dɪˈtɜːmɪn/",m:"v. 决定",c:"determine to do"},
-  {w:"device",p:"/dɪˈvaɪs/",m:"n. 设备",c:"electronic device"},
-  {w:"differ",p:"/ˈdɪfə(r)/",m:"v. 不同",c:"differ from"},
-  {w:"digital",p:"/ˈdɪdʒɪtl/",m:"adj. 数字的",c:"digital age"},
+  {w:"determine",ex:"She is determined to succeed.",excn:"她决心成功。",p:"/dɪˈtɜːmɪn/",m:"v. 决定",c:"determine to do"},
+  {w:"device",ex:"Turn off your device.",excn:"关闭你的设备。",p:"/dɪˈvaɪs/",m:"n. 设备",c:"electronic device"},
+  {w:"differ",ex:"Opinions differ on this.",excn:"对此意见不一。",p:"/ˈdɪfə(r)/",m:"v. 不同",c:"differ from"},
+  {w:"digital",ex:"We live in the digital age.",excn:"我们生活在数字时代。",p:"/ˈdɪdʒɪtl/",m:"adj. 数字的",c:"digital age"},
   {w:"discipline",p:"/ˈdɪsəplɪn/",m:"n. 纪律，学科",c:"self-discipline"},
   {w:"discount",p:"/ˈdɪskaʊnt/",m:"n. 折扣",c:"at a discount"},
-  {w:"distinct",p:"/dɪˈstɪŋkt/",m:"adj. 明显的",c:"distinct from"},
+  {w:"distinct",ex:"There are two distinct types.",excn:"有两种截然不同的类型。",p:"/dɪˈstɪŋkt/",m:"adj. 明显的",c:"distinct from"},
   {w:"distribute",p:"/dɪˈstrɪbjuːt/",m:"v. 分发",c:"distribute to"},
   {w:"domestic",p:"/dəˈmestɪk/",m:"adj. 国内的，家庭的",c:"domestic market"},
-  {w:"dominate",p:"/ˈdɒmɪneɪt/",m:"v. 支配",c:"dominate the market"},
-  {w:"doubt",p:"/daʊt/",m:"n./v. 怀疑",c:"without doubt"},
+  {w:"dominate",ex:"The company dominates the industry.",excn:"这家公司主导行业。",p:"/ˈdɒmɪneɪt/",m:"v. 支配",c:"dominate the market"},
+  {w:"doubt",ex:"There is no doubt about it.",excn:"毫无疑问。",p:"/daʊt/",m:"n./v. 怀疑",c:"without doubt"},
   {w:"dramatic",p:"/drəˈmætɪk/",m:"adj. 戏剧性的",c:"dramatic change"},
   // E
   {w:"economy",p:"/ɪˈkɒnəmi/",m:"n. 经济",c:"global economy"},
   {w:"efficient",p:"/ɪˈfɪʃnt/",m:"adj. 高效的",c:"energy efficient"},
   {w:"elaborate",p:"/ɪˈlæbərət/",m:"adj. 精心制作的",c:"elaborate plan"},
-  {w:"eliminate",p:"/ɪˈlɪmɪneɪt/",m:"v. 消除",c:"eliminate poverty"},
+  {w:"eliminate",ex:"We need to eliminate waste.",excn:"我们需要消除浪费。",p:"/ɪˈlɪmɪneɪt/",m:"v. 消除",c:"eliminate poverty"},
   {w:"embrace",p:"/ɪmˈbreɪs/",m:"v. 拥抱，接受",c:"embrace change"},
   {w:"emerge",p:"/iˈmɜːdʒ/",m:"v. 出现",c:"emerge from"},
   {w:"emotion",p:"/ɪˈməʊʃn/",m:"n. 情感",c:"express emotion"},
   {w:"emphasis",p:"/ˈemfəsɪs/",m:"n. 强调",c:"put emphasis on"},
-  {w:"emphasize",p:"/ˈemfəsaɪz/",m:"v. 强调",c:"emphasize the importance"},
+  {w:"emphasize",ex:"She emphasized the key points.",excn:"她强调了要点。",p:"/ˈemfəsaɪz/",m:"v. 强调",c:"emphasize the importance"},
   {w:"employ",p:"/ɪmˈplɔɪ/",m:"v. 雇用，使用",c:"employ a method"},
-  {w:"enable",p:"/ɪˈneɪbl/",m:"v. 使能够",c:"enable sb to do"},
+  {w:"enable",ex:"Technology enables us to connect.",excn:"技术使我们能够连接。",p:"/ɪˈneɪbl/",m:"v. 使能够",c:"enable sb to do"},
   {w:"encounter",p:"/ɪnˈkaʊntə(r)/",m:"v./n. 遭遇",c:"encounter problems"},
   {w:"engage",p:"/ɪnˈɡeɪdʒ/",m:"v. 参与，吸引",c:"engage in"},
-  {w:"enhance",p:"/ɪnˈhɑːns/",m:"v. 提高",c:"enhance performance"},
-  {w:"enormous",p:"/ɪˈnɔːməs/",m:"adj. 巨大的",c:"enormous amount"},
-  {w:"ensure",p:"/ɪnˈʃʊə(r)/",m:"v. 确保",c:"ensure safety"},
+  {w:"enhance",ex:"It enhances the experience.",excn:"它提升了体验。",p:"/ɪnˈhɑːns/",m:"v. 提高",c:"enhance performance"},
+  {w:"enormous",ex:"It took an enormous effort.",excn:"这花了巨大的努力。",p:"/ɪˈnɔːməs/",m:"adj. 巨大的",c:"enormous amount"},
+  {w:"ensure",ex:"We must ensure quality.",excn:"我们必须确保质量。",p:"/ɪnˈʃʊə(r)/",m:"v. 确保",c:"ensure safety"},
   {w:"enterprise",p:"/ˈentəpraɪz/",m:"n. 企业",c:"private enterprise"},
   {w:"enthusiasm",p:"/ɪnˈθjuːziæzəm/",m:"n. 热情",c:"show enthusiasm"},
-  {w:"environment",p:"/ɪnˈvaɪərənmənt/",m:"n. 环境",c:"protect the environment"},
+  {w:"environment",ex:"Protect the environment.",excn:"保护环境。",p:"/ɪnˈvaɪərənmənt/",m:"n. 环境",c:"protect the environment"},
   {w:"equivalent",p:"/ɪˈkwɪvələnt/",m:"adj. 相等的",c:"equivalent to"},
   {w:"essential",p:"/ɪˈsenʃl/",m:"adj. 必要的",c:"essential to"},
-  {w:"establish",p:"/ɪˈstæblɪʃ/",m:"v. 建立",c:"establish a company"},
-  {w:"estimate",p:"/ˈestɪmeɪt/",m:"v. 估计",c:"estimate the cost"},
-  {w:"evaluate",p:"/ɪˈvæljueɪt/",m:"v. 评估",c:"evaluate the results"},
-  {w:"evidence",p:"/ˈevɪdəns/",m:"n. 证据",c:"scientific evidence"},
-  {w:"evolve",p:"/iˈvɒlv/",m:"v. 进化",c:"evolve into"},
-  {w:"exceed",p:"/ɪkˈsiːd/",m:"v. 超过",c:"exceed expectations"},
-  {w:"exchange",p:"/ɪksˈtʃeɪndʒ/",m:"v. 交换",c:"exchange ideas"},
-  {w:"exclude",p:"/ɪkˈskluːd/",m:"v. 排除",c:"exclude from"},
-  {w:"execute",p:"/ˈeksɪkjuːt/",m:"v. 执行",c:"execute a plan"},
+  {w:"establish",ex:"They established new rules.",excn:"他们制定了新规则。",p:"/ɪˈstæblɪʃ/",m:"v. 建立",c:"establish a company"},
+  {w:"estimate",ex:"It is estimated that...",excn:"据估计...",p:"/ˈestɪmeɪt/",m:"v. 估计",c:"estimate the cost"},
+  {w:"evaluate",ex:"We need to evaluate performance.",excn:"我们需要评估绩效。",p:"/ɪˈvæljueɪt/",m:"v. 评估",c:"evaluate the results"},
+  {w:"evidence",ex:"There is no evidence.",excn:"没有证据。",p:"/ˈevɪdəns/",m:"n. 证据",c:"scientific evidence"},
+  {w:"evolve",ex:"The species evolved over time.",excn:"该物种随时间进化。",p:"/iˈvɒlv/",m:"v. 进化",c:"evolve into"},
+  {w:"exceed",ex:"Do not exceed the speed limit.",excn:"不要超速。",p:"/ɪkˈsiːd/",m:"v. 超过",c:"exceed expectations"},
+  {w:"exchange",ex:"They exchanged contact info.",excn:"他们交换了联系方式。",p:"/ɪksˈtʃeɪndʒ/",m:"v. 交换",c:"exchange ideas"},
+  {w:"exclude",ex:"No one should be excluded.",excn:"任何人不应被排除。",p:"/ɪkˈskluːd/",m:"v. 排除",c:"exclude from"},
+  {w:"execute",ex:"The plan was executed perfectly.",excn:"计划执行得很完美。",p:"/ˈeksɪkjuːt/",m:"v. 执行",c:"execute a plan"},
   {w:"exhibit",p:"/ɪɡˈzɪbɪt/",m:"v. 展示",c:"exhibit at a gallery"},
-  {w:"expand",p:"/ɪkˈspænd/",m:"v. 扩大",c:"expand business"},
-  {w:"expect",p:"/ɪkˈspekt/",m:"v. 期望",c:"expect to do"},
-  {w:"expense",p:"/ɪkˈspens/",m:"n. 费用",c:"at the expense of"},
+  {w:"expand",ex:"The company is expanding.",excn:"公司在扩张。",p:"/ɪkˈspænd/",m:"v. 扩大",c:"expand business"},
+  {w:"expect",ex:"What do you expect?",excn:"你期望什么？",p:"/ɪkˈspekt/",m:"v. 期望",c:"expect to do"},
+  {w:"expense",ex:"Living expenses are rising.",excn:"生活费用在上涨。",p:"/ɪkˈspens/",m:"n. 费用",c:"at the expense of"},
   {w:"explicit",p:"/ɪkˈsplɪsɪt/",m:"adj. 明确的",c:"explicit instructions"},
-  {w:"explore",p:"/ɪkˈsplɔː(r)/",m:"v. 探索",c:"explore options"},
+  {w:"explore",ex:"Let's explore the possibilities.",excn:"让我们探索可能性。",p:"/ɪkˈsplɔː(r)/",m:"v. 探索",c:"explore options"},
   {w:"export",p:"/ɪkˈspɔːt/",m:"v./n. 出口",c:"export goods"},
-  {w:"expose",p:"/ɪkˈspəʊz/",m:"v. 暴露",c:"expose to"},
+  {w:"expose",ex:"Don't expose it to sunlight.",excn:"不要暴露在阳光下。",p:"/ɪkˈspəʊz/",m:"v. 暴露",c:"expose to"},
   {w:"extend",p:"/ɪkˈstend/",m:"v. 延伸，扩展",c:"extend the deadline"},
-  {w:"external",p:"/ɪkˈstɜːnl/",m:"adj. 外部的",c:"external factors"},
+  {w:"external",ex:"External pressure is mounting.",excn:"外部压力在增加。",p:"/ɪkˈstɜːnl/",m:"adj. 外部的",c:"external factors"},
   {w:"extraordinary",p:"/ɪkˈstrɔːdnri/",m:"adj. 非凡的",c:"extraordinary achievement"},
   {w:"extreme",p:"/ɪkˈstriːm/",m:"adj. 极端的",c:"extreme weather"},
   // F
@@ -920,64 +920,73 @@ const exerciseData = {
 };
 
 // ============================================================
-// 日期相关
+// 日期系统 (V3)
 // ============================================================
-const TODAY = new Date(2026, 4, 21); // May 21, 2026
+const START_DATE = new Date(2026, 4, 21); // May 21, 2026 - 第一天
+const MS_DAY = 86400000;
+
+function getEffectiveNow() {
+  const now = new Date();
+  if (now.getHours() < 9) now.setDate(now.getDate() - 1);
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+const TODAY = getEffectiveNow();
+function dayIndex(d) { return Math.floor((d.getTime() - START_DATE.getTime()) / MS_DAY); }
 let currentDate = new Date(TODAY);
-let vocabForDate = {};  // 缓存：{"2026-05-21": [word1,...]}
 const VOCAB_PER_PAGE = 12;
-const DAILY_VOCAB_COUNT = 80;
 
-// 从 localStorage 加载
-function loadVocabCache() {
-  try {
-    const data = localStorage.getItem('cet4_vocab_cache');
-    if (data) vocabForDate = JSON.parse(data);
-  } catch(e) { vocabForDate = {}; }
-}
-function saveVocabCache() {
-  try {
-    localStorage.setItem('cet4_vocab_cache', JSON.stringify(vocabForDate));
-  } catch(e) { /* ignore quota errors */ }
-}
-loadVocabCache();
+// 每日寄语 (32条轮换)
+const DAILY_QUOTES = [
+  "今天的每一份努力，都是明天更好的自己",
+  "坚持就是胜利，四级必过！",
+  "每天进步一点点，日积月累见成效",
+  "学如逆水行舟，不进则退",
+  "今天的目标：掌握80个核心词汇",
+  "你只管努力，剩下的交给时间",
+  "不背单词，何以过四级？",
+  "知识是最好的化妆品",
+  "每一个早起背单词的你都在闪闪发光",
+  "四级不难，难的是坚持",
+  "蜕变从每天的积累开始",
+  "学习是一场马拉松，不是短跑",
+  "睡前复习一遍，记忆更牢固",
+  "认真学习的女孩最美",
+  "好运藏在努力里",
+  "今天的汗水是明天的钻石",
+  "让英语成为你的旋律",
+  "词汇量是通往高分的钥匙",
+  "不积跬步，无以至千里",
+  "翻过四级这座山，前面是更广阔的天地",
+  "每天的坚持都不会被辜负",
+  "新的一天，新的80个单词",
+  "学习的快乐在于看到自己的进步",
+  "自由来自自律",
+  "为你准备了今天的学习内容，加油！",
+  "一天一个脚印，四级就在脚下",
+  "慢慢来，比较快",
+  "学习也可以是快乐的旅程",
+  "背完这80个单词，离目标又近了一步",
+  "你比你想象的更强大",
+  "做闪闪发光的自己",
+  "每一朵花开都需要时间，学习也是"
+];
+function getDailyQuote(d) { return DAILY_QUOTES[dayIndex(d) % DAILY_QUOTES.length]; }
 
-function dateKey(d) {
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
+// V3: no cache needed - vocab is deterministically generated from date
+
 function formatDate(d) {
-  return `${d.getFullYear()}年${String(d.getMonth()+1).padStart(2,'0')}月${String(d.getDate()).padStart(2,'0')}日`;
+  return d.getFullYear()+'年'+String(d.getMonth()+1).padStart(2,'0')+'月'+String(d.getDate()).padStart(2,'0')+'日';
 }
 
-// 基于日期的伪随机数生成器
-function seededRandom(seed) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) {
-    h = ((h << 5) - h) + seed.charCodeAt(i);
-    h |= 0;
+// 按天数分片获取每日词汇 (每天80个, 不重复)
+function getDailyVocab(d) {
+  const idx = dayIndex(d);
+  const start = (idx * 80) % WORD_POOL.length;
+  const result = [];
+  for (let i = 0; i < 80; i++) {
+    result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
   }
-  return function() {
-    h = (h * 1103515245 + 12345) & 0x7fffffff;
-    return h / 0x7fffffff;
-  };
-}
-
-// 为指定日期生成词汇
-function generateVocabForDate(d) {
-  const key = dateKey(d);
-  if (vocabForDate[key]) return vocabForDate[key];
-
-  const rng = seededRandom(key);
-  // Fisher-Yates shuffle on copy
-  const pool = [...WORD_POOL];
-  for (let i = pool.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  const selected = pool.slice(0, Math.min(DAILY_VOCAB_COUNT, pool.length));
-  vocabForDate[key] = selected;
-  saveVocabCache();
-  return selected;
+  return result;
 }
 
 // ============================================================
@@ -987,7 +996,7 @@ let filteredVocab = [];
 let vocabPage = 1;
 
 function getCurrentVocab() {
-  return generateVocabForDate(currentDate);
+  return getDailyVocab(currentDate);
 }
 
 function filterVocab() {
@@ -1019,12 +1028,17 @@ function renderVocab() {
   badge.textContent = `${all.length}词`;
 
   grid.innerHTML = page.map((v, i) => `
-    <div class="word-card">
-      <span class="word-num">#${start + i + 1}</span>
-      <div class="word-en">${v.w}</div>
-      <div class="word-pron">${v.p}</div>
-      <div class="word-meaning">${v.m}</div>
-      ${v.c ? `<div class="word-collocation">${v.c}</div>` : ''}
+    <div class="word-card" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;">
+      <span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#${start + i + 1}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;">${v.w}</div>
+        ${v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;margin-top:4px;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : ''}
+      </div>
+      <div style="font-size:13px;color:#999;margin-bottom:12px;letter-spacing:0.5px;">${v.p}</div>
+      <div style="font-size:16px;color:#333;font-weight:600;margin-bottom:8px;">${v.m}</div>
+      ${v.ex ? '<div style="height:1px;background:linear-gradient(90deg,transparent,#e0e0e0,transparent);margin:10px 0;"></div><div style="font-size:13px;color:#555;font-style:italic;line-height:1.7;margin-bottom:4px;">"' + v.ex + '"</div>' : ''}
+      ${v.excn ? '<div style="font-size:12px;color:#999;margin-bottom:8px;">' + v.excn + '</div>' : ''}
+      ${v.c ? '<div style="font-size:12px;color:#ec407a;padding:4px 0;">📌 ' + v.c + '</div>' : ''}
     </div>
   `).join('');
 
@@ -1043,6 +1057,7 @@ function changeDay(delta) {
   const next = new Date(currentDate);
   next.setDate(next.getDate() + delta);
   if (next > TODAY) return; // 不能超过今天
+  if (next < START_DATE) return; // 不能早于第一天
   currentDate = next;
   filteredVocab = [];
   vocabPage = 1;
@@ -1053,10 +1068,12 @@ function updateUI() {
   document.getElementById('dateLabel').textContent = formatDate(currentDate);
   document.getElementById('sweetNoteDate').textContent = formatDate(TODAY);
   document.getElementById('examDateLabel').textContent = formatDate(currentDate);
+  // 更新天数和寄语
+  var dn = dayIndex(currentDate) + 1;
+  var sweet = document.getElementById('sweet-note');
+  if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  // 更新统计
   document.getElementById('statVocab').textContent = getCurrentVocab().length;
-  // 更新历史成绩
   renderHistoryScores();
 }
 
@@ -1349,7 +1366,7 @@ function switchTab(name) {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   // 确保今天的词汇已生成
-  generateVocabForDate(TODAY);
+  getDailyVocab(TODAY);
   updateUI();
 });
 </script>
