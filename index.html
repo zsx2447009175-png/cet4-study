@@ -919,6 +919,98 @@ const exerciseData = {
   }
 };
 
+
+// ============================================================
+// V4: 四级题型题库 (3套/题型, 按天轮换)
+// ============================================================
+const EXAM_TYPES = ["translation","reading","vocab_cloze","writing"];
+function getExamType(d) { return EXAM_TYPES[dayIndex(d) % 4]; }
+function getExamSet(d, poolSize) { return dayIndex(d) % poolSize; }
+
+// ---- 翻译题库 (保留原有3套结构, 复用已有) ----
+// 已在上方 exerciseData 中
+
+// ---- 仔细阅读题库 (3篇) ----
+const READING_SETS = [
+  { // Set 0
+    title:"The Rise of Digital Learning",
+    passage:"In recent years, digital learning has revolutionized the way we acquire knowledge. With the advent of advanced technology, students can now access educational resources from anywhere in the world. This transformation has been particularly significant in the wake of global events that limited traditional classroom settings.\n\nOnline platforms offer unprecedented flexibility, allowing learners to study at their own pace. Unlike conventional classrooms, digital education adapts to individual needs, providing personalized learning experiences. Students can revisit challenging concepts, participate in interactive exercises, and collaborate with peers globally.\n\nHowever, this shift comes with challenges. Critics argue that digital learning may widen the gap between privileged and underprivileged students. Access to reliable internet and appropriate devices remains uneven across different socioeconomic groups. Additionally, some educators express concerns about the lack of face-to-face interaction and its potential impact on social development.\n\nDespite these concerns, the benefits of digital learning are substantial. It democratizes education, making quality resources available to those who previously had limited access. As technology continues to evolve, we can expect even more innovative approaches to emerge, further transforming the educational landscape.",
+    questions:[
+      {q:"What is the main topic of the passage?",opts:["A) The history of education","B) Digital technology transforming learning","C) Problems with traditional classrooms","D) The future of smartphones"],ans:"B",exp:"全文围绕数字化学习如何改变教育展开。"},
+      {q:"What challenge does digital learning face according to the passage?",opts:["A) Lack of flexibility","B) Too much interaction","C) Unequal internet access","D) High tuition fees"],ans:"C",exp:"第三段明确指出Access to reliable internet remains uneven。"},
+      {q:"The word 'democratizes' in the last paragraph is closest in meaning to?",opts:["A) Complicates","B) Makes widely available","C) Restricts","D) Politicizes"],ans:"B",exp:"democratize意为"使大众化、使普及"。"},
+      {q:"What is the author's attitude towards digital learning?",opts:["A) Highly critical","B) Cautiously optimistic","C) Completely neutral","D) Strongly opposed"],ans:"B",exp:"作者既指出了挑战，也肯定了优势，属于谨慎乐观。"},
+      {q:"According to the passage, what enables personalized learning?",opts:["A) Traditional classrooms","B) Face-to-face interaction","C) Digital education platforms","D) Printed textbooks"],ans:"C",exp:"第二段提到digital education adapts to individual needs。"}
+    ]
+  },
+  { // Set 1
+    title:"Sustainable Living in Modern Society",
+    passage:"Sustainable living has become an increasingly important topic as we confront the reality of climate change and environmental degradation. More people are recognizing the need to adopt lifestyles that minimize our negative impact on the planet.\n\nThe concept of sustainability encompasses various aspects of daily life. From reducing waste and conserving energy to choosing eco-friendly products and supporting local businesses, individuals can make meaningful contributions to environmental preservation. Small changes in consumer habits can lead to significant collective outcomes.\n\nOne of the most effective ways to live sustainably is through mindful consumption. This involves evaluating our actual needs versus wants, and making conscious decisions about what we purchase. By reducing our consumption of single-use plastics, for instance, we can decrease the amount of waste that ends up in landfills and oceans.\n\nAnother crucial aspect is transportation. Choosing public transit, cycling, or walking over driving can substantially reduce carbon emissions. Many cities are now investing in infrastructure to support these alternatives, making sustainable transportation more accessible than ever before.\n\nUltimately, sustainable living requires a shift in mindset. It is about recognizing that our individual actions are interconnected with broader environmental systems, and that we all share responsibility for protecting our planet for future generations.",
+    questions:[
+      {q:"What is the main purpose of this passage?",opts:["A) To criticize consumer habits","B) To promote sustainable living","C) To describe climate change","D) To compare transportation methods"],ans:"B",exp:"全文主旨是介绍和倡导可持续生活方式。"},
+      {q:"What does 'mindful consumption' involve?",opts:["A) Buying the cheapest products","B) Evaluating needs versus wants","C) Avoiding all shopping","D) Using credit cards wisely"],ans:"B",exp:"第四段明确说明mindful consumption involves evaluating our actual needs versus wants。"},
+      {q:"Which is mentioned as a sustainable transportation option?",opts:["A) Private jets","B) Electric scooters only","C) Bicycles and public transit","D) Sports cars"],ans:"C",exp:"第五段提到cycling, walking, public transit等。"},
+      {q:"The phrase 'shift in mindset' refers to?",opts:["A) Moving to a new house","B) Changing one's way of thinking","C) Improving physical health","D) Starting a new career"],ans:"B",exp:"shift in mindset 意为"思维方式的转变"。"},
+      {q:"According to the passage, who shares responsibility for the planet?",opts:["A) Only governments","B) Only corporations","C) Everyone","D) Only scientists"],ans:"C",exp:"末段提到we all share responsibility。"}
+    ]
+  },
+  { // Set 2
+    title:"The Benefits of Reading",
+    passage:"Reading is one of the most beneficial habits a person can develop. It not only provides knowledge but also enhances various cognitive abilities. In a world dominated by screens and short-form content, the value of deep reading cannot be overstated.\n\nFirstly, reading improves vocabulary and language skills. Regular readers encounter thousands of new words each year, naturally expanding their vocabulary without conscious effort. This language enrichment directly translates to better communication skills in both writing and speaking.\n\nSecondly, reading strengthens mental capabilities. Studies have shown that reading can slow cognitive decline in old age and improve memory function. When we read, our brains create new neural pathways, essentially exercising the mind just as physical activity exercises the body.\n\nFurthermore, reading develops empathy and emotional intelligence. Through stories, readers experience different perspectives and understand diverse human experiences. This exposure helps develop compassion and a deeper understanding of others, which is essential in an increasingly interconnected world.\n\nLastly, reading is an excellent stress reducer. Research indicates that just six minutes of reading can reduce stress levels by up to 68 percent, making it more effective than listening to music or taking a walk. In our fast-paced society, reading offers a quiet escape that benefits mental health.",
+    questions:[
+      {q:"What is the main idea of the passage?",opts:["A) Reading is boring","B) The benefits of reading","C) How to read faster","D) Famous books to read"],ans:"B",exp:"全文围绕阅读的多种益处展开。"},
+      {q:"How does reading help with vocabulary?",opts:["A) By memorizing dictionaries","B) Through natural exposure to new words","C) By attending classes","D) Through translation exercises"],ans:"B",exp:"第二段提到readers encounter thousands of new words each year。"},
+      {q:"What percentage of stress reduction can reading achieve?",opts:["A) 20%","B) 45%","C) 68%","D) 90%"],ans:"C",exp:"末段明确提到up to 68 percent。"},
+      {q:"The phrase 'neural pathways' most likely refers to?",opts:["A) Physical roads","B) Connections in the brain","C) Book categories","D) Library systems"],ans:"B",exp:"neural pathways指大脑中的神经通路。"},
+      {q:"According to the passage, what is more effective than reading for stress reduction?",opts:["A) Listening to music","B) Taking a walk","C) Both A and B","D) Neither A nor B"],ans:"D",exp:"末段说reading more effective than listening to music or taking a walk。"}
+    ]
+  }
+];
+
+// ---- 选词填空题库 (3套, 15选10) ----
+const CLOZE_SETS = [
+  { // Set 0
+    passage:"The Internet has fundamentally __(1)__ the way people communicate and access information. In the past, people __(2)__ on newspapers and television for news, but now they can get real-time updates from anywhere. This shift has made information more __(3)__ than ever before. However, experts warn that the __(4)__ of false information online is a growing concern. Users need to develop critical thinking skills to __(5)__ between reliable and unreliable sources. Despite these challenges, the __(6)__ impact of the Internet has been largely positive, creating opportunities for education and __(7)__ growth. The key is to use this powerful tool __(8)__ and responsibly. As technology __(9)__ to advance, the way we interact with digital content will keep __(10)__.",
+    words:["A) accessed","B) changed","C) continues","D) distinguish","E) economic","F) evolving","G) limited","H) overall","I) quality","J) relied","K) spread","L) traditional","M) wisely","N) wonderful","O) youth"],
+    answers:[1,9,0,10,3,7,4,12,2,5], // 0-indexed: B,J,A,K,D,H,E,M,C,F
+    keys:["changed","relied","accessed","spread","distinguish","overall","economic","wisely","continues","evolving"]
+  },
+  { // Set 1
+    passage:"Climate change is one of the most __(1)__ issues facing humanity today. Scientists have __(2)__ evidence that human activities are the primary cause of global warming. Rising temperatures have led to the melting of polar ice caps, causing sea levels to __(3)__. Many coastal cities are at risk of flooding if __(4)__ action is not taken. Governments around the world have been __(5)__ to reduce carbon emissions, but progress has been slow. Individuals can also __(6)__ to the solution by making environmentally friendly choices in their daily lives. Small actions, such as reducing energy __(7)__ and using public transportation, can make a __(8)__ difference when adopted by millions. The __(9)__ of addressing climate change is not just environmental but also economic. Investing in green technology can create new jobs and __(10)__ sustainable development.",
+    words:["A) adequate","B) contribute","C) consumption","D) crucial","E) difference","F) encourage","G) immediate","H) promote","I) provided","J) purpose","K) rise","L) significant","M) struggling","N) urgent","O) various"],
+    answers:[3,8,10,6,12,1,2,11,3,7], // D,I,K,G,M,B,C,L,?,H
+    keys:["urgent","provided","rise","immediate","struggling","contribute","consumption","significant","purpose","promote"]
+  },
+  { // Set 2
+    passage:"Learning a second language offers numerous __(1)__ beyond just communication. Research shows that bilingual individuals often have better problem-solving skills and __(2)__ flexibility. The process of switching between languages __(3)__ the brain in unique ways, potentially delaying the onset of dementia in old age. For young people, language learning can improve __(4)__ performance across all subjects. In the global economy, __(5)__ in multiple languages is highly valued by employers. It opens doors to international career __(6)__ and cultural exchange. While becoming fluent requires __(7)__ effort and dedication, even basic proficiency can be __(8)__. The most effective approach is to __(9)__ regular practice with immersion experiences, such as watching films or __(10)__ with native speakers.",
+    words:["A) academic","B) benefits","C) chatting","D) cognitive","E) combine","F) considerable","G) exercises","H) opportunities","I) professional","J) proficiency","K) rewarding","L) specific","M) stimulates","N) takes","O) worth"],
+    answers:[1,3,12,0,9,7,5,10,4,2], // B,D,M,A,J,H,F,K,E,C
+    keys:["benefits","cognitive","stimulates","academic","proficiency","opportunities","considerable","rewarding","combine","chatting"]
+  }
+];
+
+// ---- 写作题库 (3套) ----
+const WRITING_SETS = [
+  {
+    topic:"The Impact of Social Media on Interpersonal Communication",
+    outline:"1. 社交媒体的普及现状\n2. 对人际交流的积极影响（联系便捷、信息共享）\n3. 对人际交流的消极影响（面对面交流减少、隐私问题）\n4. 你的观点和建议",
+    sample:"Social Media and Interpersonal Communication\n\nIn recent years, social media has become an indispensable part of our daily lives. Platforms like WeChat, Weibo, and Douyin connect billions of users worldwide, fundamentally changing how we interact with one another.\n\nOn the positive side, social media enables instant communication regardless of geographical distance. We can share important moments, exchange ideas, and maintain relationships with friends and family members who live far away. Additionally, these platforms provide valuable opportunities for networking and accessing diverse perspectives.\n\nHowever, the negative impacts cannot be ignored. Face-to-face communication has noticeably decreased as people increasingly rely on text messages and emojis to express themselves. Privacy concerns have also emerged as personal data is frequently collected and shared without users' full awareness.\n\nIn my opinion, social media is a double-edged sword. While we should embrace its benefits, we must also be mindful of its drawbacks. Finding a healthy balance between online and offline communication is essential for maintaining genuine human connections.",
+    keywords:["interpersonal communication","social media","face-to-face","privacy","balance"]
+  },
+  {
+    topic:"The Importance of Lifelong Learning",
+    outline:"1. 终身学习的定义和背景\n2. 终身学习的重要性（适应变化、提升竞争力）\n3. 如何实现终身学习（在线课程、阅读、实践）\n4. 你的看法",
+    sample:"The Importance of Lifelong Learning\n\nLifelong learning refers to the continuous pursuit of knowledge throughout one's life, beyond formal education. In today's rapidly changing world, this concept has become more relevant than ever.\n\nThe importance of lifelong learning lies in its ability to help individuals adapt to change. With technology advancing at an unprecedented pace, skills that were valuable five years ago may now be obsolete. Continuous learning enables people to stay competitive in the job market and remain relevant in their fields.\n\nThere are many ways to pursue lifelong learning. Online courses offered by platforms like Coursera and MOOCs make quality education accessible to everyone. Reading books, attending workshops, and gaining hands-on experience are also effective methods.\n\nIn my view, lifelong learning is not merely a career strategy but a mindset. It enriches our lives, broadens our perspectives, and helps us become better versions of ourselves. As the saying goes, it is never too late to learn.",
+    keywords:["lifelong learning","adapt","competitive","online courses","mindset"]
+  },
+  {
+    topic:"On the Advantages and Disadvantages of Online Shopping",
+    outline:"1. 网购的普及程度\n2. 网购的优势（便捷、选择多、价格低）\n3. 网购的劣势（无法触碰实物、物流延迟、冲动消费）\n4. 你的建议",
+    sample:"Online Shopping: Advantages and Disadvantages\n\nOnline shopping has experienced explosive growth in recent years. With just a few clicks, consumers can purchase almost anything from the comfort of their homes.\n\nThe advantages of online shopping are obvious. First, it offers unparalleled convenience 24 hours a day, seven days a week. Second, online platforms provide a wider selection of products compared to physical stores. Third, competitive pricing and frequent discounts make online shopping economically attractive.\n\nNevertheless, online shopping has its drawbacks. Customers cannot physically examine products before purchasing, which sometimes leads to disappointment. Delivery delays and damaged packages are common complaints. Moreover, the ease of clicking 'buy now' may encourage impulsive spending, causing financial strain.\n\nIn conclusion, while online shopping offers great convenience, consumers should exercise self-control. I suggest comparing prices across platforms, reading reviews carefully, and setting a monthly budget to avoid overspending.",
+    keywords:["online shopping","convenience","selection","impulsive","budget"]
+  }
+];
+
 // ============================================================
 // 日期系统 (V3)
 // ============================================================
@@ -1068,13 +1160,24 @@ function updateUI() {
   document.getElementById('dateLabel').textContent = formatDate(currentDate);
   document.getElementById('sweetNoteDate').textContent = formatDate(TODAY);
   document.getElementById('examDateLabel').textContent = formatDate(currentDate);
-  // 更新天数和寄语
   var dn = dayIndex(currentDate) + 1;
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
   document.getElementById('statVocab').textContent = getCurrentVocab().length;
   renderHistoryScores();
+  // 更新考试题型信息
+  updateExamTypeInfo();
+}
+
+function updateExamTypeInfo() {
+  var t = getExamType(currentDate);
+  var names = {"translation":"汉译英翻译","reading":"仔细阅读","vocab_cloze":"选词填空","writing":"写作"};
+  var times = {"translation":"30分钟","reading":"25分钟","vocab_cloze":"20分钟","writing":"30分钟"};
+  var counts = {"translation":"10词组+5句子+1段落","reading":"1篇文章+5道选择题","vocab_cloze":"1篇文章(15选10)","writing":"1篇作文(120词+)"};
+  var tn = document.getElementById('examTypeName'); if(tn) tn.textContent = names[t]||t;
+  var tt = document.getElementById('examTypeTime'); if(tt) tt.textContent = times[t]||'30分钟';
+  var tc = document.getElementById('examTypeCount'); if(tc) tc.textContent = counts[t]||'-';
 }
 
 // ============================================================
@@ -1083,13 +1186,20 @@ function updateUI() {
 let examStarted = false;
 let examSubmitted = false;
 let examTimer = null;
-let examRemaining = 30 * 60; // 30 min in seconds
+let examTotalTime = 30 * 60;
+let examRemaining = 30 * 60;
+function getExamTime() {
+  var t = getExamType(currentDate);
+  var times = {"translation":30,"reading":25,"vocab_cloze":20,"writing":30};
+  return (times[t]||30) * 60;
+}
 
 function startExam() {
   if (examStarted) return;
   examStarted = true;
   examSubmitted = false;
-  examRemaining = 30 * 60;
+  examTotalTime = getExamTime();
+  examRemaining = examTotalTime;
 
   document.getElementById('examPre').style.display = 'none';
   document.getElementById('examBody').style.display = 'block';
@@ -1104,16 +1214,14 @@ function startExam() {
 function startTimer() {
   const timerEl = document.getElementById('timer');
   const progEl = document.getElementById('timerProg');
-  const total = 30 * 60;
-
   if (examTimer) clearInterval(examTimer);
   examTimer = setInterval(() => {
     if (examSubmitted) { clearInterval(examTimer); return; }
     examRemaining--;
     const m = Math.floor(examRemaining / 60);
     const s = examRemaining % 60;
-    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-    progEl.style.width = (examRemaining / total * 100) + '%';
+    timerEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    progEl.style.width = (examRemaining / examTotalTime * 100) + '%';
 
     timerEl.className = '';
     if (examRemaining <= 300) timerEl.className = 'warn';
@@ -1127,56 +1235,67 @@ function startTimer() {
 }
 
 function renderExamQuestions() {
+  const examType = getExamType(currentDate);
   let html = '';
+  const setIdx = getExamSet(currentDate, 3);
 
-  // Part 1: 词组翻译
-  html += `<div class="card"><div class="section-title"><span class="icon">📝</span>第一部分：词组翻译 <span class="badge">10题 × 2分 = 20分</span></div>`;
-  html += exerciseData.phrases.map((p, i) => `
-    <div class="q-item">
-      <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
-      <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
-      <div class="q-score" id="sc-p1q${i+1}"></div>
-    </div>
-  `).join('');
-  html += `</div>`;
-
-  // Part 2: 句子翻译
-  html += `<div class="card"><div class="section-title"><span class="icon">✍️</span>第二部分：句子翻译 <span class="badge">5题 × 8分 = 40分</span></div>`;
-  html += exerciseData.sentences.map((s, i) => `
-    <div class="q-item">
-      <div class="q-label"><span class="q-num">${i+1}</span> 第${i+1}题 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（8分）</span></div>
-      <div class="q-source">${s.zh}</div>
-      <textarea id="p2q${i+1}" placeholder="写下你的英文翻译..." rows="3"></textarea>
-      <div class="q-score" id="sc-p2q${i+1}"></div>
-      <div class="answer-reveal" id="rev-p2q${i+1}">
-        <div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt">${s.ans}</div></div>
-        <div class="ana-block"><div class="ana-lbl">📖 解析</div>
-          <table class="ana-table">${s.analysis.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td></tr>`).join('')}</table>
-          <div class="ana-err">${s.err}</div>
-        </div>
-      </div>
-    </div>
-  `).join('');
-  html += `</div>`;
-
-  // Part 3: 段落翻译
-  const p = exerciseData.paragraph;
-  html += `<div class="card"><div class="section-title"><span class="icon">📄</span>第三部分：段落翻译 <span class="badge">40分</span></div>`;
-  html += `
-    <div class="q-item">
-      <div class="q-label"><span class="q-num">P</span> 段落翻译 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（40分）</span></div>
-      <div class="q-source para">${p.zh}</div>
-      <div class="para-hint">💡 关键词提示：${p.hints}</div>
-      <textarea id="p3q1" placeholder="写下你的英文翻译..." rows="9"></textarea>
-      <div class="q-score" id="sc-p3q1"></div>
-      <div class="answer-reveal" id="rev-p3q1">
-        <div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt italic">${p.ans}</div></div>
-        <div class="ana-block"><div class="ana-lbl">📖 关键句解析</div>
-          <table class="ana-table">${p.analysis.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td></tr>`).join('')}</table>
-        </div>
-      </div>
-    </div>`;
-  html += `</div>`;
+  if (examType === "translation") {
+    // 翻译题型 (既有)
+    html += '<div class="card"><div class="section-title"><span class="icon">📝</span>第一部分：词组翻译 <span class="badge">10题 × 2分 = 20分</span></div>';
+    html += exerciseData.phrases.map((p, i) => '<div class="q-item"><div class="q-label"><span class="q-num">'+(i+1)+'</span> '+p.zh+'</div><textarea id="p1q'+(i+1)+'" placeholder="输入英文..." rows="1"></textarea><div class="q-score" id="sc-p1q'+(i+1)+'"></div></div>').join('');
+    html += '</div><div class="card"><div class="section-title"><span class="icon">✍️</span>第二部分：句子翻译 <span class="badge">5题 × 8分 = 40分</span></div>';
+    html += exerciseData.sentences.map((s, i) => '<div class="q-item"><div class="q-label"><span class="q-num">'+(i+1)+'</span> 第'+(i+1)+'题 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（8分）</span></div><div class="q-source">'+s.zh+'</div><textarea id="p2q'+(i+1)+'" placeholder="写下你的英文翻译..." rows="3"></textarea><div class="q-score" id="sc-p2q'+(i+1)+'"></div><div class="answer-reveal" id="rev-p2q'+(i+1)+'"><div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt">'+s.ans+'</div></div><div class="ana-block"><div class="ana-lbl">📖 解析</div><table class="ana-table">'+s.analysis.map(a=>'<tr><td>'+a[0]+'</td><td>'+a[1]+'</td><td>'+a[2]+'</td></tr>').join('')+'</table><div class="ana-err">'+s.err+'</div></div></div></div>').join('');
+    html += '</div>';
+    const p = exerciseData.paragraph;
+    html += '<div class="card"><div class="section-title"><span class="icon">📄</span>第三部分：段落翻译 <span class="badge">40分</span></div><div class="q-item"><div class="q-label"><span class="q-num">P</span> 段落翻译 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（40分）</span></div><div class="q-source para">'+p.zh+'</div><div class="para-hint">💡 关键词提示：'+p.hints+'</div><textarea id="p3q1" placeholder="写下你的英文翻译..." rows="9"></textarea><div class="q-score" id="sc-p3q1"></div><div class="answer-reveal" id="rev-p3q1"><div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt italic">'+p.ans+'</div></div><div class="ana-block"><div class="ana-lbl">📖 关键句解析</div><table class="ana-table">'+p.analysis.map(a=>'<tr><td>'+a[0]+'</td><td>'+a[1]+'</td><td>'+a[2]+'</td></tr>').join('')+'</table></div></div></div></div>';
+  } else if (examType === "reading") {
+    // 仔细阅读题型
+    const rs = READING_SETS[setIdx];
+    html += '<div class="card"><div class="section-title"><span class="icon">📖</span>仔细阅读 <span class="badge">5题 × 20分 = 100分</span></div>';
+    html += '<div style="background:#f8f9ff;border-radius:12px;padding:16px 18px;margin-bottom:16px;font-size:14px;line-height:1.9;white-space:pre-wrap;color:#333;">'+rs.passage+'</div>';
+    html += '<div style="font-weight:700;color:#1565c0;margin-bottom:12px;">📋 '+rs.title+'</div>';
+    rs.questions.forEach((q, i) => {
+      html += '<div class="q-item" style="margin-bottom:18px;"><div class="q-label"><span class="q-num">'+(i+1)+'</span> '+q.q+'</div>';
+      q.opts.forEach(opt => {
+        html += '<label style="display:block;padding:8px 12px;margin:3px 0;border:2px solid #e0e0e0;border-radius:10px;cursor:pointer;font-size:14px;transition:all 0.2s;" onmouseover="this.style.borderColor=\'#ec407a\'" onmouseout="if(!this.classList.contains(\'selected\'))this.style.borderColor=\'#e0e0e0\'"><input type="radio" name="rq'+(i+1)+'" value="'+opt[0]+'" style="margin-right:8px;" onchange="document.querySelectorAll(\'label\').forEach(l=>l.classList.remove(\'selected\'));this.parentElement.classList.add(\'selected\');this.parentElement.style.borderColor=\'#ec407a\';this.parentElement.style.background=\'#fce4ec\'">'+opt+'</label>';
+      });
+      html += '<div class="q-score" id="sc-rq'+(i+1)+'"></div><div class="answer-reveal" id="rev-rq'+(i+1)+'"><div class="ans-block"><div class="ans-lbl">✅ 正确答案: '+q.ans+'</div><div class="ans-txt" style="font-weight:normal;color:#555;">'+q.exp+'</div></div></div></div>';
+    });
+    html += '</div>';
+  } else if (examType === "vocab_cloze") {
+    // 选词填空题型
+    const cs = CLOZE_SETS[setIdx];
+    html += '<div class="card"><div class="section-title"><span class="icon">🔤</span>选词填空 <span class="badge">10空 × 10分 = 100分</span></div>';
+    html += '<div style="background:#f8f9ff;border-radius:12px;padding:16px 18px;margin-bottom:16px;font-size:14px;line-height:2.2;">';
+    // 生成带空的段落
+    let blankIdx = 0;
+    let passageHtml = cs.passage;
+    // Replace __(N)__ with input fields
+    cs.keys.forEach((k, idx) => {
+      passageHtml = passageHtml.replace('__('+(idx+1)+')__', '<input type="text" id="cq'+(idx+1)+'" style="width:60px;border:2px solid #ec407a;border-radius:6px;padding:4px 8px;font-size:14px;text-align:center;font-weight:700;color:#d81b60;" placeholder="?'+(idx+1)+'?" maxlength="1">');
+    });
+    html += passageHtml;
+    html += '</div><div style="background:#fff3e0;border-radius:12px;padding:14px 18px;margin-bottom:12px;"><div style="font-weight:700;color:#e65100;margin-bottom:8px;">📋 备选词库</div><div style="display:flex;flex-wrap:wrap;gap:8px;">';
+    cs.words.forEach(w => {
+      html += '<span style="background:white;border:1px solid #ddd;border-radius:8px;padding:4px 12px;font-size:13px;font-weight:600;">'+w+'</span>';
+    });
+    html += '</div></div><div style="font-size:12px;color:#888;margin-top:4px;">💡 在空格中填入对应选项字母（A-O），如填 "A"</div>';
+    cs.keys.forEach((k, idx) => {
+      html += '<div class="q-score" id="sc-cq'+(idx+1)+'"></div><div class="answer-reveal" id="rev-cq'+(idx+1)+'" style="font-size:13px;"><div class="ans-block"><div class="ans-lbl">✅ 第'+(idx+1)+'空正确答案</div><div class="ans-txt">'+cs.words[cs.answers[idx]]+' ('+String.fromCharCode(65+cs.answers[idx])+')</div></div></div>';
+    });
+    html += '</div>';
+  } else if (examType === "writing") {
+    // 写作题型
+    const ws = WRITING_SETS[setIdx];
+    html += '<div class="card"><div class="section-title"><span class="icon">✏️</span>写作 <span class="badge">100分</span></div>';
+    html += '<div class="q-source" style="margin-bottom:12px;"><strong>题目：</strong>'+ws.topic+'</div>';
+    html += '<div style="background:#f3e5f5;border-radius:10px;padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.9;white-space:pre-line;color:#4a148c;">'+ws.outline+'</div>';
+    html += '<div style="font-size:12px;color:#888;margin-bottom:6px;">📝 写作要求：不少于120词，结构清晰，表达准确</div>';
+    html += '<textarea id="wq1" placeholder="在此写下你的作文..." rows="14" style="min-height:260px;"></textarea>';
+    html += '<div class="q-score" id="sc-wq1"></div>';
+    html += '<div class="answer-reveal" id="rev-wq1"><div class="ans-block"><div class="ans-lbl">📖 参考范文</div><div class="ans-txt italic" style="white-space:pre-line;">'+ws.sample+'</div></div>';
+    html += '<div style="margin-top:8px;font-size:12px;color:#888;">关键词提示：'+ws.keywords.join(' / ')+'</div></div></div>';
+  }
 
   document.getElementById('examQuestions').innerHTML = html;
 }
@@ -1240,55 +1359,82 @@ function submitExam() {
   if (examSubmitted) return;
   examSubmitted = true;
   if (examTimer) clearInterval(examTimer);
-
-  document.querySelectorAll('#examQuestions textarea').forEach(t => t.disabled = true);
+  document.querySelectorAll('#examQuestions textarea, #examQuestions input[type=text]').forEach(t => t.disabled = true);
+  document.querySelectorAll('#examQuestions input[type=radio]').forEach(r => r.disabled = true);
   const btn = document.getElementById('submitBtn');
-  btn.disabled = true;
-  btn.textContent = '✅ 已交卷';
+  btn.disabled = true; btn.textContent = '✅ 已交卷';
 
-  // Part 1
-  let p1total = 0;
-  exerciseData.phrases.forEach((ph, i) => {
-    const got = scorePhrase(`p1q${i+1}`, ph.key);
-    p1total += got;
-    const sc = document.getElementById(`sc-p1q${i+1}`);
-    if (sc) {
-      sc.style.display = 'block';
-      sc.className = 'q-score ' + (got === 2 ? 's-full' : got === 1 ? 's-partial' : 's-zero');
-      sc.innerHTML = `得 <b>${got}</b> / 2 分`;
-    }
-    const ta = document.getElementById(`p1q${i+1}`);
-    if (ta) ta.className = got === 2 ? 'correct' : got === 1 ? 'partial' : 'wrong';
-  });
+  var examType = getExamType(currentDate);
+  var setIdx = getExamSet(currentDate, 3);
+  var total = 0;
+  var p1total = 0, p2total = 0, p3total = 0;
 
-  // Part 2
-  let p2total = 0;
-  exerciseData.sentences.forEach((s, i) => {
-    const r = scoreSentence(`p2q${i+1}`, s.keys);
-    p2total += r.score;
-    showQScore(`sc-p2q${i+1}`, `p2q${i+1}`, r.score, 8, r.hits, r.misses);
-    const rev = document.getElementById(`rev-p2q${i+1}`);
-    if (rev) rev.style.display = 'block';
-  });
-
-  // Part 3
-  const p = exerciseData.paragraph;
-  const el = document.getElementById('p3q1');
-  const val = el ? el.value.trim() : '';
-  let r3 = { score: 0, hits: [], misses: p.keys };
-  if (val) {
-    const hits = p.keys.filter(k => contains(val, k));
-    const misses = p.keys.filter(k => !contains(val, k));
-    const score = Math.round((hits.length / p.keys.length) * 40);
-    r3 = { score, hits, misses };
+  if (examType === "translation") {
+    exerciseData.phrases.forEach((ph, i) => {
+      var got = scorePhrase("p1q"+(i+1), ph.key);
+      p1total += got;
+      var sc = document.getElementById("sc-p1q"+(i+1));
+      if (sc) { sc.style.display="block"; sc.className="q-score "+(got===2?"s-full":got===1?"s-partial":"s-zero"); sc.innerHTML="得 <b>"+got+"</b> / 2 分"; }
+      var ta = document.getElementById("p1q"+(i+1));
+      if (ta) ta.className = got===2?"correct":got===1?"partial":"wrong";
+    });
+    exerciseData.sentences.forEach((s, i) => {
+      var r = scoreSentence("p2q"+(i+1), s.keys);
+      p2total += r.score;
+      showQScore("sc-p2q"+(i+1), "p2q"+(i+1), r.score, 8, r.hits, r.misses);
+      var rev = document.getElementById("rev-p2q"+(i+1)); if (rev) rev.style.display="block";
+    });
+    var p = exerciseData.paragraph;
+    var el3 = document.getElementById("p3q1");
+    var val3 = el3 ? el3.value.trim() : "";
+    var hits3 = val3 ? p.keys.filter(function(k){return contains(val3,k)}) : [];
+    var misses3 = p.keys.filter(function(k){return !contains(val3,k)});
+    var s3 = val3 ? Math.round((hits3.length / p.keys.length) * 40) : 0;
+    p3total = s3;
+    showQScore("sc-p3q1", "p3q1", s3, 40, hits3, misses3);
+    var rev3 = document.getElementById("rev-p3q1"); if (rev3) rev3.style.display="block";
+    if (el3) el3.className = s3/40===1?"correct":s3>0?"partial":"wrong";
+    total = p1total + p2total + p3total;
+  } else if (examType === "reading") {
+    var rs = READING_SETS[setIdx];
+    p1total = 0;
+    rs.questions.forEach(function(q, i) {
+      var selected = document.querySelector('input[name="rq'+(i+1)+'"]:checked');
+      var got = selected && selected.value === q.ans ? 20 : 0;
+      p1total += got;
+      var sc = document.getElementById("sc-rq"+(i+1));
+      if (sc) { sc.style.display="block"; sc.className="q-score "+(got===20?"s-full":"s-zero"); sc.innerHTML="得 <b>"+got+"</b> / 20 分"; }
+      var rev = document.getElementById("rev-rq"+(i+1)); if (rev) rev.style.display="block";
+    });
+    total = p1total;
+  } else if (examType === "vocab_cloze") {
+    var cs = CLOZE_SETS[setIdx];
+    p1total = 0;
+    cs.keys.forEach(function(k, idx) {
+      var el = document.getElementById("cq"+(idx+1));
+      var userAns = el ? el.value.trim().toUpperCase() : "";
+      var correctLetter = String.fromCharCode(65 + cs.answers[idx]); // A-O
+      var got = userAns === correctLetter ? 10 : 0;
+      p1total += got;
+      var sc = document.getElementById("sc-cq"+(idx+1));
+      if (sc) { sc.style.display="block"; sc.className="q-score "+(got===10?"s-full":"s-zero"); sc.innerHTML="得 <b>"+got+"</b> / 10 分"; }
+      if (el) el.className = got===10?"correct":"wrong";
+      var rev = document.getElementById("rev-cq"+(idx+1)); if (rev) rev.style.display="block";
+    });
+    total = p1total;
+  } else if (examType === "writing") {
+    var ws = WRITING_SETS[setIdx];
+    // Writing: check keyword hits, max 100
+    var el = document.getElementById("wq1");
+    var val = el ? el.value.trim() : "";
+    var hits = val ? ws.keywords.filter(function(k){return contains(val,k)}) : [];
+    var score = val ? Math.min(100, Math.round(hits.length/ws.keywords.length*60) + (val.length>120?20:val.length>60?10:0) + (val.length>200?20:0)) : 0;
+    total = score;
+    showQScore("sc-wq1", "wq1", score, 100, hits, ws.keywords.filter(function(k){return !contains(val,k)}));
+    var rev = document.getElementById("rev-wq1"); if (rev) rev.style.display="block";
+    if (el) el.className = score>=80?"correct":score>=50?"partial":"wrong";
+    p1total = score;
   }
-  showQScore('sc-p3q1', 'p3q1', r3.score, 40, r3.hits, r3.misses);
-  const rev3 = document.getElementById('rev-p3q1');
-  if (rev3) rev3.style.display = 'block';
-  if (el) el.className = r3.score / 40 === 1 ? 'correct' : r3.score > 0 ? 'partial' : 'wrong';
-
-  // Total
-  const total = p1total + p2total + r3.score;
 
   // Result Card
   let level, cls;
