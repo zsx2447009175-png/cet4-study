@@ -404,7 +404,7 @@ textarea:disabled { opacity: 0.85; }
     <div class="stats-card">
       <h3>📊 今日学习概览</h3>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="statVocab">80</div><div class="stat-lbl">核心词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVocab">100</div><div class="stat-lbl">核心词汇</div></div>
         <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
         <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
         <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
@@ -832,6 +832,17 @@ const WORD_POOL = [
   {w:"witness",p:"/ˈwɪtnəs/",m:"n. 目击者 v. 目睹",c:"witness an event"},
   {w:"worthwhile",p:"/ˌwɜːθˈwaɪl/",m:"adj. 值得的",c:"be worthwhile"},
 ];
+// Seeded shuffle based on start date - same order every day
+(function(){
+  var pool = WORD_POOL;
+  var seed = 20260521; // fixed seed for consistent order
+  function srand() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(srand() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+})();
+
 
 // ============================================================
 // 翻译练习题 (固定题库，从generator中提取)
@@ -988,7 +999,7 @@ function getDailyVocab(d) {
   const idx = dayIndex(d);
   const start = (idx * 80) % WORD_POOL.length;
   const result = [];
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 100; i++) {
     result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
   }
   return result;
@@ -1030,7 +1041,7 @@ function renderVocab() {
   const page = filteredVocab.slice(start, start + VOCAB_PER_PAGE);
 
   count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
-  badge.textContent = `${all.length}词`;
+  badge.textContent = all.length+'词';
 
     grid.innerHTML = page.map(function(v, i) {
     var num = start + i + 1;
@@ -1087,7 +1098,7 @@ function updateUI() {
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  document.getElementById('statVocab').textContent = getCurrentVocab().length;
+  document.getElementById('statVocab').textContent = 100;
   renderHistoryScores();
 }
 
