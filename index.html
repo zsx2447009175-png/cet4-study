@@ -404,7 +404,7 @@ textarea:disabled { opacity: 0.85; }
     <div class="stats-card">
       <h3>📊 今日学习概览</h3>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="statVocab">100</div><div class="stat-lbl">核心词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVocab">80</div><div class="stat-lbl">核心词汇</div></div>
         <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
         <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
         <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
@@ -999,7 +999,8 @@ function getDailyVocab(d) {
   const idx = dayIndex(d);
   const start = (idx * 80) % WORD_POOL.length;
   const result = [];
-  for (let i = 0; i < 100; i++) {
+  var cnt = dayIndex(d) === 0 ? 80 : 100;
+  for (var i = 0; i < cnt; i++) {
     result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
   }
   return result;
@@ -1041,7 +1042,7 @@ function renderVocab() {
   const page = filteredVocab.slice(start, start + VOCAB_PER_PAGE);
 
   count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
-  badge.textContent = all.length+'词';
+  badge.textContent = (dayIndex(currentDate)===0?80:100)+'词';
 
     grid.innerHTML = page.map(function(v, i) {
     var num = start + i + 1;
@@ -1098,7 +1099,7 @@ function updateUI() {
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  document.getElementById('statVocab').textContent = 100;
+  document.getElementById('statVocab').textContent = dayIndex(currentDate) === 0 ? 80 : 100;
   renderHistoryScores();
 }
 
