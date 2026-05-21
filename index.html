@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>树新的四级小站 💕</title>
+<style>
+:root {
+  --pink-50: #fdf2f7; --pink-100: #fce4ec; --pink-200: #f8bbd0;
+  --pink-300: #f48fb1; --pink-400: #f06292; --pink-500: #ec407a;
+  --pink-600: #d81b60; --pink-700: #c2185b;
+  --white: #ffffff; --text: #3d2c33; --text-light: #8d7b83;
+  --shadow: 0 2px 16px rgba(216,27,96,0.10);
+  --shadow-lg: 0 8px 32px rgba(216,27,96,0.16);
+  --radius: 16px; --radius-sm: 10px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  background: linear-gradient(135deg, #fce4ec 0%, #fdf2f7 30%, #fff9f5 70%, #fce4ec 100%);
+  color: var(--text); min-height: 100vh; overflow-x: hidden;
+  line-height: 1.7; font-size: 15px;
+}
+body::before {
+  content: ''; position: fixed; top: -120px; right: -80px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(236,64,122,0.08) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+body::after {
+  content: ''; position: fixed; bottom: -60px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(240,98,146,0.06) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 0 16px 40px; position: relative; z-index: 1; }
+
+/* Hero */
+.hero { text-align: center; padding: 28px 20px 16px; position: relative; }
+.hero-avatar {
+  width: 68px; height: 68px; background: linear-gradient(135deg, #f48fb1, #ec407a);
+  border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center;
+  justify-content: center; font-size: 34px;
+  box-shadow: 0 6px 20px rgba(236,64,122,0.3); position: relative;
+}
+.hero-avatar::after {
+  content: '💕'; position: absolute; bottom: -4px; right: -4px;
+  font-size: 18px; animation: heartbeat 1.4s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0%,100%{transform:scale(1)} 15%{transform:scale(1.25)} 30%{transform:scale(1)} 45%{transform:scale(1.15)} 60%{transform:scale(1)}
+}
+.hero h1 {
+  font-size: 26px; font-weight: 800;
+  background: linear-gradient(135deg, #d81b60, #ec407a, #f48fb1);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 4px; letter-spacing: 0.5px;
+}
+.hero .subtitle { font-size: 13px; color: var(--text-light); font-weight: 500; }
+.hero .sweet-note {
+  display: inline-block; background: linear-gradient(135deg, rgba(236,64,122,0.08), rgba(240,98,146,0.05));
+  border: 1px solid rgba(236,64,122,0.15); border-radius: 20px; padding: 8px 20px;
+  margin-top: 12px; font-size: 13px; color: var(--pink-600); font-weight: 500;
+  animation: fadeInUp 0.8s ease;
+}
+@keyframes fadeInUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* Date Bar */
+.date-bar {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin: 12px 0; padding: 10px 16px; background: var(--white);
+  border-radius: 30px; box-shadow: var(--shadow);
+}
+.date-btn {
+  width: 34px; height: 34px; border: none; border-radius: 50%;
+  background: var(--pink-50); color: var(--pink-500); cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.date-btn:hover { background: var(--pink-100); color: var(--pink-600); }
+.date-label { font-size: 14px; font-weight: 700; color: var(--text); min-width: 130px; text-align: center; }
+
+/* Tab Nav */
+.tab-nav {
+  display: flex; gap: 4px; padding: 4px; background: var(--white);
+  border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 16px;
+  position: sticky; top: 8px; z-index: 10;
+}
+.tab-btn {
+  flex: 1; padding: 10px 6px; border: none; border-radius: 13px;
+  background: transparent; color: var(--text-light); font-size: 13px;
+  font-weight: 600; cursor: pointer; transition: var(--transition);
+  white-space: nowrap; font-family: inherit;
+}
+.tab-btn.active { background: linear-gradient(135deg, #ec407a, #f06292); color: white; box-shadow: 0 3px 12px rgba(236,64,122,0.3); }
+.tab-btn .tab-icon { display: block; font-size: 17px; margin-bottom: 1px; }
+.tab-panel { display: none; animation: fadeIn 0.4s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* Cards */
+.card { background: var(--white); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; box-shadow: var(--shadow); transition: var(--transition); }
+.card:hover { box-shadow: var(--shadow-lg); }
+.section-title { font-size: 17px; font-weight: 700; color: var(--pink-700); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid var(--pink-100); display: flex; align-items: center; gap: 8px; }
+.section-title .icon { font-size: 22px; }
+.badge { font-size: 11px; background: var(--pink-100); color: var(--pink-600); padding: 3px 10px; border-radius: 12px; font-weight: 600; margin-left: auto; }
+
+/* Vocab Search */
+.search-box { position: relative; margin-bottom: 14px; }
+.search-box input {
+  width: 100%; padding: 12px 44px 12px 16px; border: 2px solid var(--pink-100);
+  border-radius: 30px; font-size: 14px; font-family: inherit; color: var(--text);
+  background: var(--white); transition: var(--transition); outline: none;
+}
+.search-box input:focus { border-color: var(--pink-400); box-shadow: 0 0 0 4px rgba(236,64,122,0.1); }
+.search-box .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 18px; pointer-events: none; }
+
+.vocab-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+@media(min-width:600px){ .vocab-grid { grid-template-columns: 1fr 1fr; } }
+.word-card {
+  background: var(--pink-50); border-radius: var(--radius-sm); padding: 14px 16px;
+  border-left: 4px solid var(--pink-400); transition: var(--transition); cursor: default;
+  position: relative; overflow: hidden;
+}
+.word-card:hover { background: var(--pink-100); transform: translateX(2px); box-shadow: 0 2px 12px rgba(236,64,122,0.15); }
+.word-card .word-en { font-size: 18px; font-weight: 800; color: var(--pink-700); margin-bottom: 2px; }
+.word-card .word-pron { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+.word-card .word-meaning { font-size: 14px; color: var(--text); font-weight: 600; }
+.word-card .word-num { position: absolute; top: 8px; right: 10px; font-size: 11px; color: var(--pink-300); font-weight: 700; }
+.word-card .word-collocation { font-size: 12px; color: var(--pink-500); margin-top: 4px; }
+.word-card .word-collocation::before { content: '📌 '; }
+
+.vocab-count { font-size: 13px; color: var(--text-light); margin-bottom: 10px; text-align: center; }
+
+.pagination { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+.page-btn {
+  width: 36px; height: 36px; border: 2px solid var(--pink-200); border-radius: 50%;
+  background: var(--white); color: var(--pink-500); cursor: pointer;
+  font-weight: 700; font-size: 14px; font-family: inherit;
+  display: flex; align-items: center; justify-content: center; transition: var(--transition);
+}
+.page-btn:hover { background: var(--pink-50); color: var(--pink-600); border-color: var(--pink-400); }
+.page-btn.active { background: var(--pink-500); color: white; border-color: var(--pink-500); }
+.page-info { font-size: 13px; color: var(--text-light); min-width: 80px; text-align: center; }
+
+/* ================================================================ */
+/* 模拟考试样式                                                      */
+/* ================================================================ */
+
+/* 考试前导页 */
+.exam-pre {
+  text-align: center; padding: 30px 20px;
+}
+.exam-pre h2 { font-size: 24px; color: var(--pink-700); margin-bottom: 8px; }
+.exam-pre .exam-icon { font-size: 56px; margin-bottom: 12px; }
+.exam-info {
+  background: var(--pink-50); border-radius: var(--radius); padding: 16px 20px;
+  text-align: left; margin: 16px 0; line-height: 2;
+}
+.exam-info li { font-size: 14px; color: var(--text); }
+.exam-info li strong { color: var(--pink-600); }
+.btn-start {
+  background: linear-gradient(135deg, #ec407a, #d81b60); color: white;
+  border: none; border-radius: 50px; padding: 16px 52px; font-size: 18px;
+  font-weight: 800; cursor: pointer; font-family: inherit; letter-spacing: 1px;
+  box-shadow: 0 6px 24px rgba(216,27,96,0.4); transition: var(--transition);
+  animation: pulse 2s ease-in-out infinite;
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(216,27,96,0.5); }
+.btn-start:active { transform: scale(0.97); }
+@keyframes pulse {
+  0%,100%{box-shadow:0 6px 24px rgba(216,27,96,0.4)} 50%{box-shadow:0 6px 36px rgba(216,27,96,0.7)}
+}
+
+/* 考试进行中头部 */
+.exam-header {
+  background: linear-gradient(135deg, #1a237e, #283593);
+  color: white; border-radius: var(--radius); padding: 16px 20px;
+  margin-bottom: 14px; position: sticky; top: 64px; z-index: 5;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 4px 16px rgba(26,35,126,0.3);
+}
+.exam-header .exam-title { font-size: 15px; font-weight: 700; }
+.exam-header .timer-box {
+  background: rgba(255,255,255,0.15); border-radius: 12px;
+  padding: 6px 16px; text-align: center; min-width: 88px;
+}
+.timer-lbl { font-size: 10px; opacity: 0.8; letter-spacing: 1px; }
+#timer { font-size: 26px; font-weight: 900; letter-spacing: 2px; font-variant-numeric: tabular-nums; line-height: 1.1; }
+#timer.warn { color: #ffeb3b; }
+#timer.danger { color: #ff5252; animation: blink 0.8s infinite; }
+@keyframes blink { 50%{opacity:.4} }
+.timer-prog-wrap { height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-top: 4px; }
+#timerProg { height: 100%; border-radius: 2px; background: #64b5f6; transition: width 1s linear; width: 100%; }
+
+/* 题目样式 */
+.q-item { margin-bottom: 14px; }
+.q-label { font-weight: 700; color: var(--pink-600); font-size: 13px; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+.q-num { background: var(--pink-500); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.q-source { background: #fff8e1; border-left: 4px solid #ffc107; border-radius: 6px; padding: 8px 12px; font-size: 14px; color: #4e342e; margin-bottom: 7px; line-height: 1.7; }
+.q-source.para { background: #f3e5f5; border-left-color: #9c27b0; color: #4a148c; }
+
+textarea {
+  width: 100%; border: 2px solid #e0d6db; border-radius: var(--radius-sm);
+  padding: 10px 14px; font-size: 14px; font-family: inherit;
+  line-height: 1.6; resize: vertical; min-height: 52px;
+  background: var(--white); color: var(--text); transition: var(--transition);
+}
+textarea:focus { outline: none; border-color: var(--pink-400); background: #fff; }
+textarea.correct { border-color: #43a047; background: #f1fff2; }
+textarea.partial { border-color: #fb8c00; background: #fffde7; }
+textarea.wrong   { border-color: #e53935; background: #fff5f5; }
+textarea:disabled { opacity: 0.85; }
+
+.q-score { display: none; margin-top: 6px; font-size: 13px; font-weight: 700; padding: 5px 10px; border-radius: 6px; }
+.q-score.s-full    { background: #e8f5e9; color: #2e7d32; }
+.q-score.s-partial { background: #fff3e0; color: #e65100; }
+.q-score.s-zero    { background: #ffebee; color: #c62828; }
+
+/* Answer reveal */
+.answer-reveal { display: none; margin-top: 10px; border-top: 1.5px dashed #ddd; padding-top: 10px; animation: fadeIn 0.4s ease; }
+.ans-block { background: #e8f5e9; border-left: 4px solid #4caf50; border-radius: 8px; padding: 10px 13px; margin-bottom: 8px; }
+.ans-lbl { font-size: 11px; color: #2e7d32; font-weight: 700; margin-bottom: 4px; }
+.ans-txt { font-weight: 700; color: #1b5e20; font-size: 14px; line-height: 1.8; }
+.ans-txt.italic { font-style: italic; font-weight: normal; }
+.ana-block { background: #f5f2ff; border-radius: 8px; padding: 10px 12px; margin-bottom: 6px; }
+.ana-lbl { font-size: 11px; color: #5c6bc0; font-weight: 700; margin-bottom: 5px; }
+.ana-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ana-table th { background: #e8eaf6; color: #3949ab; padding: 5px 7px; text-align: left; font-weight: 600; }
+.ana-table td { padding: 5px 7px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+.ana-table tr:last-child td { border-bottom: none; }
+.ana-err { font-size: 12px; color: #c62828; margin-top: 5px; }
+.ana-err::before { content: '❌ 常见错误：'; font-weight: 700; }
+.kw-wrap { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.kw { display: inline-block; font-size: 11px; border-radius: 10px; padding: 2px 8px; font-weight: 600; }
+.kw.hit  { background: #c8e6c9; color: #1b5e20; }
+.kw.miss { background: #ffcdd2; color: #b71c1c; text-decoration: line-through; }
+.para-hint { font-size: 12px; color: #9c27b0; margin-bottom: 7px; font-weight: 500; }
+
+.submit-wrap { text-align: center; margin: 20px 0 10px; }
+.btn-submit {
+  background: linear-gradient(135deg, #283593, #1a237e); color: white;
+  border: none; border-radius: 50px; padding: 14px 44px; font-size: 16px;
+  font-weight: 700; cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 16px rgba(26,35,126,0.4); transition: var(--transition); letter-spacing: 0.5px;
+}
+.btn-submit:hover { transform: translateY(-2px); }
+.btn-submit:active { transform: scale(0.97); }
+.btn-submit:disabled { background: #b0bec5; box-shadow: none; cursor: default; }
+
+/* Result Card */
+.result-card {
+  display: none; border-radius: var(--radius); padding: 24px 20px;
+  margin-bottom: 14px; text-align: center; color: white; animation: fadeIn 0.5s ease;
+}
+.result-card.excellent { background: linear-gradient(135deg, #43a047, #2e7d32); }
+.result-card.good      { background: linear-gradient(135deg, #1e88e5, #1565c0); }
+.result-card.fair      { background: linear-gradient(135deg, #fb8c00, #ef6c00); }
+.result-card.poor      { background: linear-gradient(135deg, #e53935, #c62828); }
+.result-card h2 { font-size: 20px; margin-bottom: 4px; }
+.big-score { font-size: 56px; font-weight: 900; line-height: 1.1; }
+.big-score span { font-size: 22px; font-weight: 400; opacity: 0.8; }
+.grade-chip { display: inline-block; background: rgba(255,255,255,0.25); border-radius: 20px; padding: 5px 18px; font-size: 15px; font-weight: 700; margin-top: 8px; }
+.score-detail { display: flex; justify-content: space-around; margin-top: 16px; gap: 8px; }
+.sd-item { text-align: center; flex: 1; }
+.sd-num { font-size: 24px; font-weight: 800; }
+.sd-lbl { font-size: 11px; opacity: 0.85; }
+.sub-tip { font-size: 12px; opacity: 0.85; margin-top: 10px; }
+
+.score-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+.score-table th { background: var(--pink-50); color: var(--pink-600); padding: 8px 10px; text-align: left; font-weight: 600; }
+.score-table td { padding: 8px 10px; border-bottom: 1px solid #f5f0f3; vertical-align: top; }
+.score-table tr:last-child td { border-bottom: none; }
+
+/* Stats */
+.stats-card { background: linear-gradient(135deg, var(--white), var(--pink-50)); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); margin-bottom: 14px; text-align: center; }
+.stats-card h3 { font-size: 16px; color: var(--pink-700); margin-bottom: 12px; }
+.stats-row { display: flex; justify-content: space-around; gap: 12px; flex-wrap: wrap; }
+.stat-item { text-align: center; flex: 1; min-width: 60px; }
+.stat-num { font-size: 28px; font-weight: 800; color: var(--pink-500); }
+.stat-lbl { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+
+/* Footer */
+.footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-light); margin-top: 10px; }
+.footer .heart { color: var(--pink-500); animation: heartbeat 1.4s ease-in-out infinite; display: inline-block; }
+
+@media(max-width:480px){
+  .hero{padding-top:18px} .hero h1{font-size:22px}
+  .tab-btn{font-size:12px;padding:8px 5px} .tab-btn .tab-icon{font-size:16px}
+  .word-card .word-en{font-size:16px} .big-score{font-size:44px}
+  .score-detail{flex-direction:column}
+  .btn-start{padding:14px 40px;font-size:16px}
+  .exam-header{border-radius:12px;padding:12px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-avatar">📚</div>
+    <h1>树新的四级小站</h1>
+    <p class="subtitle">每天进步一点点，我在陪你 💕</p>
+    <div class="sweet-note">✨ 今天的每一份努力，都是明天更好的自己</div>
+  </div>
+
+  <!-- 日期导航 -->
+  <div class="date-bar">
+    <button class="date-btn" onclick="changeDay(-1)">◀</button>
+    <span class="date-label" id="dateLabel"></span>
+    <button class="date-btn" onclick="changeDay(1)">▶</button>
+  </div>
+
+  <!-- Tab Nav -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('vocab')"><span class="tab-icon">📝</span>词汇</button>
+    <button class="tab-btn" onclick="switchTab('exam')"><span class="tab-icon">✍️</span>模拟考</button>
+    <button class="tab-btn" onclick="switchTab('stats')"><span class="tab-icon">📊</span>统计</button>
+  </nav>
+
+  <!-- ============ Tab 1: 词汇 ============ -->
+  <div class="tab-panel active" id="panel-vocab">
+    <div class="card">
+      <div class="section-title"><span class="icon">📝</span>今日核心词汇 <span class="badge" id="vocabBadge">80词</span></div>
+      <div class="search-box">
+        <input type="text" id="vocabSearch" placeholder="搜索单词或释义..." oninput="filterVocab()">
+        <span class="search-icon">🔍</span>
+      </div>
+      <div class="vocab-count" id="vocabCount"></div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+      <div class="pagination" id="vocabPagination"></div>
+    </div>
+  </div>
+
+  <!-- ============ Tab 2: 模拟考试 ============ -->
+  <div class="tab-panel" id="panel-exam">
+    <!-- 考试前导 -->
+    <div id="examPre" class="card exam-pre">
+      <div class="exam-icon">📋</div>
+      <h2>四级翻译 · 模拟考试</h2>
+      <p style="color:var(--text-light);margin:8px 0;">模拟真实四级翻译考场氛围</p>
+      <div class="exam-info">
+        <ul style="list-style:none;padding:0;">
+          <li>📝 <strong>题型：</strong>汉译英（词组 + 句子 + 段落）</li>
+          <li>⏱ <strong>时长：</strong>30分钟</li>
+          <li>📊 <strong>满分：</strong>100分</li>
+          <li>📋 <strong>题量：</strong>10道词组 + 5道句子 + 1篇段落</li>
+          <li>⚠️ <strong>注意：</strong>点击开始后计时器启动，时间到自动交卷</li>
+        </ul>
+      </div>
+      <button class="btn-start" onclick="startExam()">
+        🚀 开始答题
+      </button>
+    </div>
+
+    <!-- 考试进行中 -->
+    <div id="examBody" style="display:none;">
+      <!-- 考试头部计时 -->
+      <div class="exam-header">
+        <div>
+          <div class="exam-title">🔒 四级翻译 · 考试中</div>
+          <div style="font-size:11px;opacity:0.7;" id="examDateLabel"></div>
+        </div>
+        <div class="timer-box">
+          <div class="timer-lbl">剩余时间</div>
+          <div id="timer">30:00</div>
+          <div class="timer-prog-wrap"><div id="timerProg"></div></div>
+        </div>
+      </div>
+
+      <!-- 题目区域 -->
+      <div id="examQuestions"></div>
+
+      <!-- 提交 -->
+      <div class="submit-wrap">
+        <button class="btn-submit" id="submitBtn" onclick="submitExam()">📤 交卷</button>
+      </div>
+
+      <!-- 成绩卡片 -->
+      <div class="result-card" id="resultCard">
+        <h2 id="rcTitle">答题完成 🎉</h2>
+        <div class="big-score" id="rcScore">0<span>/100</span></div>
+        <div class="grade-chip" id="rcGrade">—</div>
+        <div class="score-detail">
+          <div class="sd-item"><div class="sd-num" id="sdP1">0</div><div class="sd-lbl">词组翻译 /20分</div></div>
+          <div class="sd-item"><div class="sd-num" id="sdP2">0</div><div class="sd-lbl">句子翻译 /40分</div></div>
+          <div class="sd-item"><div class="sd-num" id="sdP3">0</div><div class="sd-lbl">段落翻译 /40分</div></div>
+        </div>
+        <div class="sub-tip">👇 答案解析已展开，请逐题核查</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ Tab 3: 统计 ============ -->
+  <div class="tab-panel" id="panel-stats">
+    <div class="stats-card">
+      <h3>📊 今日学习概览</h3>
+      <div class="stats-row">
+        <div class="stat-item"><div class="stat-num" id="statVocab">80</div><div class="stat-lbl">核心词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
+        <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
+        <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><span class="icon">🏆</span>历史成绩</div>
+      <div id="historyScores" style="color:var(--text-light);font-size:14px;">
+        <p>暂无历史记录，快去模拟考吧！</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><span class="icon">💡</span>学习建议</div>
+      <p style="color:var(--text-light);line-height:1.9;font-size:14px;">
+      📌 建议学习时长：<strong>45–60分钟</strong><br>
+      📌 今日题型：<strong>翻译（汉译英）⭐⭐⭐⭐☆</strong><br>
+      📌 重点突破：<strong>句式变换 + 核心词汇活用</strong><br>
+      📌 学习顺序：先浏览词汇表 → 模拟考试 → 核对解析 → 重点记忆错题词汇<br>
+      📌 小技巧：把错题中的生词标记下来，睡前再复习一遍效果最好！
+      </p>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <div class="section-title" style="justify-content:center;"><span class="icon">💕</span>来自树新的一句话</div>
+      <p style="color:var(--pink-500);font-size:16px;font-weight:600;line-height:1.8;">
+      "学习虽然辛苦，但想到你能用到这个小站，<br>一切都值得。加油，你永远是我的骄傲 ❤️"
+      </p>
+      <p style="color:var(--text-light);font-size:12px;margin-top:8px;">
+      —— <span id="sweetNoteDate"></span>
+      </p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="heart">❤️</span> 树新的四级小站 · CET-4 Daily Study <span class="heart">❤️</span><br>每天进步一点点
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 四级词库 (300+ 词汇)
+// ============================================================
+const WORD_POOL = [
+  // A
+  {w:"abandon",p:"/əˈbændən/",m:"v. 放弃，遗弃",c:"abandon oneself to"},
+  {w:"absorb",p:"/əbˈzɔːb/",m:"v. 吸收，吸引",c:"be absorbed in"},
+  {w:"abstract",p:"/ˈæbstrækt/",m:"adj. 抽象的 n. 摘要",c:"abstract concept"},
+  {w:"abundant",p:"/əˈbʌndənt/",m:"adj. 丰富的，充裕的",c:"abundant resources"},
+  {w:"abuse",p:"/əˈbjuːz/",m:"v./n. 滥用，虐待",c:"drug abuse"},
+  {w:"academic",p:"/ˌækəˈdemɪk/",m:"adj. 学术的",c:"academic research"},
+  {w:"accelerate",p:"/əkˈseləreɪt/",m:"v. 加速",c:"accelerate growth"},
+  {w:"access",p:"/ˈækses/",m:"n. 通道 v. 访问",c:"have access to"},
+  {w:"accommodate",p:"/əˈkɒmədeɪt/",m:"v. 容纳，适应",c:"accommodate needs"},
+  {w:"accompany",p:"/əˈkʌmpəni/",m:"v. 陪伴，伴随",c:"accompany sb"},
+  {w:"accomplish",p:"/əˈkʌmplɪʃ/",m:"v. 完成，实现",c:"accomplish a goal"},
+  {w:"account",p:"/əˈkaʊnt/",m:"n. 账户 v. 解释",c:"account for"},
+  {w:"accurate",p:"/ˈækjərət/",m:"adj. 准确的",c:"accurate data"},
+  {w:"achieve",p:"/əˈtʃiːv/",m:"v. 达到，获得",c:"achieve success"},
+  {w:"acknowledge",p:"/əkˈnɒlɪdʒ/",m:"v. 承认，认可",c:"acknowledge the fact"},
+  {w:"acquire",p:"/əˈkwaɪə(r)/",m:"v. 获得，学到",c:"acquire knowledge"},
+  {w:"adapt",p:"/əˈdæpt/",m:"v. 适应，改编",c:"adapt to"},
+  {w:"adequate",p:"/ˈædɪkwət/",m:"adj. 足够的，适当的",c:"adequate supply"},
+  {w:"adjust",p:"/əˈdʒʌst/",m:"v. 调整，适应",c:"adjust to"},
+  {w:"administration",p:"/ədˌmɪnɪˈstreɪʃn/",m:"n. 管理，行政",c:"public administration"},
+  {w:"admire",p:"/ədˈmaɪə(r)/",m:"v. 钦佩，欣赏",c:"admire sb for"},
+  {w:"adopt",p:"/əˈdɒpt/",m:"v. 采纳，收养",c:"adopt a method"},
+  {w:"advance",p:"/ədˈvɑːns/",m:"n./v. 前进，进步",c:"in advance"},
+  {w:"advantage",p:"/ədˈvɑːntɪdʒ/",m:"n. 优势，有利条件",c:"take advantage of"},
+  {w:"advertise",p:"/ˈædvətaɪz/",m:"v. 做广告",c:"advertise a product"},
+  {w:"affair",p:"/əˈfeə(r)/",m:"n. 事务，事件",c:"public affairs"},
+  {w:"affect",p:"/əˈfekt/",m:"v. 影响，感动",c:"affect the outcome"},
+  {w:"afford",p:"/əˈfɔːd/",m:"v. 负担得起",c:"cannot afford"},
+  {w:"aggressive",p:"/əˈɡresɪv/",m:"adj. 侵略的，好斗的",c:"aggressive behavior"},
+  {w:"allocate",p:"/ˈæləkeɪt/",m:"v. 分配",c:"allocate resources"},
+  {w:"alternative",p:"/ɔːlˈtɜːnətɪv/",m:"n./adj. 替代选择",c:"alternative solution"},
+  {w:"amaze",p:"/əˈmeɪz/",m:"v. 使惊奇",c:"be amazed at"},
+  {w:"ambition",p:"/æmˈbɪʃn/",m:"n. 雄心，野心",c:"political ambition"},
+  {w:"analyze",p:"/ˈænəlaɪz/",m:"v. 分析",c:"analyze data"},
+  {w:"anniversary",p:"/ˌænɪˈvɜːsəri/",m:"n. 周年纪念",c:"wedding anniversary"},
+  {w:"annual",p:"/ˈænjuəl/",m:"adj. 每年的",c:"annual report"},
+  {w:"anticipate",p:"/ænˈtɪsɪpeɪt/",m:"v. 预期",c:"anticipate problems"},
+  {w:"anxiety",p:"/æŋˈzaɪəti/",m:"n. 焦虑",c:"reduce anxiety"},
+  {w:"apparent",p:"/əˈpærənt/",m:"adj. 明显的",c:"apparent reason"},
+  {w:"appeal",p:"/əˈpiːl/",m:"v./n. 呼吁，吸引",c:"appeal to"},
+  {w:"appetite",p:"/ˈæpɪtaɪt/",m:"n. 食欲，胃口",c:"lose appetite"},
+  {w:"appliance",p:"/əˈplaɪəns/",m:"n. 电器，设备",c:"household appliances"},
+  {w:"application",p:"/ˌæplɪˈkeɪʃn/",m:"n. 申请，应用",c:"job application"},
+  {w:"appreciate",p:"/əˈpriːʃieɪt/",m:"v. 欣赏，感激",c:"appreciate your help"},
+  {w:"approach",p:"/əˈprəʊtʃ/",m:"n./v. 接近，方法",c:"a new approach"},
+  {w:"appropriate",p:"/əˈprəʊpriət/",m:"adj. 适当的",c:"appropriate measures"},
+  {w:"approve",p:"/əˈpruːv/",m:"v. 批准，赞成",c:"approve of"},
+  {w:"arise",p:"/əˈraɪz/",m:"v. 出现，产生",c:"problems arise"},
+  {w:"arouse",p:"/əˈraʊz/",m:"v. 唤起，引起",c:"arouse interest"},
+  {w:"artificial",p:"/ˌɑːtɪˈfɪʃl/",m:"adj. 人工的",c:"artificial intelligence"},
+  {w:"aspect",p:"/ˈæspekt/",m:"n. 方面",c:"every aspect"},
+  {w:"assemble",p:"/əˈsembl/",m:"v. 集合，组装",c:"assemble the team"},
+  {w:"assess",p:"/əˈses/",m:"v. 评估",c:"assess the situation"},
+  {w:"assign",p:"/əˈsaɪn/",m:"v. 分配",c:"assign a task"},
+  {w:"assist",p:"/əˈsɪst/",m:"v. 帮助",c:"assist sb with"},
+  {w:"associate",p:"/əˈsəʊʃieɪt/",m:"v. 联系，关联",c:"associate with"},
+  {w:"assume",p:"/əˈsjuːm/",m:"v. 假设",c:"assume responsibility"},
+  {w:"atmosphere",p:"/ˈætməsfɪə(r)/",m:"n. 大气，氛围",c:"friendly atmosphere"},
+  {w:"attach",p:"/əˈtætʃ/",m:"v. 附上",c:"attach importance to"},
+  {w:"attain",p:"/əˈteɪn/",m:"v. 获得",c:"attain a goal"},
+  {w:"attempt",p:"/əˈtempt/",m:"n./v. 尝试",c:"make an attempt"},
+  {w:"attitude",p:"/ˈætɪtjuːd/",m:"n. 态度",c:"positive attitude"},
+  {w:"attract",p:"/əˈtrækt/",m:"v. 吸引",c:"attract attention"},
+  {w:"attribute",p:"/ˈætrɪbjuːt/",m:"n. 属性 v. 归因于",c:"attribute to"},
+  {w:"authority",p:"/ɔːˈθɒrəti/",m:"n. 权威",c:"local authority"},
+  {w:"automatic",p:"/ˌɔːtəˈmætɪk/",m:"adj. 自动的",c:"automatic system"},
+  {w:"available",p:"/əˈveɪləbl/",m:"adj. 可用的",c:"available resources"},
+  {w:"avenue",p:"/ˈævənjuː/",m:"n. 大街，途径",c:"explore avenues"},
+  {w:"average",p:"/ˈævərɪdʒ/",m:"adj. 平均的 n. 平均",c:"on average"},
+  {w:"avoid",p:"/əˈvɔɪd/",m:"v. 避免",c:"avoid doing"},
+  {w:"award",p:"/əˈwɔːd/",m:"n. 奖品 v. 授予",c:"win an award"},
+  {w:"aware",p:"/əˈweə(r)/",m:"adj. 意识到的",c:"be aware of"},
+  // B
+  {w:"balance",p:"/ˈbæləns/",m:"n./v. 平衡",c:"keep balance"},
+  {w:"ban",p:"/bæn/",m:"v./n. 禁止",c:"ban smoking"},
+  {w:"barrier",p:"/ˈbæriə(r)/",m:"n. 障碍",c:"language barrier"},
+  {w:"behavior",p:"/bɪˈheɪvjə(r)/",m:"n. 行为",c:"social behavior"},
+  {w:"beneficial",p:"/ˌbenɪˈfɪʃl/",m:"adj. 有益的",c:"beneficial to"},
+  {w:"benefit",p:"/ˈbenɪfɪt/",m:"n. 利益 v. 受益",c:"benefit from"},
+  {w:"blame",p:"/bleɪm/",m:"v./n. 责备",c:"blame sb for"},
+  {w:"boom",p:"/buːm/",m:"n./v. 繁荣",c:"economic boom"},
+  {w:"border",p:"/ˈbɔːdə(r)/",m:"n. 边界",c:"cross the border"},
+  {w:"budget",p:"/ˈbʌdʒɪt/",m:"n. 预算",c:"within budget"},
+  // C
+  {w:"campaign",p:"/kæmˈpeɪn/",m:"n. 运动，战役",c:"advertising campaign"},
+  {w:"capable",p:"/ˈkeɪpəbl/",m:"adj. 有能力的",c:"be capable of"},
+  {w:"capacity",p:"/kəˈpæsəti/",m:"n. 能力，容量",c:"production capacity"},
+  {w:"capture",p:"/ˈkæptʃə(r)/",m:"v. 捕获，吸引",c:"capture attention"},
+  {w:"career",p:"/kəˈrɪə(r)/",m:"n. 职业，生涯",c:"career development"},
+  {w:"category",p:"/ˈkætəɡəri/",m:"n. 类别",c:"fall into a category"},
+  {w:"challenge",p:"/ˈtʃælɪndʒ/",m:"n./v. 挑战",c:"face challenges"},
+  {w:"character",p:"/ˈkærəktə(r)/",m:"n. 性格，角色",c:"good character"},
+  {w:"circumstance",p:"/ˈsɜːkəmstæns/",m:"n. 情况",c:"under the circumstances"},
+  {w:"claim",p:"/kleɪm/",m:"v./n. 声称，要求",c:"claim that"},
+  {w:"collapse",p:"/kəˈlæps/",m:"v./n. 倒塌，崩溃",c:"economic collapse"},
+  {w:"colleague",p:"/ˈkɒliːɡ/",m:"n. 同事",c:"work with colleagues"},
+  {w:"combine",p:"/kəmˈbaɪn/",m:"v. 结合",c:"combine with"},
+  {w:"comfort",p:"/ˈkʌmfət/",m:"n./v. 舒适，安慰",c:"provide comfort"},
+  {w:"comment",p:"/ˈkɒment/",m:"n./v. 评论",c:"comment on"},
+  {w:"commit",p:"/kəˈmɪt/",m:"v. 承诺，犯",c:"commit to"},
+  {w:"communicate",p:"/kəˈmjuːnɪkeɪt/",m:"v. 交流",c:"communicate with"},
+  {w:"community",p:"/kəˈmjuːnəti/",m:"n. 社区",c:"international community"},
+  {w:"companion",p:"/kəmˈpæniən/",m:"n. 同伴",c:"travel companion"},
+  {w:"compare",p:"/kəmˈpeə(r)/",m:"v. 比较",c:"compare with"},
+  {w:"compensate",p:"/ˈkɒmpenseɪt/",m:"v. 补偿",c:"compensate for"},
+  {w:"compete",p:"/kəmˈpiːt/",m:"v. 竞争",c:"compete with"},
+  {w:"competent",p:"/ˈkɒmpɪtənt/",m:"adj. 胜任的",c:"competent in"},
+  {w:"competitive",p:"/kəmˈpetətɪv/",m:"adj. 竞争的",c:"competitive market"},
+  {w:"complain",p:"/kəmˈpleɪn/",m:"v. 抱怨",c:"complain about"},
+  {w:"complex",p:"/ˈkɒmpleks/",m:"adj. 复杂的",c:"complex issue"},
+  {w:"component",p:"/kəmˈpəʊnənt/",m:"n. 组件",c:"key component"},
+  {w:"comprehensive",p:"/ˌkɒmprɪˈhensɪv/",m:"adj. 全面的",c:"comprehensive review"},
+  {w:"concentrate",p:"/ˈkɒnsntreɪt/",m:"v. 集中",c:"concentrate on"},
+  {w:"concept",p:"/ˈkɒnsept/",m:"n. 概念",c:"basic concept"},
+  {w:"concern",p:"/kənˈsɜːn/",m:"n./v. 关心",c:"concern about"},
+  {w:"conclude",p:"/kənˈkluːd/",m:"v. 结束，得出结论",c:"conclude that"},
+  {w:"conduct",p:"/kənˈdʌkt/",m:"v. 实施",c:"conduct a survey"},
+  {w:"confidence",p:"/ˈkɒnfɪdəns/",m:"n. 信心",c:"build confidence"},
+  {w:"confident",p:"/ˈkɒnfɪdənt/",m:"adj. 自信的",c:"confident in"},
+  {w:"confirm",p:"/kənˈfɜːm/",m:"v. 确认",c:"confirm the reservation"},
+  {w:"conflict",p:"/ˈkɒnflɪkt/",m:"n. 冲突",c:"in conflict with"},
+  {w:"confuse",p:"/kənˈfjuːz/",m:"v. 使困惑",c:"confuse A with B"},
+  {w:"conscious",p:"/ˈkɒnʃəs/",m:"adj. 有意识的",c:"be conscious of"},
+  {w:"consequence",p:"/ˈkɒnsɪkwəns/",m:"n. 结果",c:"as a consequence"},
+  {w:"conservative",p:"/kənˈsɜːvətɪv/",m:"adj. 保守的",c:"conservative estimate"},
+  {w:"considerable",p:"/kənˈsɪdərəbl/",m:"adj. 相当大的",c:"considerable amount"},
+  {w:"consistent",p:"/kənˈsɪstənt/",m:"adj. 一致的",c:"consistent with"},
+  {w:"constant",p:"/ˈkɒnstənt/",m:"adj. 持续的",c:"constant change"},
+  {w:"construct",p:"/kənˈstrʌkt/",m:"v. 建造",c:"construct a building"},
+  {w:"consume",p:"/kənˈsjuːm/",m:"v. 消耗",c:"consume energy"},
+  {w:"contact",p:"/ˈkɒntækt/",m:"n./v. 联系",c:"keep in contact"},
+  {w:"contain",p:"/kənˈteɪn/",m:"v. 包含",c:"contain information"},
+  {w:"contemporary",p:"/kənˈtemprəri/",m:"adj. 当代的",c:"contemporary art"},
+  {w:"content",p:"/ˈkɒntent/",m:"n. 内容 adj. 满足的",c:"be content with"},
+  {w:"contest",p:"/ˈkɒntest/",m:"n. 竞赛",c:"enter a contest"},
+  {w:"context",p:"/ˈkɒntekst/",m:"n. 背景，上下文",c:"in this context"},
+  {w:"contract",p:"/ˈkɒntrækt/",m:"n. 合同",c:"sign a contract"},
+  {w:"contrast",p:"/ˈkɒntrɑːst/",m:"n./v. 对比",c:"in contrast to"},
+  {w:"contribute",p:"/kənˈtrɪbjuːt/",m:"v. 贡献",c:"contribute to"},
+  {w:"controversial",p:"/ˌkɒntrəˈvɜːʃl/",m:"adj. 有争议的",c:"controversial issue"},
+  {w:"convenient",p:"/kənˈviːniənt/",m:"adj. 方便的",c:"convenient for"},
+  {w:"conventional",p:"/kənˈvenʃənl/",m:"adj. 传统的",c:"conventional wisdom"},
+  {w:"convince",p:"/kənˈvɪns/",m:"v. 使信服",c:"convince sb of"},
+  {w:"cooperate",p:"/kəʊˈɒpəreɪt/",m:"v. 合作",c:"cooperate with"},
+  {w:"correspond",p:"/ˌkɒrəˈspɒnd/",m:"v. 符合，通信",c:"correspond to"},
+  {w:"creative",p:"/kriˈeɪtɪv/",m:"adj. 创造性的",c:"creative thinking"},
+  {w:"crisis",p:"/ˈkraɪsɪs/",m:"n. 危机",c:"economic crisis"},
+  {w:"critical",p:"/ˈkrɪtɪkl/",m:"adj. 批评的，关键的",c:"critical thinking"},
+  {w:"crucial",p:"/ˈkruːʃl/",m:"adj. 至关重要的",c:"crucial to"},
+  {w:"cultivate",p:"/ˈkʌltɪveɪt/",m:"v. 培养，耕作",c:"cultivate habits"},
+  {w:"current",p:"/ˈkʌrənt/",m:"adj. 当前的",c:"current situation"},
+  // D
+  {w:"debate",p:"/dɪˈbeɪt/",m:"n./v. 辩论",c:"heated debate"},
+  {w:"decade",p:"/ˈdekeɪd/",m:"n. 十年",c:"in the past decade"},
+  {w:"decline",p:"/dɪˈklaɪn/",m:"v. 下降，拒绝",c:"decline an offer"},
+  {w:"define",p:"/dɪˈfaɪn/",m:"v. 定义",c:"define as"},
+  {w:"demonstrate",p:"/ˈdemənstreɪt/",m:"v. 展示",c:"demonstrate the ability"},
+  {w:"deny",p:"/dɪˈnaɪ/",m:"v. 否认",c:"deny doing"},
+  {w:"deposit",p:"/dɪˈpɒzɪt/",m:"v./n. 存款，存放",c:"bank deposit"},
+  {w:"derive",p:"/dɪˈraɪv/",m:"v. 源于",c:"derive from"},
+  {w:"deserve",p:"/dɪˈzɜːv/",m:"v. 值得",c:"deserve attention"},
+  {w:"despite",p:"/dɪˈspaɪt/",m:"prep. 尽管",c:"despite the fact"},
+  {w:"destination",p:"/ˌdestɪˈneɪʃn/",m:"n. 目的地",c:"travel destination"},
+  {w:"destruction",p:"/dɪˈstrʌkʃn/",m:"n. 破坏",c:"environmental destruction"},
+  {w:"detail",p:"/ˈdiːteɪl/",m:"n. 细节",c:"in detail"},
+  {w:"detect",p:"/dɪˈtekt/",m:"v. 发现",c:"detect a problem"},
+  {w:"determine",p:"/dɪˈtɜːmɪn/",m:"v. 决定",c:"determine to do"},
+  {w:"device",p:"/dɪˈvaɪs/",m:"n. 设备",c:"electronic device"},
+  {w:"differ",p:"/ˈdɪfə(r)/",m:"v. 不同",c:"differ from"},
+  {w:"digital",p:"/ˈdɪdʒɪtl/",m:"adj. 数字的",c:"digital age"},
+  {w:"discipline",p:"/ˈdɪsəplɪn/",m:"n. 纪律，学科",c:"self-discipline"},
+  {w:"discount",p:"/ˈdɪskaʊnt/",m:"n. 折扣",c:"at a discount"},
+  {w:"distinct",p:"/dɪˈstɪŋkt/",m:"adj. 明显的",c:"distinct from"},
+  {w:"distribute",p:"/dɪˈstrɪbjuːt/",m:"v. 分发",c:"distribute to"},
+  {w:"domestic",p:"/dəˈmestɪk/",m:"adj. 国内的，家庭的",c:"domestic market"},
+  {w:"dominate",p:"/ˈdɒmɪneɪt/",m:"v. 支配",c:"dominate the market"},
+  {w:"doubt",p:"/daʊt/",m:"n./v. 怀疑",c:"without doubt"},
+  {w:"dramatic",p:"/drəˈmætɪk/",m:"adj. 戏剧性的",c:"dramatic change"},
+  // E
+  {w:"economy",p:"/ɪˈkɒnəmi/",m:"n. 经济",c:"global economy"},
+  {w:"efficient",p:"/ɪˈfɪʃnt/",m:"adj. 高效的",c:"energy efficient"},
+  {w:"elaborate",p:"/ɪˈlæbərət/",m:"adj. 精心制作的",c:"elaborate plan"},
+  {w:"eliminate",p:"/ɪˈlɪmɪneɪt/",m:"v. 消除",c:"eliminate poverty"},
+  {w:"embrace",p:"/ɪmˈbreɪs/",m:"v. 拥抱，接受",c:"embrace change"},
+  {w:"emerge",p:"/iˈmɜːdʒ/",m:"v. 出现",c:"emerge from"},
+  {w:"emotion",p:"/ɪˈməʊʃn/",m:"n. 情感",c:"express emotion"},
+  {w:"emphasis",p:"/ˈemfəsɪs/",m:"n. 强调",c:"put emphasis on"},
+  {w:"emphasize",p:"/ˈemfəsaɪz/",m:"v. 强调",c:"emphasize the importance"},
+  {w:"employ",p:"/ɪmˈplɔɪ/",m:"v. 雇用，使用",c:"employ a method"},
+  {w:"enable",p:"/ɪˈneɪbl/",m:"v. 使能够",c:"enable sb to do"},
+  {w:"encounter",p:"/ɪnˈkaʊntə(r)/",m:"v./n. 遭遇",c:"encounter problems"},
+  {w:"engage",p:"/ɪnˈɡeɪdʒ/",m:"v. 参与，吸引",c:"engage in"},
+  {w:"enhance",p:"/ɪnˈhɑːns/",m:"v. 提高",c:"enhance performance"},
+  {w:"enormous",p:"/ɪˈnɔːməs/",m:"adj. 巨大的",c:"enormous amount"},
+  {w:"ensure",p:"/ɪnˈʃʊə(r)/",m:"v. 确保",c:"ensure safety"},
+  {w:"enterprise",p:"/ˈentəpraɪz/",m:"n. 企业",c:"private enterprise"},
+  {w:"enthusiasm",p:"/ɪnˈθjuːziæzəm/",m:"n. 热情",c:"show enthusiasm"},
+  {w:"environment",p:"/ɪnˈvaɪərənmənt/",m:"n. 环境",c:"protect the environment"},
+  {w:"equivalent",p:"/ɪˈkwɪvələnt/",m:"adj. 相等的",c:"equivalent to"},
+  {w:"essential",p:"/ɪˈsenʃl/",m:"adj. 必要的",c:"essential to"},
+  {w:"establish",p:"/ɪˈstæblɪʃ/",m:"v. 建立",c:"establish a company"},
+  {w:"estimate",p:"/ˈestɪmeɪt/",m:"v. 估计",c:"estimate the cost"},
+  {w:"evaluate",p:"/ɪˈvæljueɪt/",m:"v. 评估",c:"evaluate the results"},
+  {w:"evidence",p:"/ˈevɪdəns/",m:"n. 证据",c:"scientific evidence"},
+  {w:"evolve",p:"/iˈvɒlv/",m:"v. 进化",c:"evolve into"},
+  {w:"exceed",p:"/ɪkˈsiːd/",m:"v. 超过",c:"exceed expectations"},
+  {w:"exchange",p:"/ɪksˈtʃeɪndʒ/",m:"v. 交换",c:"exchange ideas"},
+  {w:"exclude",p:"/ɪkˈskluːd/",m:"v. 排除",c:"exclude from"},
+  {w:"execute",p:"/ˈeksɪkjuːt/",m:"v. 执行",c:"execute a plan"},
+  {w:"exhibit",p:"/ɪɡˈzɪbɪt/",m:"v. 展示",c:"exhibit at a gallery"},
+  {w:"expand",p:"/ɪkˈspænd/",m:"v. 扩大",c:"expand business"},
+  {w:"expect",p:"/ɪkˈspekt/",m:"v. 期望",c:"expect to do"},
+  {w:"expense",p:"/ɪkˈspens/",m:"n. 费用",c:"at the expense of"},
+  {w:"explicit",p:"/ɪkˈsplɪsɪt/",m:"adj. 明确的",c:"explicit instructions"},
+  {w:"explore",p:"/ɪkˈsplɔː(r)/",m:"v. 探索",c:"explore options"},
+  {w:"export",p:"/ɪkˈspɔːt/",m:"v./n. 出口",c:"export goods"},
+  {w:"expose",p:"/ɪkˈspəʊz/",m:"v. 暴露",c:"expose to"},
+  {w:"extend",p:"/ɪkˈstend/",m:"v. 延伸，扩展",c:"extend the deadline"},
+  {w:"external",p:"/ɪkˈstɜːnl/",m:"adj. 外部的",c:"external factors"},
+  {w:"extraordinary",p:"/ɪkˈstrɔːdnri/",m:"adj. 非凡的",c:"extraordinary achievement"},
+  {w:"extreme",p:"/ɪkˈstriːm/",m:"adj. 极端的",c:"extreme weather"},
+  // F
+  {w:"facility",p:"/fəˈsɪləti/",m:"n. 设施，设备",c:"sports facilities"},
+  {w:"factor",p:"/ˈfæktə(r)/",m:"n. 因素",c:"key factor"},
+  {w:"feature",p:"/ˈfiːtʃə(r)/",m:"n. 特色 v. 以……为特色",c:"main feature"},
+  {w:"finance",p:"/ˈfaɪnæns/",m:"n. 金融",c:"personal finance"},
+  {w:"flexible",p:"/ˈfleksəbl/",m:"adj. 灵活的",c:"flexible schedule"},
+  {w:"focus",p:"/ˈfəʊkəs/",m:"v./n. 聚焦",c:"focus on"},
+  {w:"forecast",p:"/ˈfɔːkɑːst/",m:"n./v. 预测",c:"weather forecast"},
+  {w:"foundation",p:"/faʊnˈdeɪʃn/",m:"n. 基础",c:"lay the foundation"},
+  {w:"frequency",p:"/ˈfriːkwənsi/",m:"n. 频率",c:"increase frequency"},
+  {w:"fulfill",p:"/fʊlˈfɪl/",m:"v. 实现，满足",c:"fulfill a dream"},
+  {w:"function",p:"/ˈfʌŋkʃn/",m:"n. 功能 v. 运作",c:"function properly"},
+  {w:"fundamental",p:"/ˌfʌndəˈmentl/",m:"adj. 基本的",c:"fundamental principle"},
+  // G
+  {w:"generate",p:"/ˈdʒenəreɪt/",m:"v. 产生",c:"generate income"},
+  {w:"generous",p:"/ˈdʒenərəs/",m:"adj. 慷慨的",c:"generous donation"},
+  {w:"global",p:"/ˈɡləʊbl/",m:"adj. 全球的",c:"global warming"},
+  {w:"guarantee",p:"/ˌɡærənˈtiː/",m:"v./n. 保证",c:"guarantee quality"},
+  // H
+  {w:"highlight",p:"/ˈhaɪlaɪt/",m:"v. 强调 n. 亮点",c:"highlight the importance"},
+  {w:"household",p:"/ˈhaʊshəʊld/",m:"n. 家庭",c:"household appliances"},
+  // I
+  {w:"identify",p:"/aɪˈdentɪfaɪ/",m:"v. 识别，确认",c:"identify with"},
+  {w:"illustrate",p:"/ˈɪləstreɪt/",m:"v. 说明，阐明",c:"illustrate the point"},
+  {w:"impact",p:"/ˈɪmpækt/",m:"n./v. 影响",c:"have an impact on"},
+  {w:"implement",p:"/ˈɪmplɪment/",m:"v. 实施",c:"implement a plan"},
+  {w:"imply",p:"/ɪmˈplaɪ/",m:"v. 暗示",c:"imply that"},
+  {w:"impose",p:"/ɪmˈpəʊz/",m:"v. 强加，征收",c:"impose on"},
+  {w:"indicate",p:"/ˈɪndɪkeɪt/",m:"v. 表明",c:"indicate that"},
+  {w:"individual",p:"/ˌɪndɪˈvɪdʒuəl/",m:"n. 个人 adj. 个人的",c:"individual needs"},
+  {w:"inevitable",p:"/ɪnˈevɪtəbl/",m:"adj. 不可避免的",c:"inevitable result"},
+  {w:"influence",p:"/ˈɪnfluəns/",m:"n./v. 影响",c:"have an influence on"},
+  {w:"innovation",p:"/ˌɪnəˈveɪʃn/",m:"n. 创新",c:"technological innovation"},
+  {w:"insight",p:"/ˈɪnsaɪt/",m:"n. 洞察力",c:"provide insight"},
+  {w:"inspire",p:"/ɪnˈspaɪə(r)/",m:"v. 激励",c:"inspire sb to do"},
+  {w:"instance",p:"/ˈɪnstəns/",m:"n. 例子",c:"for instance"},
+  {w:"institution",p:"/ˌɪnstɪˈtjuːʃn/",m:"n. 机构",c:"educational institution"},
+  {w:"integrate",p:"/ˈɪntɪɡreɪt/",m:"v. 整合",c:"integrate into"},
+  {w:"intellectual",p:"/ˌɪntəˈlektʃuəl/",m:"adj. 智力的",c:"intellectual property"},
+  {w:"intense",p:"/ɪnˈtens/",m:"adj. 强烈的",c:"intense pressure"},
+  {w:"interact",p:"/ˌɪntərˈækt/",m:"v. 互动",c:"interact with"},
+  {w:"interpret",p:"/ɪnˈtɜːprɪt/",m:"v. 解释，口译",c:"interpret as"},
+  {w:"invest",p:"/ɪnˈvest/",m:"v. 投资",c:"invest in"},
+  {w:"involve",p:"/ɪnˈvɒlv/",m:"v. 涉及",c:"be involved in"},
+  {w:"isolate",p:"/ˈaɪsəleɪt/",m:"v. 孤立",c:"isolate from"},
+  {w:"issue",p:"/ˈɪʃuː/",m:"n. 问题 v. 发布",c:"key issue"},
+  // J, K, L
+  {w:"justify",p:"/ˈdʒʌstɪfaɪ/",m:"v. 证明……正当",c:"justify doing"},
+  {w:"launch",p:"/lɔːntʃ/",m:"v. 发射，启动",c:"launch a product"},
+  {w:"liberal",p:"/ˈlɪbərəl/",m:"adj. 自由的，开明的",c:"liberal arts"},
+  // M
+  {w:"maintain",p:"/meɪnˈteɪn/",m:"v. 维持",c:"maintain contact"},
+  {w:"manufacture",p:"/ˌmænjuˈfæktʃə(r)/",m:"v. 制造",c:"manufacture products"},
+  {w:"maximum",p:"/ˈmæksɪməm/",m:"n./adj. 最大",c:"maximum capacity"},
+  {w:"mechanism",p:"/ˈmekənɪzəm/",m:"n. 机制",c:"market mechanism"},
+  {w:"minority",p:"/maɪˈnɒrəti/",m:"n. 少数，少数民族",c:"ethnic minority"},
+  {w:"mission",p:"/ˈmɪʃn/",m:"n. 使命",c:"accomplish the mission"},
+  {w:"moderate",p:"/ˈmɒdərət/",m:"adj. 适度的",c:"moderate exercise"},
+  {w:"monitor",p:"/ˈmɒnɪtə(r)/",m:"v. 监控",c:"monitor the progress"},
+  {w:"motivate",p:"/ˈməʊtɪveɪt/",m:"v. 激励",c:"motivate employees"},
+  {w:"mutual",p:"/ˈmjuːtʃuəl/",m:"adj. 相互的",c:"mutual understanding"},
+  // N
+  {w:"negotiate",p:"/nɪˈɡəʊʃieɪt/",m:"v. 谈判",c:"negotiate with"},
+  {w:"network",p:"/ˈnetwɜːk/",m:"n. 网络",c:"social network"},
+  {w:"nevertheless",p:"/ˌnevəðəˈles/",m:"adv. 尽管如此",c:""},
+  {w:"normally",p:"/ˈnɔːməli/",m:"adv. 通常",c:""},
+  // O
+  {w:"obtain",p:"/əbˈteɪn/",m:"v. 获得",c:"obtain permission"},
+  {w:"obvious",p:"/ˈɒbviəs/",m:"adj. 明显的",c:"obvious reason"},
+  {w:"occupy",p:"/ˈɒkjupaɪ/",m:"v. 占据",c:"occupy time"},
+  {w:"opponent",p:"/əˈpəʊnənt/",m:"n. 对手",c:"political opponent"},
+  {w:"opportunity",p:"/ˌɒpəˈtjuːnəti/",m:"n. 机会",c:"seize the opportunity"},
+  {w:"option",p:"/ˈɒpʃn/",m:"n. 选择",c:"have no option"},
+  {w:"original",p:"/əˈrɪdʒənl/",m:"adj. 原来的，原创的",c:"original idea"},
+  {w:"outcome",p:"/ˈaʊtkʌm/",m:"n. 结果",c:"final outcome"},
+  {w:"overcome",p:"/ˌəʊvəˈkʌm/",m:"v. 克服",c:"overcome difficulties"},
+  // P
+  {w:"participate",p:"/pɑːˈtɪsɪpeɪt/",m:"v. 参与",c:"participate in"},
+  {w:"passion",p:"/ˈpæʃn/",m:"n. 热情",c:"have a passion for"},
+  {w:"perceive",p:"/pəˈsiːv/",m:"v. 感知，理解",c:"perceive as"},
+  {w:"perform",p:"/pəˈfɔːm/",m:"v. 表现，执行",c:"perform well"},
+  {w:"permanent",p:"/ˈpɜːmənənt/",m:"adj. 永久的",c:"permanent resident"},
+  {w:"phenomenon",p:"/fəˈnɒmɪnən/",m:"n. 现象",c:"social phenomenon"},
+  {w:"policy",p:"/ˈpɒləsi/",m:"n. 政策",c:"foreign policy"},
+  {w:"potential",p:"/pəˈtenʃl/",m:"adj. 潜在的 n. 潜力",c:"potential customer"},
+  {w:"predict",p:"/prɪˈdɪkt/",m:"v. 预测",c:"predict the future"},
+  {w:"preserve",p:"/prɪˈzɜːv/",m:"v. 保护，保存",c:"preserve the environment"},
+  {w:"previous",p:"/ˈpriːviəs/",m:"adj. 以前的",c:"previous experience"},
+  {w:"principle",p:"/ˈprɪnsəpl/",m:"n. 原则",c:"basic principle"},
+  {w:"priority",p:"/praɪˈɒrəti/",m:"n. 优先事项",c:"top priority"},
+  {w:"procedure",p:"/prəˈsiːdʒə(r)/",m:"n. 程序，步骤",c:"standard procedure"},
+  {w:"promote",p:"/prəˈməʊt/",m:"v. 促进，晋升",c:"promote economic growth"},
+  {w:"proportion",p:"/prəˈpɔːʃn/",m:"n. 比例",c:"in proportion to"},
+  {w:"prospect",p:"/ˈprɒspekt/",m:"n. 前景，展望",c:"job prospects"},
+  {w:"psychology",p:"/saɪˈkɒlədʒi/",m:"n. 心理学",c:"social psychology"},
+  {w:"purchase",p:"/ˈpɜːtʃəs/",m:"v./n. 购买",c:"purchase online"},
+  {w:"pursue",p:"/pəˈsjuː/",m:"v. 追求",c:"pursue a dream"},
+  // R
+  {w:"range",p:"/reɪndʒ/",m:"n. 范围 v. 变化",c:"a range of"},
+  {w:"recognize",p:"/ˈrekəɡnaɪz/",m:"v. 认识，认出",c:"recognize the importance"},
+  {w:"recommend",p:"/ˌrekəˈmend/",m:"v. 推荐",c:"recommend doing"},
+  {w:"recovery",p:"/rɪˈkʌvəri/",m:"n. 恢复",c:"economic recovery"},
+  {w:"reflect",p:"/rɪˈflekt/",m:"v. 反映，反思",c:"reflect on"},
+  {w:"regulate",p:"/ˈreɡjuleɪt/",m:"v. 调节，管理",c:"regulate the market"},
+  {w:"release",p:"/rɪˈliːs/",m:"v./n. 释放，发布",c:"release a statement"},
+  {w:"relevant",p:"/ˈreləvənt/",m:"adj. 相关的",c:"relevant to"},
+  {w:"rely",p:"/rɪˈlaɪ/",m:"v. 依赖",c:"rely on"},
+  {w:"represent",p:"/ˌreprɪˈzent/",m:"v. 代表",c:"represent the company"},
+  {w:"resolve",p:"/rɪˈzɒlv/",m:"v. 解决",c:"resolve conflicts"},
+  {w:"resource",p:"/rɪˈsɔːs/",m:"n. 资源",c:"natural resources"},
+  {w:"respond",p:"/rɪˈspɒnd/",m:"v. 回应",c:"respond to"},
+  {w:"restore",p:"/rɪˈstɔː(r)/",m:"v. 恢复",c:"restore order"},
+  {w:"restrict",p:"/rɪˈstrɪkt/",m:"v. 限制",c:"restrict access"},
+  {w:"reveal",p:"/rɪˈviːl/",m:"v. 揭示",c:"reveal the truth"},
+  {w:"revenue",p:"/ˈrevənjuː/",m:"n. 收入，税收",c:"tax revenue"},
+  {w:"revolution",p:"/ˌrevəˈluːʃn/",m:"n. 革命",c:"industrial revolution"},
+  {w:"rural",p:"/ˈrʊərəl/",m:"adj. 农村的",c:"rural areas"},
+  // S
+  {w:"schedule",p:"/ˈʃedjuːl/",m:"n. 时间表",c:"on schedule"},
+  {w:"secure",p:"/sɪˈkjʊə(r)/",m:"adj. 安全的 v. 获得",c:"secure a job"},
+  {w:"significant",p:"/sɪɡˈnɪfɪkənt/",m:"adj. 重要的",c:"significant change"},
+  {w:"source",p:"/sɔːs/",m:"n. 来源",c:"energy source"},
+  {w:"specific",p:"/spəˈsɪfɪk/",m:"adj. 具体的",c:"specific details"},
+  {w:"stable",p:"/ˈsteɪbl/",m:"adj. 稳定的",c:"stable economy"},
+  {w:"strategy",p:"/ˈstrætədʒi/",m:"n. 策略",c:"business strategy"},
+  {w:"strength",p:"/streŋθ/",m:"n. 力量，优势",c:"strengths and weaknesses"},
+  {w:"structure",p:"/ˈstrʌktʃə(r)/",m:"n. 结构",c:"organizational structure"},
+  {w:"substitute",p:"/ˈsʌbstɪtjuːt/",m:"n./v. 替代",c:"substitute for"},
+  {w:"sufficient",p:"/səˈfɪʃnt/",m:"adj. 足够的",c:"sufficient evidence"},
+  {w:"survey",p:"/ˈsɜːveɪ/",m:"n./v. 调查",c:"conduct a survey"},
+  {w:"survive",p:"/səˈvaɪv/",m:"v. 生存",c:"survive the crisis"},
+  {w:"sustainable",p:"/səˈsteɪnəbl/",m:"adj. 可持续的",c:"sustainable development"},
+  {w:"symbol",p:"/ˈsɪmbl/",m:"n. 象征，符号",c:"status symbol"},
+  // T
+  {w:"target",p:"/ˈtɑːɡɪt/",m:"n. 目标 v. 以……为目标",c:"achieve the target"},
+  {w:"tendency",p:"/ˈtendənsi/",m:"n. 趋势",c:"have a tendency to"},
+  {w:"threaten",p:"/ˈθretn/",m:"v. 威胁",c:"threaten to do"},
+  {w:"transform",p:"/trænsˈfɔːm/",m:"v. 转变",c:"transform into"},
+  {w:"trend",p:"/trend/",m:"n. 趋势",c:"current trend"},
+  // U, V
+  {w:"ultimate",p:"/ˈʌltɪmət/",m:"adj. 最终的",c:"ultimate goal"},
+  {w:"undergo",p:"/ˌʌndəˈɡəʊ/",m:"v. 经历",c:"undergo changes"},
+  {w:"unique",p:"/juˈniːk/",m:"adj. 独特的",c:"unique feature"},
+  {w:"urban",p:"/ˈɜːbən/",m:"adj. 城市的",c:"urban areas"},
+  {w:"utilize",p:"/ˈjuːtəlaɪz/",m:"v. 利用",c:"utilize resources"},
+  {w:"valid",p:"/ˈvælɪd/",m:"adj. 有效的",c:"valid passport"},
+  {w:"variety",p:"/vəˈraɪəti/",m:"n. 多样性",c:"a variety of"},
+  {w:"version",p:"/ˈvɜːʃn/",m:"n. 版本",c:"latest version"},
+  {w:"visible",p:"/ˈvɪzəbl/",m:"adj. 可见的",c:"clearly visible"},
+  {w:"vision",p:"/ˈvɪʒn/",m:"n. 愿景，视力",c:"have a vision"},
+  {w:"vital",p:"/ˈvaɪtl/",m:"adj. 至关重要的",c:"vital to"},
+  {w:"volume",p:"/ˈvɒljuːm/",m:"n. 量，卷",c:"sales volume"},
+  {w:"voluntary",p:"/ˈvɒləntri/",m:"adj. 自愿的",c:"voluntary work"},
+  // W
+  {w:"welfare",p:"/ˈwelfeə(r)/",m:"n. 福利",c:"social welfare"},
+  {w:"widespread",p:"/ˈwaɪdspred/",m:"adj. 广泛的",c:"widespread use"},
+  {w:"wisdom",p:"/ˈwɪzdəm/",m:"n. 智慧",c:"conventional wisdom"},
+  {w:"witness",p:"/ˈwɪtnəs/",m:"n. 目击者 v. 目睹",c:"witness an event"},
+  {w:"worthwhile",p:"/ˌwɜːθˈwaɪl/",m:"adj. 值得的",c:"be worthwhile"},
+];
+
+// ============================================================
+// 翻译练习题 (固定题库，从generator中提取)
+// ============================================================
+const exerciseData = {
+  phrases: [
+    { zh:"语言障碍", ans:"language barrier", key:["language","barrier"] },
+    { zh:"血液循环", ans:"blood circulation", key:["blood","circulation"] },
+    { zh:"自律精神", ans:"self-discipline", key:["self-discipline"] },
+    { zh:"全球变暖", ans:"global warming", key:["global","warming"] },
+    { zh:"和平倡议", ans:"peace initiative", key:["peace","initiative"] },
+    { zh:"逐步提升", ans:"gradual improvement", key:["gradual","improvement"] },
+    { zh:"竞争激烈的市场", ans:"highly competitive market", key:["competitive","market"] },
+    { zh:"确保安全", ans:"ensure safety", key:["ensure","safety"] },
+    { zh:"主动出击", ans:"take the initiative", key:["take","initiative"] },
+    { zh:"追求梦想", ans:"pursue a dream", key:["pursue","dream"] }
+  ],
+  sentences: [
+    {
+      zh:"随着科技的不断进步，人们积累知识和获取信息的方式正在发生深刻变化。",
+      ans:"With the continuous advancement of technology, the ways in which people accumulate knowledge and access information are undergoing profound changes.",
+      keys:["technology","accumulate","profound","information","continuous"],
+      analysis:[
+        ["随著进步","With the continuous advancement of technology","with引导伴随状语"],
+        ["人们的方式","the ways in which people...","正式句型"],
+        ["积累知识","accumulate knowledge","词表核心词"],
+        ["深刻变化","undergoing profound changes","undergo=经历；profound=深刻"]
+      ], err:"\"great changes\" 应改为 \"profound/significant changes\""
+    },
+    {
+      zh:"政府应当采取措施，消除贫困，同时确保弱势群体获得足够的社会保障。",
+      ans:"The government should take measures to eliminate poverty while ensuring that vulnerable groups have access to adequate social security.",
+      keys:["measures","eliminate","poverty","vulnerable","adequate"],
+      analysis:[
+        ["采取措施","take measures","固定搭配"],
+        ["消除贫困","eliminate poverty","词表核心词"],
+        ["弱势群体","vulnerable groups","四级重要词"],
+        ["获得保障","have access to...","获得/享有"]
+      ], err:"应用 \"ensure that + 从句\" 而非口语化表达"
+    },
+    {
+      zh:"保持积极的心态对于应对学业和工作中不可避免的压力至关重要。",
+      ans:"Maintaining a positive attitude is crucial for dealing with the inevitable pressures in academic studies and work.",
+      keys:["maintaining","attitude","crucial","inevitable","pressures"],
+      analysis:[
+        ["保持积极心态","Maintaining a positive attitude","动名词主语更正式"],
+        ["至关重要","is crucial/essential/vital","三词均可"],
+        ["不可避免的","inevitable","词表词汇"],
+        ["应对压力","dealing with pressures","deal with = cope with"]
+      ], err:"\"very important\" 太简单；\"Keep\" 应换为 maintain"
+    },
+    {
+      zh:"这项研究表明，适度锻炼不仅有助于改善血液循环，还能增强免疫系统功能。",
+      ans:"This study indicates that moderate exercise not only helps improve blood circulation, but also enhances the function of the immune system.",
+      keys:["indicates","moderate","circulation","not only","immune"],
+      analysis:[
+        ["研究表明","the study indicates/shows","indicate为词表词汇"],
+        ["适度锻炼","moderate exercise","moderate=适度的"],
+        ["不仅还","not only...but also...","注意位置对称"],
+        ["增强免疫","enhance the function of the immune system","enhance为词表核心词"]
+      ], err:"\"not only...but...\" 缺 also 结构不完整"
+    },
+    {
+      zh:"要在全球竞争激烈的市场中脱颖而出，企业必须不断创新并提升产品和服务质量。",
+      ans:"To stand out in the highly competitive global market, companies must constantly innovate and improve the quality of their products and services.",
+      keys:["stand out","competitive","innovate","quality","constantly"],
+      analysis:[
+        ["脱颖而出","stand out","固定短语"],
+        ["竞争激烈","highly competitive","competitive为词表词汇"],
+        ["不断创新","constantly innovate","constantly/continuously均可"],
+        ["提升质量","improve the quality of","improve/enhance均可"]
+      ], err:"\"To be outstanding\" 意思偏差"
+    }
+  ],
+  paragraph: {
+    zh:"近年来，在线教育迅速发展，为全球数百万学习者提供了灵活多样的学习机会。然而，这一趋势也带来了一些挑战。首先，学习者需要具备高度的自律性，才能在没有传统课堂约束的环境下坚持学习。其次，网络技术的差异导致不同地区的学习者在获取教育资源方面存在明显的不平等。尽管如此，在线教育所带来的便利性和低成本优势，使其成为推动教育公平的重要途径，值得持续关注与投入。",
+    ans:"In recent years, online education has developed rapidly, providing millions of learners worldwide with flexible and diverse learning opportunities. However, this trend has also brought about some challenges. First, learners need to possess a high degree of self-discipline in order to persist in their studies without the constraints of a traditional classroom. Second, disparities in internet technology have led to significant inequalities among learners from different regions in accessing educational resources. Nevertheless, the convenience and low-cost advantages offered by online education make it an important pathway to promoting educational equity, deserving sustained attention and investment.",
+    keys:["self-discipline","flexible","disparities","nevertheless","equity","persist","millions","rapidly"],
+    hints:"self-discipline / flexible / disparities / educational equity / nevertheless",
+    analysis:[
+      ["迅速发展","has developed rapidly","现在完成时"],
+      ["数百万","millions of","≠ hundreds of millions"],
+      ["自律性","self-discipline","词表词汇"],
+      ["坚持学习","persist in their studies","persist in doing"],
+      ["差异","disparities","disparity为四级词"],
+      ["尽管如此","Nevertheless","比However更强调转折"],
+      ["教育公平","educational equity","equity比equality更精准"],
+      ["值得关注","deserving sustained attention","deserve doing"]
+    ]
+  }
+};
+
+// ============================================================
+// 日期相关
+// ============================================================
+const TODAY = new Date(2026, 4, 21); // May 21, 2026
+let currentDate = new Date(TODAY);
+let vocabForDate = {};  // 缓存：{"2026-05-21": [word1,...]}
+const VOCAB_PER_PAGE = 12;
+const DAILY_VOCAB_COUNT = 80;
+
+// 从 localStorage 加载
+function loadVocabCache() {
+  try {
+    const data = localStorage.getItem('cet4_vocab_cache');
+    if (data) vocabForDate = JSON.parse(data);
+  } catch(e) { vocabForDate = {}; }
+}
+function saveVocabCache() {
+  try {
+    localStorage.setItem('cet4_vocab_cache', JSON.stringify(vocabForDate));
+  } catch(e) { /* ignore quota errors */ }
+}
+loadVocabCache();
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function formatDate(d) {
+  return `${d.getFullYear()}年${String(d.getMonth()+1).padStart(2,'0')}月${String(d.getDate()).padStart(2,'0')}日`;
+}
+
+// 基于日期的伪随机数生成器
+function seededRandom(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) - h) + seed.charCodeAt(i);
+    h |= 0;
+  }
+  return function() {
+    h = (h * 1103515245 + 12345) & 0x7fffffff;
+    return h / 0x7fffffff;
+  };
+}
+
+// 为指定日期生成词汇
+function generateVocabForDate(d) {
+  const key = dateKey(d);
+  if (vocabForDate[key]) return vocabForDate[key];
+
+  const rng = seededRandom(key);
+  // Fisher-Yates shuffle on copy
+  const pool = [...WORD_POOL];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const selected = pool.slice(0, Math.min(DAILY_VOCAB_COUNT, pool.length));
+  vocabForDate[key] = selected;
+  saveVocabCache();
+  return selected;
+}
+
+// ============================================================
+// 词汇渲染
+// ============================================================
+let filteredVocab = [];
+let vocabPage = 1;
+
+function getCurrentVocab() {
+  return generateVocabForDate(currentDate);
+}
+
+function filterVocab() {
+  const q = document.getElementById('vocabSearch').value.toLowerCase().trim();
+  const all = getCurrentVocab();
+  filteredVocab = q ? all.filter(v =>
+    v.w.toLowerCase().includes(q) || v.m.includes(q)
+  ) : [...all];
+  vocabPage = 1;
+  renderVocab();
+}
+
+function renderVocab() {
+  const all = getCurrentVocab();
+  filteredVocab = filteredVocab.length > 0 ? filteredVocab : [...all];
+  const grid = document.getElementById('vocabGrid');
+  const pagination = document.getElementById('vocabPagination');
+  const count = document.getElementById('vocabCount');
+  const badge = document.getElementById('vocabBadge');
+
+  const totalPages = Math.ceil(filteredVocab.length / VOCAB_PER_PAGE);
+  if (vocabPage > totalPages) vocabPage = totalPages;
+  if (vocabPage < 1) vocabPage = 1;
+
+  const start = (vocabPage - 1) * VOCAB_PER_PAGE;
+  const page = filteredVocab.slice(start, start + VOCAB_PER_PAGE);
+
+  count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
+  badge.textContent = `${all.length}词`;
+
+  grid.innerHTML = page.map((v, i) => `
+    <div class="word-card">
+      <span class="word-num">#${start + i + 1}</span>
+      <div class="word-en">${v.w}</div>
+      <div class="word-pron">${v.p}</div>
+      <div class="word-meaning">${v.m}</div>
+      ${v.c ? `<div class="word-collocation">${v.c}</div>` : ''}
+    </div>
+  `).join('');
+
+  if (totalPages <= 1) { pagination.innerHTML = ''; return; }
+  pagination.innerHTML = `
+    <button class="page-btn" onclick="vocabPage=${vocabPage-1};renderVocab()" ${vocabPage===1?'disabled style="opacity:0.4"':''}>◀</button>
+    <span class="page-info">${vocabPage} / ${totalPages}</span>
+    <button class="page-btn" onclick="vocabPage=${vocabPage+1};renderVocab()" ${vocabPage===totalPages?'disabled style="opacity:0.4"':''}>▶</button>
+  `;
+}
+
+// ============================================================
+// 日期切换
+// ============================================================
+function changeDay(delta) {
+  const next = new Date(currentDate);
+  next.setDate(next.getDate() + delta);
+  if (next > TODAY) return; // 不能超过今天
+  currentDate = next;
+  filteredVocab = [];
+  vocabPage = 1;
+  updateUI();
+}
+
+function updateUI() {
+  document.getElementById('dateLabel').textContent = formatDate(currentDate);
+  document.getElementById('sweetNoteDate').textContent = formatDate(TODAY);
+  document.getElementById('examDateLabel').textContent = formatDate(currentDate);
+  renderVocab();
+  // 更新统计
+  document.getElementById('statVocab').textContent = getCurrentVocab().length;
+  // 更新历史成绩
+  renderHistoryScores();
+}
+
+// ============================================================
+// 考试逻辑
+// ============================================================
+let examStarted = false;
+let examSubmitted = false;
+let examTimer = null;
+let examRemaining = 30 * 60; // 30 min in seconds
+
+function startExam() {
+  if (examStarted) return;
+  examStarted = true;
+  examSubmitted = false;
+  examRemaining = 30 * 60;
+
+  document.getElementById('examPre').style.display = 'none';
+  document.getElementById('examBody').style.display = 'block';
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').textContent = '📤 交卷';
+
+  renderExamQuestions();
+  startTimer();
+}
+
+function startTimer() {
+  const timerEl = document.getElementById('timer');
+  const progEl = document.getElementById('timerProg');
+  const total = 30 * 60;
+
+  if (examTimer) clearInterval(examTimer);
+  examTimer = setInterval(() => {
+    if (examSubmitted) { clearInterval(examTimer); return; }
+    examRemaining--;
+    const m = Math.floor(examRemaining / 60);
+    const s = examRemaining % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    progEl.style.width = (examRemaining / total * 100) + '%';
+
+    timerEl.className = '';
+    if (examRemaining <= 300) timerEl.className = 'warn';
+    if (examRemaining <= 60) timerEl.className = 'danger';
+    if (examRemaining <= 0) {
+      clearInterval(examTimer);
+      timerEl.textContent = '00:00';
+      submitExam();
+    }
+  }, 1000);
+}
+
+function renderExamQuestions() {
+  let html = '';
+
+  // Part 1: 词组翻译
+  html += `<div class="card"><div class="section-title"><span class="icon">📝</span>第一部分：词组翻译 <span class="badge">10题 × 2分 = 20分</span></div>`;
+  html += exerciseData.phrases.map((p, i) => `
+    <div class="q-item">
+      <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
+      <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
+      <div class="q-score" id="sc-p1q${i+1}"></div>
+    </div>
+  `).join('');
+  html += `</div>`;
+
+  // Part 2: 句子翻译
+  html += `<div class="card"><div class="section-title"><span class="icon">✍️</span>第二部分：句子翻译 <span class="badge">5题 × 8分 = 40分</span></div>`;
+  html += exerciseData.sentences.map((s, i) => `
+    <div class="q-item">
+      <div class="q-label"><span class="q-num">${i+1}</span> 第${i+1}题 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（8分）</span></div>
+      <div class="q-source">${s.zh}</div>
+      <textarea id="p2q${i+1}" placeholder="写下你的英文翻译..." rows="3"></textarea>
+      <div class="q-score" id="sc-p2q${i+1}"></div>
+      <div class="answer-reveal" id="rev-p2q${i+1}">
+        <div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt">${s.ans}</div></div>
+        <div class="ana-block"><div class="ana-lbl">📖 解析</div>
+          <table class="ana-table">${s.analysis.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td></tr>`).join('')}</table>
+          <div class="ana-err">${s.err}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  html += `</div>`;
+
+  // Part 3: 段落翻译
+  const p = exerciseData.paragraph;
+  html += `<div class="card"><div class="section-title"><span class="icon">📄</span>第三部分：段落翻译 <span class="badge">40分</span></div>`;
+  html += `
+    <div class="q-item">
+      <div class="q-label"><span class="q-num">P</span> 段落翻译 <span style="font-weight:400;color:var(--text-light);font-size:12px;">（40分）</span></div>
+      <div class="q-source para">${p.zh}</div>
+      <div class="para-hint">💡 关键词提示：${p.hints}</div>
+      <textarea id="p3q1" placeholder="写下你的英文翻译..." rows="9"></textarea>
+      <div class="q-score" id="sc-p3q1"></div>
+      <div class="answer-reveal" id="rev-p3q1">
+        <div class="ans-block"><div class="ans-lbl">✅ 参考译文</div><div class="ans-txt italic">${p.ans}</div></div>
+        <div class="ana-block"><div class="ana-lbl">📖 关键句解析</div>
+          <table class="ana-table">${p.analysis.map(a=>`<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2]}</td></tr>`).join('')}</table>
+        </div>
+      </div>
+    </div>`;
+  html += `</div>`;
+
+  document.getElementById('examQuestions').innerHTML = html;
+}
+
+// ============================================================
+// 评分逻辑
+// ============================================================
+function contains(text, word) {
+  return text.toLowerCase().includes(word.toLowerCase());
+}
+
+function scorePhrase(id, keys) {
+  const el = document.getElementById(id);
+  if (!el) return 0;
+  const val = el.value.trim();
+  if (!val) return 0;
+  if (keys.every(k => contains(val, k))) return 2;
+  const hits = keys.filter(k => contains(val, k));
+  return hits.length / keys.length >= 0.5 ? 1 : 0;
+}
+
+function scoreSentence(id, keys) {
+  const el = document.getElementById(id);
+  if (!el) return { score: 0, hits: [], misses: keys };
+  const val = el.value.trim();
+  if (!val) return { score: 0, hits: [], misses: keys };
+  const hits = keys.filter(k => contains(val, k));
+  const misses = keys.filter(k => !contains(val, k));
+  const ratio = hits.length / keys.length;
+  const score = ratio >= 0.8 ? 8 : ratio >= 0.5 ? 4 : 0;
+  return { score, hits, misses };
+}
+
+function showQScore(scId, taId, got, max, hits, misses) {
+  const scEl = document.getElementById(scId);
+  const taEl = document.getElementById(taId);
+  if (!scEl || !taEl) return;
+  scEl.style.display = 'block';
+  const ratio = got / max;
+  let cls = ratio === 1 ? 's-full' : ratio > 0 ? 's-partial' : 's-zero';
+  scEl.className = 'q-score ' + cls;
+  let html = `得 <b>${got}</b> / ${max} 分`;
+  if (hits && hits.length) {
+    html += ' &nbsp; <span style="font-size:11px;font-weight:400;">命中：';
+    html += hits.map(k => `<span class="kw hit">${k}</span>`).join('');
+    html += '</span>';
+  }
+  if (misses && misses.length) {
+    html += ' &nbsp; <span style="font-size:11px;font-weight:400;">缺失：';
+    html += misses.map(k => `<span class="kw miss">${k}</span>`).join('');
+    html += '</span>';
+  }
+  scEl.innerHTML = html;
+  if (taEl) taEl.className = ratio === 1 ? 'correct' : ratio > 0 ? 'partial' : 'wrong';
+}
+
+// ============================================================
+// 交卷
+// ============================================================
+function submitExam() {
+  if (examSubmitted) return;
+  examSubmitted = true;
+  if (examTimer) clearInterval(examTimer);
+
+  document.querySelectorAll('#examQuestions textarea').forEach(t => t.disabled = true);
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = '✅ 已交卷';
+
+  // Part 1
+  let p1total = 0;
+  exerciseData.phrases.forEach((ph, i) => {
+    const got = scorePhrase(`p1q${i+1}`, ph.key);
+    p1total += got;
+    const sc = document.getElementById(`sc-p1q${i+1}`);
+    if (sc) {
+      sc.style.display = 'block';
+      sc.className = 'q-score ' + (got === 2 ? 's-full' : got === 1 ? 's-partial' : 's-zero');
+      sc.innerHTML = `得 <b>${got}</b> / 2 分`;
+    }
+    const ta = document.getElementById(`p1q${i+1}`);
+    if (ta) ta.className = got === 2 ? 'correct' : got === 1 ? 'partial' : 'wrong';
+  });
+
+  // Part 2
+  let p2total = 0;
+  exerciseData.sentences.forEach((s, i) => {
+    const r = scoreSentence(`p2q${i+1}`, s.keys);
+    p2total += r.score;
+    showQScore(`sc-p2q${i+1}`, `p2q${i+1}`, r.score, 8, r.hits, r.misses);
+    const rev = document.getElementById(`rev-p2q${i+1}`);
+    if (rev) rev.style.display = 'block';
+  });
+
+  // Part 3
+  const p = exerciseData.paragraph;
+  const el = document.getElementById('p3q1');
+  const val = el ? el.value.trim() : '';
+  let r3 = { score: 0, hits: [], misses: p.keys };
+  if (val) {
+    const hits = p.keys.filter(k => contains(val, k));
+    const misses = p.keys.filter(k => !contains(val, k));
+    const score = Math.round((hits.length / p.keys.length) * 40);
+    r3 = { score, hits, misses };
+  }
+  showQScore('sc-p3q1', 'p3q1', r3.score, 40, r3.hits, r3.misses);
+  const rev3 = document.getElementById('rev-p3q1');
+  if (rev3) rev3.style.display = 'block';
+  if (el) el.className = r3.score / 40 === 1 ? 'correct' : r3.score > 0 ? 'partial' : 'wrong';
+
+  // Total
+  const total = p1total + p2total + r3.score;
+
+  // Result Card
+  let level, cls;
+  if (total >= 85) { level = '🏆 优秀 · 四级高分水平'; cls = 'excellent'; }
+  else if (total >= 70) { level = '✅ 良好 · 具备四级翻译能力'; cls = 'good'; }
+  else if (total >= 55) { level = '📖 一般 · 继续加油'; cls = 'fair'; }
+  else { level = '📝 待提高 · 重点复习词表'; cls = 'poor'; }
+
+  const rc = document.getElementById('resultCard');
+  rc.style.display = 'block';
+  rc.className = 'result-card ' + cls;
+  document.getElementById('rcTitle').textContent = examRemaining <= 0 ? '⏰ 时间到！' : '答题完成 🎉';
+  document.getElementById('rcScore').innerHTML = total + '<span>/100</span>';
+  document.getElementById('rcGrade').textContent = level;
+  document.getElementById('sdP1').textContent = p1total;
+  document.getElementById('sdP2').textContent = p2total;
+  document.getElementById('sdP3').textContent = r3.score;
+
+  // Save score to localStorage
+  saveExamScore(total, p1total, p2total, r3.score, level);
+
+  rc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ============================================================
+// 成绩持久化
+// ============================================================
+function saveExamScore(total, p1, p2, p3, grade) {
+  try {
+    const key = dateKey(currentDate);
+    const scores = JSON.parse(localStorage.getItem('cet4_exam_scores') || '{}');
+    scores[key] = { total, p1, p2, p3, grade, time: new Date().toISOString() };
+    localStorage.setItem('cet4_exam_scores', JSON.stringify(scores));
+  } catch(e) {}
+}
+
+function getExamScores() {
+  try {
+    return JSON.parse(localStorage.getItem('cet4_exam_scores') || '{}');
+  } catch(e) { return {}; }
+}
+
+function renderHistoryScores() {
+  const container = document.getElementById('historyScores');
+  const scores = getExamScores();
+  const keys = Object.keys(scores).sort().reverse();
+
+  if (keys.length === 0) {
+    container.innerHTML = '<p>暂无历史记录，快去模拟考吧！</p>';
+    return;
+  }
+
+  let html = '<table class="score-table"><tr><th>日期</th><th>总分</th><th>等级</th><th>词组</th><th>句子</th><th>段落</th></tr>';
+  keys.forEach(k => {
+    const s = scores[k];
+    html += `<tr><td>${k}</td><td><strong>${s.total}</strong>/100</td><td>${s.grade}</td><td>${s.p1}/20</td><td>${s.p2}/40</td><td>${s.p3}/40</td></tr>`;
+  });
+  html += '</table>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// Tab 切换
+// ============================================================
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  const map = { vocab:0, exam:1, stats:2 };
+  document.querySelectorAll('.tab-btn')[map[name]].classList.add('active');
+}
+
+// ============================================================
+// 初始化
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  // 确保今天的词汇已生成
+  generateVocabForDate(TODAY);
+  updateUI();
+});
+</script>
+</body>
+</html>
