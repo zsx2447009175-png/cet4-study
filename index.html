@@ -1150,6 +1150,9 @@ function renderExamQuestions() {
       <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
       <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
       <div class="q-score" id="sc-p1q${i+1}"></div>
+      <div class="answer-reveal" id="rev-p1q${i+1}">
+        <div class="ans-block"><div class="ans-lbl">✅ 参考答案</div><div class="ans-txt">${p.ans}</div></div>
+      </div>
     </div>
   `).join('');
   html += `</div>`;
@@ -1278,16 +1281,18 @@ function submitExam() {
   // Part 1
   let p1total = 0;
   exerciseData.phrases.forEach((ph, i) => {
-    const got = scorePhrase(`p1q${i+1}`, ph.key);
+    var got = scorePhrase('p1q'+(i+1), ph.key);
     p1total += got;
-    const sc = document.getElementById(`sc-p1q${i+1}`);
+    var sc = document.getElementById('sc-p1q'+(i+1));
     if (sc) {
       sc.style.display = 'block';
       sc.className = 'q-score ' + (got === 2 ? 's-full' : got === 1 ? 's-partial' : 's-zero');
-      sc.innerHTML = `得 <b>${got}</b> / 2 分`;
+      sc.innerHTML = '得 <b>'+got+'</b> / 2 分';
     }
-    const ta = document.getElementById(`p1q${i+1}`);
+    var ta = document.getElementById('p1q'+(i+1));
     if (ta) ta.className = got === 2 ? 'correct' : got === 1 ? 'partial' : 'wrong';
+    var rev = document.getElementById('rev-p1q'+(i+1));
+    if (rev) rev.style.display = 'block';
   });
 
   // Part 2
