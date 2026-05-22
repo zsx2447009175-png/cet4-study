@@ -394,12 +394,15 @@ textarea:disabled { opacity: 0.85; }
     </div>
   </div>
 
+  <!-- ============ 每日一练（V3.3） ============ -->
+  <div id="dailyQuizContainer"></div>
+
   <!-- ============ Tab 3: 统计 ============ -->
   <div class="tab-panel" id="panel-stats">
     <div class="stats-card">
       <h3>📊 今日学习概览</h3>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="statVocab">100</div><div class="stat-lbl">核心词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVocab">-</div><div class="stat-lbl">核心词汇</div></div>
         <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
         <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
         <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
@@ -417,10 +420,7 @@ textarea:disabled { opacity: 0.85; }
       <div class="section-title"><span class="icon">💡</span>学习建议</div>
       <p style="color:var(--text-light);line-height:1.9;font-size:14px;">
       📌 建议学习时长：<strong>45–60分钟</strong><br>
-      📌 今日题型：<strong>翻译（汉译英）⭐⭐⭐⭐☆</strong><br>
-      📌 重点突破：<strong>句式变换 + 核心词汇活用</strong><br>
-      📌 学习顺序：先浏览词汇表 → 模拟考试 → 核对解析 → 重点记忆错题词汇<br>
-      📌 小技巧：把错题中的生词标记下来，睡前再复习一遍效果最好！
+      <span id="todayTypeTip">📌 今日题型：加载中...<br>📌 学习顺序：先浏览词汇表 → 每日一练 → 模拟考试 → 核对解析 → 重点记忆错题词汇</span>
       </p>
     </div>
 
@@ -987,12 +987,13 @@ function formatDate(d) {
   return d.getFullYear()+'年'+String(d.getMonth()+1).padStart(2,'0')+'月'+String(d.getDate()).padStart(2,'0')+'日';
 }
 
-// 按天数分片获取每日词汇 (每天80个, 不重复)
+// 按天数分片获取每日词汇 (第1天80个, 第2天起100个)
 function getDailyVocab(d) {
   const idx = dayIndex(d);
+  const count = idx === 0 ? 80 : 100; // 5/21 保留80词，5/22起100词
   const start = (idx * 80) % WORD_POOL.length;
   const result = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < count; i++) {
     result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
   }
   return result;
@@ -1082,8 +1083,10 @@ function updateUI() {
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  document.getElementById('statVocab').textContent = 100;
+  document.getElementById('statVocab').textContent = getCurrentVocab().length;
   renderHistoryScores();
+  renderDailyQuiz();
+  updateDailyStats();
 }
 
 // ============================================================
@@ -1378,6 +1381,535 @@ document.addEventListener('DOMContentLoaded', () => {
   getDailyVocab(TODAY);
   updateUI();
 });
+
+// ============================================================
+// 每日练习题库 (V3.3)
+// ============================================================
+
+// 题型A: 四级标准题型（选词填空/段落匹配/阅读理解/翻译/作文），每道题有完整题目+答案+解析
+const DAILY_PRACTICE_POOL = [
+  // ---- 选词填空 (Banked Cloze) ----
+  {
+    type: "选词填空", typeEn: "Banked Cloze",
+    title: "选词填空练习",
+    instruction: "从下方词库中选择合适的单词填入空格（每词只用一次，注意形态变化）",
+    words: ["accumulate","adequate","consequence","demonstrate","eliminate",
+            "enhance","establish","evaluate","exceed","flexible"],
+    text: `In modern society, it is crucial to __(1)__ clear goals and work steadily toward them. People who __(2)__ a wealth of experience tend to perform better under pressure. However, we must __(3)__ the potential risks before making major decisions. A __(4)__ approach to problem-solving often yields better results. __(5)__ unnecessary steps in your workflow can __(6)__ overall efficiency. Remember: effort that __(7)__ average will always __(8)__ positive outcomes. Make sure you have __(9)__ resources before starting. The __(10)__ of poor planning can last for years.`,
+    answers: {1:"establish",2:"accumulate",3:"evaluate",4:"flexible",5:"Eliminating",6:"enhance",7:"exceeds",8:"demonstrate",9:"adequate",10:"consequence"},
+    analysis: "重点词：establish目标、accumulate经验、evaluate评估、flexible灵活、eliminate消除、enhance提升、exceed超过、demonstrate展示、adequate足够、consequence后果"
+  },
+  {
+    type: "选词填空", typeEn: "Banked Cloze",
+    title: "选词填空练习（第2组）",
+    instruction: "从下方词库中选择合适的单词填入空格",
+    words: ["acquire","beneficial","capable","competitive","confident",
+            "contribute","crucial","decline","determine","digital"],
+    text: `The __(1)__ age has transformed how we learn and communicate. It is __(2)__ that students __(3)__ strong reading and writing skills early on. Reading is __(4)__ to cognitive development at every age. People who are __(5)__ in their abilities tend to take on greater challenges. In a __(6)__ job market, one must constantly grow. Those who __(7)__ to a team's success are valued most. A person's mindset can __(8)__ their ultimate outcome. Although test scores __(9)__ in some regions, motivation remains key. Everyone is __(10)__ of achieving more than they think.`,
+    answers: {1:"digital",2:"crucial",3:"acquire",4:"beneficial",5:"confident",6:"competitive",7:"contribute",8:"determine",9:"decline",10:"capable"},
+    analysis: "核心句型：it is crucial that...（虚拟语气）、contribute to success、determine outcome"
+  },
+  // ---- 段落匹配 (Section Matching) ----
+  {
+    type: "段落匹配", typeEn: "Section Matching",
+    title: "段落匹配练习",
+    instruction: "阅读下方5个段落，将题目陈述（A-E）与正确段落编号（①-⑤）匹配",
+    paragraphs: [
+      "① Many researchers argue that sleep is as important as diet and exercise for maintaining good health. Studies show that chronic sleep deprivation is linked to increased risk of obesity, heart disease, and depression.",
+      "② The rise of remote work has fundamentally changed how offices are designed. Companies now invest in collaboration tools rather than physical desk space, prioritizing flexibility over fixed locations.",
+      "③ Urban green spaces have proven benefits for mental health. Residents with access to parks and nature areas report lower stress levels and greater overall life satisfaction than those in densely built environments.",
+      "④ Artificial intelligence is reshaping the job market at an unprecedented rate. While some positions become automated, new roles requiring human creativity and judgment are simultaneously emerging.",
+      "⑤ Sustainable packaging has moved from a niche concern to a mainstream business requirement. Consumers increasingly expect brands to reduce plastic use and adopt eco-friendly materials."
+    ],
+    questions: [
+      {q:"A. Access to nature can significantly improve people's emotional well-being.", ans:"③"},
+      {q:"B. Insufficient rest negatively affects various aspects of physical and mental health.", ans:"①"},
+      {q:"C. Environmental awareness is now influencing major corporate decisions.", ans:"⑤"},
+      {q:"D. Technological advancement is simultaneously creating and eliminating employment.", ans:"④"},
+      {q:"E. Flexible working arrangements are changing the physical structure of workplaces.", ans:"②"}
+    ]
+  },
+  // ---- 阅读理解 (Reading Comprehension) ----
+  {
+    type: "阅读理解", typeEn: "Reading Comprehension",
+    title: "阅读理解练习",
+    instruction: "阅读短文，选择最佳答案",
+    passage: `Procrastination—the habit of delaying tasks—affects millions of people worldwide. While often dismissed as mere laziness, research suggests it is more closely related to emotional regulation than time management. People avoid tasks not because they are lazy, but because those tasks trigger feelings of anxiety, boredom, or self-doubt.
+
+Studies from Carleton University found that procrastinators experience higher levels of stress and lower well-being, not because they do less work, but because of the guilt and worry that accompany avoidance. Interestingly, the act of procrastination provides short-term relief—by avoiding the task, one avoids the negative emotion—but this comes at the cost of long-term consequences.
+
+Experts recommend addressing the emotional roots of procrastination rather than simply setting stricter schedules. Techniques such as "implementation intentions" (stating specifically when and where you will do a task) and self-compassion (treating yourself kindly after setbacks) have shown measurable improvements in follow-through.`,
+    questions: [
+      {
+        q: "1. According to the passage, procrastination is primarily caused by:",
+        options: ["A. Poor time management skills","B. Physical laziness","C. Difficulty managing negative emotions","D. Lack of clear goals"],
+        ans: "C",
+        explain: "第一段明确：'it is more closely related to emotional regulation than time management'"
+      },
+      {
+        q: "2. The phrase 'short-term relief' in paragraph 2 refers to:",
+        options: ["A. Completing tasks ahead of schedule","B. The temporary comfort gained from avoiding a task","C. A decrease in overall workload","D. Improved concentration after rest"],
+        ans: "B",
+        explain: "第二段：'by avoiding the task, one avoids the negative emotion' — 回避带来短暂轻松感"
+      },
+      {
+        q: "3. Which of the following is suggested as an effective solution?",
+        options: ["A. Working longer hours","B. Setting stricter deadlines","C. Being kind to yourself after failures","D. Avoiding challenging tasks"],
+        ans: "C",
+        explain: "第三段：'self-compassion (treating yourself kindly after setbacks) have shown measurable improvements'"
+      }
+    ]
+  },
+  {
+    type: "阅读理解", typeEn: "Reading Comprehension",
+    title: "阅读理解练习（第2篇）",
+    instruction: "阅读短文，选择最佳答案",
+    passage: `The concept of a "growth mindset," popularized by psychologist Carol Dweck, holds that intelligence and talent are not fixed traits but can be developed through effort and learning. In contrast, a "fixed mindset" leads people to believe their abilities are static, causing them to avoid challenges and give up easily when they encounter obstacles.
+
+Research across schools and workplaces consistently shows that individuals with a growth mindset outperform their peers over time—not because they are naturally more talented, but because they persist through difficulties and learn from mistakes. They view failure not as evidence of incompetence, but as a necessary step in the learning process.
+
+Organizations that cultivate a growth mindset culture report higher levels of innovation and employee engagement. Leaders play a crucial role in this by providing specific, constructive feedback rather than praise focused on outcomes, and by openly discussing their own learning journeys and mistakes.`,
+    questions: [
+      {
+        q: "1. What distinguishes a growth mindset from a fixed mindset?",
+        options: ["A. People with a growth mindset are naturally smarter","B. People with a growth mindset believe abilities can improve with effort","C. Fixed mindset holders work harder","D. Growth mindset is only relevant to schools"],
+        ans: "B",
+        explain: "第一段：'intelligence and talent...can be developed through effort and learning'"
+      },
+      {
+        q: "2. According to the passage, growth mindset individuals perform better because they:",
+        options: ["A. Have higher IQs","B. Receive better teaching","C. Persist through challenges and learn from errors","D. Avoid high-pressure situations"],
+        ans: "C",
+        explain: "第二段：'they persist through difficulties and learn from mistakes'"
+      },
+      {
+        q: "3. How can leaders promote a growth mindset in organizations?",
+        options: ["A. By rewarding only successful outcomes","B. By giving specific, constructive feedback and sharing their own learning experiences","C. By hiring only growth mindset individuals","D. By reducing workload pressure"],
+        ans: "B",
+        explain: "第三段：'providing specific, constructive feedback...and by openly discussing their own learning journeys'"
+      }
+    ]
+  },
+  // ---- 翻译 (Translation) ----
+  {
+    type: "翻译", typeEn: "Translation (C→E)",
+    title: "汉译英练习",
+    instruction: "将下面的中文段落翻译成英文（参考用时15分钟）",
+    source: "志愿服务是一种无偿帮助他人的行为，它不仅能给受助者带来实际的帮助，也能让志愿者在服务过程中获得满足感和成就感。近年来，越来越多的年轻人选择投身志愿服务，他们认为这是承担社会责任、提升个人能力的重要途径。政府和社会各界也积极倡导志愿精神，将其视为构建和谐社会的重要力量。",
+    reference: "Volunteer service refers to the act of helping others without pay. It not only provides practical assistance to recipients, but also allows volunteers to gain a sense of fulfillment and achievement in the process. In recent years, a growing number of young people have chosen to engage in volunteer work, believing it to be an important means of taking on social responsibilities and improving personal competencies. Governments and various sectors of society are also actively advocating the spirit of volunteerism, viewing it as an important force in building a harmonious society.",
+    keyPoints: [
+      "志愿服务 → volunteer service",
+      "无偿 → without pay / unpaid",
+      "满足感和成就感 → fulfillment and achievement",
+      "承担社会责任 → taking on social responsibilities",
+      "倡导志愿精神 → advocating the spirit of volunteerism",
+      "和谐社会 → harmonious society"
+    ]
+  },
+  {
+    type: "翻译", typeEn: "Translation (C→E)",
+    title: "汉译英练习（第2题）",
+    instruction: "将下面的中文段落翻译成英文",
+    source: "中国的传统节日源远流长，是中华文化的重要组成部分。春节是中国最重要的传统节日，象征着新的开始和家庭团聚。在春节期间，人们通常会贴春联、放烟花、互相拜年，并且走亲访友。这些习俗不仅传承了中华民族几千年的文化，也增强了人与人之间的感情联系。",
+    reference: "China's traditional festivals have a long history and are an important part of Chinese culture. The Spring Festival is the most important traditional festival in China, symbolizing new beginnings and family reunion. During the Spring Festival, people typically put up Spring Festival couplets, set off fireworks, exchange New Year greetings, and visit relatives and friends. These customs not only carry on thousands of years of Chinese cultural heritage, but also strengthen emotional bonds between people.",
+    keyPoints: [
+      "源远流长 → have a long history",
+      "象征着 → symbolizing",
+      "家庭团聚 → family reunion",
+      "贴春联 → put up Spring Festival couplets",
+      "互相拜年 → exchange New Year greetings",
+      "传承文化 → carry on cultural heritage"
+    ]
+  },
+  // ---- 作文 (Writing) ----
+  {
+    type: "作文", typeEn: "Writing",
+    title: "作文练习",
+    instruction: "根据以下提示写一篇120-180词的英文短文",
+    prompt: "题目：The Importance of Reading\n\n提示：\n1. 阅读的好处（知识积累、思维拓展、语言提升）\n2. 当今阅读习惯面临的挑战（手机、短视频、快节奏生活）\n3. 你的建议",
+    outline: [
+      "Para 1 (引入): Reading has long been regarded as one of the most valuable habits a person can develop...",
+      "Para 2 (好处): First, reading builds knowledge... Second, it broadens our perspective... Third, it improves language proficiency...",
+      "Para 3 (挑战): However, in today's fast-paced digital age, reading habits face unprecedented challenges...",
+      "Para 4 (建议): To cultivate better reading habits, I suggest setting aside at least 30 minutes daily..."
+    ],
+    reference: `Reading has long been regarded as one of the most valuable habits a person can develop. In an age flooded with information, the ability to read deeply and critically is more important than ever.
+
+The benefits of reading are numerous. It builds knowledge, broadens perspective, and sharpens language skills. Unlike passive media consumption, reading engages the mind actively, encouraging reflection and deeper understanding.
+
+However, reading habits today face serious challenges. The widespread use of smartphones and the popularity of short videos have fragmented people's attention spans, making sustained reading increasingly difficult. Many people now prefer quick scrolling over sitting with a book.
+
+To cultivate better reading habits, I suggest starting small: set aside just 15–30 minutes each day for focused reading. Choose topics you genuinely enjoy, and gradually increase the difficulty. With consistent effort, reading will become a rewarding daily habit.`,
+    tips: "四级作文评分关注：段落结构清晰、首尾呼应、论据充分、词汇多样（避免重复用 good/bad/many）"
+  },
+  {
+    type: "作文", typeEn: "Writing",
+    title: "作文练习（第2题）",
+    instruction: "根据以下提示写一篇120-180词的英文短文",
+    prompt: "题目：Online Learning: Advantages and Disadvantages\n\n要求：\n1. 分析在线学习的优缺点\n2. 结合自身经历举例\n3. 表明你的观点",
+    outline: [
+      "Para 1: Online learning has transformed education in the 21st century...",
+      "Para 2 (优点): flexibility of schedule, access to diverse resources, self-paced learning...",
+      "Para 3 (缺点): lack of face-to-face interaction, self-discipline required, technical barriers...",
+      "Para 4 (观点): On balance, I believe online learning is a powerful supplement to traditional education..."
+    ],
+    reference: `Online learning has transformed education in the 21st century, offering millions of learners worldwide new ways to acquire knowledge.
+
+The advantages are clear. Online learning provides unmatched flexibility: students can study at their own pace and schedule, access world-class courses regardless of location, and revisit materials as many times as needed. Platforms like Coursera and edX have democratized education in ways traditional classrooms cannot.
+
+However, challenges exist. Without the structure of a physical classroom, maintaining motivation and self-discipline is difficult. Technical issues and unstable internet connections can disrupt learning. Moreover, the absence of face-to-face interaction may hinder collaborative skills and social development.
+
+On balance, I believe online learning is a powerful complement to traditional education. When used alongside regular classroom instruction, it can significantly broaden a student's learning opportunities. The key lies in developing strong self-management habits.`,
+    tips: "常见失分：介绍阶段太长、正文论据过于笼统、结尾仅重复开头——结尾要有新的思考或呼吁"
+  }
+];
+
+// 题型B: 四级历年真题片段（精选，除听力）
+const CET4_PAST_PAPERS = [
+  {
+    year: "2023年6月", type: "阅读理解",
+    title: "2023年6月 · 阅读理解（节选）",
+    passage: `For decades, coffee has been blamed for all kinds of health problems. However, a growing body of research suggests that moderate coffee consumption may actually offer several health benefits. Studies indicate that regular coffee drinkers have a lower risk of developing type 2 diabetes, Parkinson's disease, and certain types of liver disease.
+
+The key ingredient appears to be chlorogenic acid, an antioxidant found in coffee beans. This compound may help improve insulin sensitivity and reduce inflammation. Caffeine itself—despite its reputation for causing jitteriness and sleep disruption—has been shown to enhance cognitive performance, mood, and athletic endurance when consumed in appropriate amounts.
+
+That said, health experts caution that the benefits apply to moderate consumption: roughly 3–4 cups per day for most adults. Excessive intake can lead to anxiety, heart palpitations, and disrupted sleep. Pregnant women and individuals with certain health conditions are generally advised to limit or avoid coffee entirely.`,
+    questions: [
+      {
+        q: "1. What does recent research suggest about coffee?",
+        options: ["A. It causes more harm than previously thought","B. Moderate intake may have health benefits","C. It should be consumed only in the morning","D. It has no effect on chronic diseases"],
+        ans: "B",
+        explain: "'a growing body of research suggests that moderate coffee consumption may actually offer several health benefits'"
+      },
+      {
+        q: "2. What is the role of chlorogenic acid?",
+        options: ["A. It enhances athletic performance","B. It disrupts sleep patterns","C. It may improve insulin sensitivity and reduce inflammation","D. It increases caffeine absorption"],
+        ans: "C",
+        explain: "'This compound may help improve insulin sensitivity and reduce inflammation'"
+      },
+      {
+        q: "3. Who is advised to limit coffee consumption?",
+        options: ["A. Regular office workers","B. Athletes in training","C. Pregnant women and those with certain conditions","D. People over age 60"],
+        ans: "C",
+        explain: "'Pregnant women and individuals with certain health conditions are generally advised to limit or avoid coffee entirely'"
+      }
+    ]
+  },
+  {
+    year: "2022年12月", type: "段落匹配",
+    title: "2022年12月 · 段落匹配（节选）",
+    paragraphs: [
+      "① Scientists have discovered that forests play a far more significant role in the global water cycle than previously understood. Trees draw water from deep underground through their root systems and release it into the atmosphere through a process called transpiration.",
+      "② The link between forests and rainfall is particularly strong in tropical regions. Research in the Amazon basin shows that moisture released by trees forms clouds that travel thousands of kilometers inland, delivering rain to areas far from any ocean source.",
+      "③ Deforestation disrupts this cycle in predictable ways. When large areas of forest are cleared, the reduction in transpiration leads to decreased rainfall, increased temperatures, and a higher frequency of droughts in surrounding regions.",
+      "④ Restoration projects are beginning to reverse some of these effects. In parts of China and Africa, large-scale tree-planting initiatives have led to measurable improvements in local precipitation patterns within just a few years.",
+      "⑤ Climate scientists argue that protecting existing forests must be treated as a climate priority equivalent to reducing carbon emissions. Forest loss not only releases stored carbon but permanently removes the ecosystem services forests provide."
+    ],
+    questions: [
+      {q:"A. Cutting down forests leads to drier and hotter conditions nearby.", ans:"③"},
+      {q:"B. Forests have a greater impact on water distribution than scientists once believed.", ans:"①"},
+      {q:"C. Reforestation efforts have produced positive changes in rainfall in some areas.", ans:"④"},
+      {q:"D. Tropical forests contribute to rainfall far inland through atmospheric moisture transport.", ans:"②"},
+      {q:"E. Preserving forests should be a climate priority comparable to cutting emissions.", ans:"⑤"}
+    ]
+  },
+  {
+    year: "2023年12月", type: "翻译",
+    title: "2023年12月 · 翻译真题",
+    instruction: "将下面的中文段落翻译成英文",
+    source: "中国高铁是当今世界上最先进的铁路系统之一。经过几十年的建设，中国已经建立了世界上最大的高铁网络，连接了全国数百个城市。高铁不仅大大缩短了城市之间的旅行时间，还促进了沿线地区的经济发展。由于其快速、安全、舒适的特点，高铁已成为许多中国人出行的首选交通方式，特别是在节假日出行高峰期。",
+    reference: "China's high-speed railway is one of the most advanced rail systems in the world today. After decades of construction, China has established the world's largest high-speed rail network, connecting hundreds of cities across the country. High-speed rail has not only greatly reduced travel time between cities, but has also promoted economic development along its routes. Due to its characteristics of speed, safety, and comfort, high-speed rail has become the preferred mode of transportation for many Chinese people, especially during peak travel periods such as holidays.",
+    keyPoints: [
+      "最先进的 → most advanced",
+      "高铁网络 → high-speed rail network",
+      "促进经济发展 → promote economic development",
+      "首选交通方式 → preferred mode of transportation",
+      "节假日出行高峰期 → peak travel periods such as holidays"
+    ]
+  },
+  {
+    year: "2022年6月", type: "阅读理解",
+    title: "2022年6月 · 阅读理解（节选）",
+    passage: `The concept of "digital minimalism," advanced by author Cal Newport, proposes that individuals should be more intentional about which digital tools they use and how they use them. Rather than adopting every new technology by default, digital minimalists carefully select tools that serve their values and goals—and consciously eliminate the rest.
+
+Newport argues that the compulsive use of smartphones and social media has eroded people's capacity for solitude and deep work. Constant connectivity, he says, fragments attention and prevents the kind of sustained focus necessary for meaningful achievement. The solution, he contends, is not to abandon technology entirely, but to redefine one's relationship with it.
+
+A key practice in digital minimalism is a "digital declutter": a 30-day break from optional digital technologies, followed by a careful reintroduction of only those tools that provide genuine value. Proponents report that this reset allows them to rediscover offline activities—reading, exercise, face-to-face conversation—that provide deeper satisfaction than passive screen time.`,
+    questions: [
+      {
+        q: "1. What does 'digital minimalism' advocate?",
+        options: ["A. Abandoning all digital tools","B. Using only the newest technology","C. Deliberately choosing only tools that align with personal values","D. Reducing time online to one hour per day"],
+        ans: "C",
+        explain: "'carefully select tools that serve their values and goals—and consciously eliminate the rest'"
+      },
+      {
+        q: "2. According to Newport, what is the main problem with constant connectivity?",
+        options: ["A. It makes people physically inactive","B. It fragments attention and prevents deep focus","C. It leads to financial overspending","D. It causes social isolation"],
+        ans: "B",
+        explain: "'fragments attention and prevents the kind of sustained focus necessary for meaningful achievement'"
+      },
+      {
+        q: "3. What does a 'digital declutter' involve?",
+        options: ["A. Deleting all apps permanently","B. A temporary break from optional technology followed by selective reintroduction","C. Switching to a basic phone","D. Using only productivity tools"],
+        ans: "B",
+        explain: "'a 30-day break from optional digital technologies, followed by a careful reintroduction of only those tools that provide genuine value'"
+      }
+    ]
+  },
+  {
+    year: "2021年12月", type: "作文",
+    title: "2021年12月 · 作文真题",
+    prompt: "题目：Limiting Screen Time for Children\n\n要求：\n1. 限制屏幕时间的必要性\n2. 如何有效限制\n3. 你的看法",
+    reference: `Limiting Screen Time for Children
+
+In today's digital age, children are spending more time than ever in front of screens. While technology offers educational resources and entertainment, excessive screen time poses serious risks to children's physical and mental health, including eye strain, sleep disorders, and reduced physical activity.
+
+Limiting screen time is therefore essential. Parents can set clear daily limits—no more than two hours for school-age children—and model healthy digital habits themselves. Schools can promote outdoor activities, reading, and face-to-face social interaction as alternatives to screen-based entertainment.
+
+In my view, the goal is not to eliminate screens entirely, but to ensure that children develop a balanced relationship with technology. Children who learn to regulate their screen use early are better equipped to navigate the digital world responsibly as adults.`,
+    tips: "评分亮点：第一段交代背景和问题，第二段提出具体措施（set limits / model habits），第三段表明个人观点并升华。注意用 'in my view' 而非 'I think' 更显书面语水平。"
+  },
+  {
+    year: "2023年6月", type: "选词填空",
+    title: "2023年6月 · 选词填空（节选）",
+    instruction: "从下方词库中选择合适的单词填入空格",
+    words: ["anticipate","broaden","demonstrate","effective","essential",
+            "generate","global","inevitable","reflect","sustain"],
+    text: `Environmental sustainability has become an __(1)__ topic for __(2)__ policymakers. Experts argue that it is __(3)__ that current consumption patterns will lead to resource depletion if left unchecked. Governments must __(4)__ innovative solutions to __(5)__ clean energy production. Education plays an equally important role—schools that __(6)__ students' understanding of ecological systems help __(7)__ long-term environmental awareness. Effective policies must __(8)__ on the real needs of communities. Research has also shown that community-based programs are highly __(9)__ in encouraging green behavior. Leaders who __(10)__ commitment through action, rather than words alone, earn greater public trust.`,
+    answers: {1:"essential",2:"global",3:"inevitable",4:"generate",5:"sustain",6:"broaden",7:"reflect",8:"anticipate",9:"effective",10:"demonstrate"},
+    analysis: "注意：generate solutions（产生解决方案）、sustain production（维持生产）、broaden understanding（拓展理解）均为四级高频搭配"
+  }
+];
+
+// 根据日期获取当天练习题
+function getDailyPractice(d) {
+  const idx = dayIndex(d);
+  return DAILY_PRACTICE_POOL[idx % DAILY_PRACTICE_POOL.length];
+}
+
+function getDailyPastPaper(d) {
+  const idx = dayIndex(d);
+  // 错开一位，避免与练习题类型完全重合
+  return CET4_PAST_PAPERS[(idx + 2) % CET4_PAST_PAPERS.length];
+}
+
+// ============================================================
+// 渲染每日练习题
+// ============================================================
+function renderDailyQuiz() {
+  const container = document.getElementById('dailyQuizContainer');
+  if (!container) return;
+  const d = currentDate;
+  const practice = getDailyPractice(d);
+  const pastPaper = getDailyPastPaper(d);
+
+  let html = '';
+
+  // === 练习题A ===
+  html += `<div class="card" style="margin-bottom:16px;">
+    <div class="section-title"><span class="icon">🎯</span>每日一练 A · ${practice.type}
+      <span class="badge" style="background:linear-gradient(135deg,#ec407a,#f06292);color:white;font-size:11px;">${formatDate(d)}</span>
+    </div>
+    <div style="font-size:12px;color:var(--text-light);margin-bottom:12px;">${practice.instruction}</div>`;
+
+  if (practice.type === '选词填空') {
+    html += `<div style="background:var(--pink-50);border-radius:10px;padding:12px;margin-bottom:12px;">
+      <div style="font-size:12px;color:var(--pink-600);font-weight:700;margin-bottom:8px;">📦 词库（每词只用一次）</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">`;
+    practice.words.forEach(w => {
+      html += `<span style="background:white;border:1px solid var(--pink-200);border-radius:6px;padding:3px 10px;font-size:13px;font-weight:600;">${w}</span>`;
+    });
+    html += `</div></div>
+    <div style="font-size:14px;line-height:2.2;color:var(--text);">${practice.text
+      .replace(/__([\d]+)__/g, '<span style="display:inline-block;min-width:90px;border-bottom:2px solid var(--pink-300);text-align:center;color:var(--pink-500);font-weight:700;">($1)</span>')
+    }</div>
+    <div style="margin-top:16px;">
+      <button onclick="toggleQuizAnswer('practiceA')" style="background:linear-gradient(135deg,#ec407a,#f06292);color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    </div>
+    <div id="practiceA-answer" style="display:none;margin-top:12px;background:var(--pink-50);border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--pink-700);margin-bottom:8px;">✅ 参考答案</div>`;
+    const ans = practice.answers;
+    Object.keys(ans).sort((a,b)=>+a-+b).forEach(k => {
+      html += `<span style="display:inline-block;margin:3px 8px 3px 0;font-size:13px;">（${k}）<strong>${ans[k]}</strong></span>`;
+    });
+    html += `<div style="margin-top:10px;font-size:12px;color:var(--text-light);line-height:1.8;">📖 ${practice.analysis}</div>
+    </div>`;
+  } else if (practice.type === '段落匹配') {
+    practice.paragraphs.forEach(p => {
+      html += `<div style="font-size:13px;line-height:1.8;color:var(--text);margin-bottom:10px;padding:8px 12px;background:var(--pink-50);border-radius:8px;">${p}</div>`;
+    });
+    html += `<div style="margin-top:12px;">`;
+    practice.questions.forEach(q => {
+      html += `<div style="font-size:13px;color:var(--text);margin-bottom:8px;padding:6px 0;border-bottom:1px solid var(--pink-100);">${q.q}</div>`;
+    });
+    html += `<button onclick="toggleQuizAnswer('practiceA')" style="margin-top:12px;background:linear-gradient(135deg,#ec407a,#f06292);color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    </div>
+    <div id="practiceA-answer" style="display:none;margin-top:12px;background:var(--pink-50);border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--pink-700);margin-bottom:8px;">✅ 参考答案</div>`;
+    practice.questions.forEach(q => {
+      html += `<div style="font-size:13px;margin-bottom:4px;">${q.q} → <strong style="color:var(--pink-600);">${q.ans}</strong></div>`;
+    });
+    html += `</div>`;
+  } else if (practice.type === '阅读理解') {
+    html += `<div style="font-size:13px;line-height:1.9;color:var(--text);background:var(--pink-50);border-radius:10px;padding:12px;margin-bottom:12px;">${practice.passage.replace(/\n\n/g,'<br><br>')}</div>`;
+    practice.questions.forEach((q, i) => {
+      html += `<div style="margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">${q.q}</div>`;
+      q.options.forEach(opt => {
+        html += `<div style="font-size:13px;color:var(--text-light);padding:3px 0;">${opt}</div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<button onclick="toggleQuizAnswer('practiceA')" style="background:linear-gradient(135deg,#ec407a,#f06292);color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    <div id="practiceA-answer" style="display:none;margin-top:12px;background:var(--pink-50);border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:var(--pink-700);margin-bottom:8px;">✅ 答案解析</div>`;
+    practice.questions.forEach(q => {
+      html += `<div style="font-size:13px;margin-bottom:8px;">答案：<strong style="color:var(--pink-600);">${q.ans}</strong> — ${q.explain}</div>`;
+    });
+    html += `</div>`;
+  } else if (practice.type === '翻译') {
+    html += `<div style="background:var(--pink-50);border-radius:10px;padding:14px;margin-bottom:12px;font-size:14px;line-height:1.9;color:var(--text);">${practice.source}</div>
+    <div style="font-size:12px;color:var(--text-light);margin-bottom:12px;">💡 关键词提示：${practice.keyPoints.join('　|　')}</div>
+    <button onclick="toggleQuizAnswer('practiceA')" style="background:linear-gradient(135deg,#ec407a,#f06292);color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看参考译文 ▼</button>
+    <div id="practiceA-answer" style="display:none;margin-top:12px;background:var(--pink-50);border-radius:10px;padding:12px;font-size:13px;line-height:1.9;">${practice.reference}</div>`;
+  } else if (practice.type === '作文') {
+    html += `<div style="background:var(--pink-50);border-radius:10px;padding:14px;margin-bottom:12px;font-size:14px;line-height:1.9;white-space:pre-line;">${practice.prompt}</div>
+    <div style="font-size:13px;color:var(--pink-600);margin-bottom:8px;">💡 参考提纲：</div>`;
+    practice.outline.forEach(p => {
+      html += `<div style="font-size:12px;color:var(--text-light);padding:3px 0;padding-left:10px;border-left:3px solid var(--pink-200);">${p}</div>`;
+    });
+    html += `<button onclick="toggleQuizAnswer('practiceA')" style="margin-top:12px;background:linear-gradient(135deg,#ec407a,#f06292);color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看范文 ▼</button>
+    <div id="practiceA-answer" style="display:none;margin-top:12px;background:var(--pink-50);border-radius:10px;padding:12px;font-size:13px;line-height:1.9;">${practice.reference}
+    <div style="margin-top:10px;padding:8px;background:white;border-radius:6px;font-size:12px;color:var(--text-light);">📝 ${practice.tips}</div></div>`;
+  }
+
+  html += `</div>`;
+
+  // === 练习题B: 真题 ===
+  html += `<div class="card">
+    <div class="section-title"><span class="icon">📋</span>每日一练 B · 四级真题
+      <span class="badge" style="background:#3949ab;color:white;font-size:11px;">${pastPaper.year} · ${pastPaper.type}</span>
+    </div>`;
+
+  const pp = pastPaper;
+  if (pp.type === '阅读理解') {
+    html += `<div style="font-size:13px;line-height:1.9;background:var(--pink-50);border-radius:10px;padding:12px;margin-bottom:12px;">${pp.passage.replace(/\n\n/g,'<br><br>')}</div>`;
+    pp.questions.forEach(q => {
+      html += `<div style="margin-bottom:12px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:6px;">${q.q}</div>`;
+      q.options.forEach(opt => {
+        html += `<div style="font-size:13px;color:var(--text-light);padding:3px 0;">${opt}</div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<button onclick="toggleQuizAnswer('practiceB')" style="background:#3949ab;color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    <div id="practiceB-answer" style="display:none;margin-top:12px;background:#e8eaf6;border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#3949ab;margin-bottom:8px;">✅ 答案解析</div>`;
+    pp.questions.forEach(q => {
+      html += `<div style="font-size:13px;margin-bottom:8px;">答案：<strong style="color:#3949ab;">${q.ans}</strong> — ${q.explain}</div>`;
+    });
+    html += `</div>`;
+  } else if (pp.type === '段落匹配') {
+    pp.paragraphs.forEach(p => {
+      html += `<div style="font-size:13px;line-height:1.8;margin-bottom:10px;padding:8px 12px;background:var(--pink-50);border-radius:8px;">${p}</div>`;
+    });
+    html += `<div style="margin-top:12px;">`;
+    pp.questions.forEach(q => {
+      html += `<div style="font-size:13px;margin-bottom:8px;padding:5px 0;border-bottom:1px solid var(--pink-100);">${q.q}</div>`;
+    });
+    html += `<button onclick="toggleQuizAnswer('practiceB')" style="margin-top:8px;background:#3949ab;color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    </div>
+    <div id="practiceB-answer" style="display:none;margin-top:12px;background:#e8eaf6;border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#3949ab;margin-bottom:8px;">✅ 参考答案</div>`;
+    pp.questions.forEach(q => {
+      html += `<div style="font-size:13px;margin-bottom:4px;">${q.q} → <strong style="color:#3949ab;">${q.ans}</strong></div>`;
+    });
+    html += `</div>`;
+  } else if (pp.type === '翻译') {
+    html += `<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">${pp.instruction}</div>
+    <div style="background:var(--pink-50);border-radius:10px;padding:14px;margin-bottom:12px;font-size:14px;line-height:1.9;">${pp.source}</div>
+    <div style="font-size:12px;color:var(--text-light);margin-bottom:12px;">💡 关键词：${pp.keyPoints.join('　|　')}</div>
+    <button onclick="toggleQuizAnswer('practiceB')" style="background:#3949ab;color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看参考译文 ▼</button>
+    <div id="practiceB-answer" style="display:none;margin-top:12px;background:#e8eaf6;border-radius:10px;padding:12px;font-size:13px;line-height:1.9;">${pp.reference}</div>`;
+  } else if (pp.type === '作文') {
+    html += `<div style="background:var(--pink-50);border-radius:10px;padding:14px;margin-bottom:12px;font-size:14px;white-space:pre-line;">${pp.prompt}</div>
+    <button onclick="toggleQuizAnswer('practiceB')" style="background:#3949ab;color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看范文 ▼</button>
+    <div id="practiceB-answer" style="display:none;margin-top:12px;background:#e8eaf6;border-radius:10px;padding:12px;font-size:13px;line-height:1.9;">${pp.reference}
+    <div style="margin-top:10px;padding:8px;background:white;border-radius:6px;font-size:12px;color:var(--text-light);">📝 ${pp.tips}</div></div>`;
+  } else if (pp.type === '选词填空') {
+    html += `<div style="font-size:12px;color:var(--text-light);margin-bottom:8px;">${pp.instruction}</div>
+    <div style="background:var(--pink-50);border-radius:10px;padding:12px;margin-bottom:12px;">
+      <div style="font-size:12px;color:var(--pink-600);font-weight:700;margin-bottom:8px;">📦 词库</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">`;
+    pp.words.forEach(w => {
+      html += `<span style="background:white;border:1px solid var(--pink-200);border-radius:6px;padding:3px 10px;font-size:13px;font-weight:600;">${w}</span>`;
+    });
+    html += `</div></div>
+    <div style="font-size:14px;line-height:2.2;">${pp.text.replace(/__([\d]+)__/g,'<span style="display:inline-block;min-width:90px;border-bottom:2px solid #9fa8da;text-align:center;color:#3949ab;font-weight:700;">($1)</span>')}</div>
+    <button onclick="toggleQuizAnswer('practiceB')" style="margin-top:12px;background:#3949ab;color:white;border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;">查看答案 ▼</button>
+    <div id="practiceB-answer" style="display:none;margin-top:12px;background:#e8eaf6;border-radius:10px;padding:12px;">
+      <div style="font-size:13px;font-weight:700;color:#3949ab;margin-bottom:8px;">✅ 参考答案</div>`;
+    const ans = pp.answers;
+    Object.keys(ans).sort((a,b)=>+a-+b).forEach(k => {
+      html += `<span style="display:inline-block;margin:3px 8px 3px 0;font-size:13px;">（${k}）<strong>${ans[k]}</strong></span>`;
+    });
+    html += `<div style="margin-top:10px;font-size:12px;color:var(--text-light);">📖 ${pp.analysis}</div></div>`;
+  }
+
+  html += `</div>`;
+
+  container.innerHTML = html;
+}
+
+function toggleQuizAnswer(id) {
+  const el = document.getElementById(id + '-answer');
+  if (!el) return;
+  const btn = el.previousElementSibling;
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    if (btn && btn.tagName === 'BUTTON') btn.textContent = btn.textContent.replace('▼','▲');
+  } else {
+    el.style.display = 'none';
+    if (btn && btn.tagName === 'BUTTON') btn.textContent = btn.textContent.replace('▲','▼');
+  }
+}
+
+// ============================================================
+// 统计 Tab：每日题型实时更新
+// ============================================================
+function updateDailyStats() {
+  const d = currentDate;
+  const practice = getDailyPractice(d);
+  const pastPaper = getDailyPastPaper(d);
+  // 更新今日题型文字
+  const tipEl = document.getElementById('todayTypeTip');
+  if (tipEl) {
+    const stars = {
+      '选词填空': '⭐⭐⭐☆☆',
+      '段落匹配': '⭐⭐⭐⭐☆',
+      '阅读理解': '⭐⭐⭐⭐⭐',
+      '翻译': '⭐⭐⭐⭐☆',
+      '作文': '⭐⭐⭐⭐⭐'
+    };
+    tipEl.innerHTML = `📌 今日题型：<strong>${practice.type}（${practice.typeEn}）${stars[practice.type]||'⭐⭐⭐'}</strong>
+      &nbsp;&nbsp;+&nbsp;&nbsp;真题：<strong>${pastPaper.year} · ${pastPaper.type}</strong><br>
+      📌 重点突破：<strong>${getTodayFocus(practice.type)}</strong><br>
+      📌 学习顺序：先浏览词汇表 → 每日一练 → 模拟考试 → 核对解析 → 重点记忆错题词汇<br>
+      📌 小技巧：把错题中的生词标记下来，睡前再复习一遍效果最好！`;
+  }
+}
+
+function getTodayFocus(type) {
+  const map = {
+    '选词填空': '词义辨析 + 搭配记忆（固定词组优先）',
+    '段落匹配': '主旨句识别 + 关键词定位技巧',
+    '阅读理解': '细节题精读 + 推断题逻辑判断',
+    '翻译': '句式变换 + 核心词汇活用',
+    '作文': '段落结构清晰 + 论据举例 + 词汇多样化'
+  };
+  return map[type] || '词汇积累 + 题型专项';
+}
+
 </script>
 </body>
 </html>
