@@ -335,67 +335,13 @@ textarea:disabled { opacity: 0.85; }
     </div>
   </div>
 
-  <!-- ============ Tab 2: 模拟考试 ============ -->
+  <!-- ============ Tab 2: 每日一练 (V3.3) ============ -->
   <div class="tab-panel" id="panel-exam">
-    <!-- 考试前导 -->
-    <div id="examPre" class="card exam-pre">
-      <div class="exam-icon">📋</div>
-      <h2>四级翻译 · 模拟考试</h2>
-      <p style="color:var(--text-light);margin:8px 0;">模拟真实四级翻译考场氛围</p>
-      <div class="exam-info">
-        <ul style="list-style:none;padding:0;">
-          <li>📝 <strong>题型：</strong>汉译英（词组 + 句子 + 段落）</li>
-          <li>⏱ <strong>时长：</strong>30分钟</li>
-          <li>📊 <strong>满分：</strong>100分</li>
-          <li>📋 <strong>题量：</strong>10道词组 + 5道句子 + 1篇段落</li>
-          <li>⚠️ <strong>注意：</strong>点击开始后计时器启动，时间到自动交卷</li>
-        </ul>
-      </div>
-      <button class="btn-start" onclick="startExam()">
-        🚀 开始答题
-      </button>
-    </div>
-
-    <!-- 考试进行中 -->
-    <div id="examBody" style="display:none;">
-      <!-- 考试头部计时 -->
-      <div class="exam-header">
-        <div>
-          <div class="exam-title">🔒 四级翻译 · 考试中</div>
-          <div style="font-size:11px;opacity:0.7;" id="examDateLabel"></div>
-        </div>
-        <div class="timer-box">
-          <div class="timer-lbl">剩余时间</div>
-          <div id="timer">30:00</div>
-          <div class="timer-prog-wrap"><div id="timerProg"></div></div>
-        </div>
-      </div>
-
-      <!-- 题目区域 -->
-      <div id="examQuestions"></div>
-
-      <!-- 提交 -->
-      <div class="submit-wrap">
-        <button class="btn-submit" id="submitBtn" onclick="submitExam()">📤 交卷</button>
-      </div>
-
-      <!-- 成绩卡片 -->
-      <div class="result-card" id="resultCard">
-        <h2 id="rcTitle">答题完成 🎉</h2>
-        <div class="big-score" id="rcScore">0<span>/100</span></div>
-        <div class="grade-chip" id="rcGrade">—</div>
-        <div class="score-detail">
-          <div class="sd-item"><div class="sd-num" id="sdP1">0</div><div class="sd-lbl">词组翻译 /20分</div></div>
-          <div class="sd-item"><div class="sd-num" id="sdP2">0</div><div class="sd-lbl">句子翻译 /40分</div></div>
-          <div class="sd-item"><div class="sd-num" id="sdP3">0</div><div class="sd-lbl">段落翻译 /40分</div></div>
-        </div>
-        <div class="sub-tip">👇 答案解析已展开，请逐题核查</div>
-      </div>
+    <div id="dailyQuizContainer">
+      <!-- 内容由 renderDailyQuiz() 动态注入 -->
+      <div style="text-align:center;padding:40px;color:var(--text-light);">加载中...</div>
     </div>
   </div>
-
-  <!-- ============ 每日一练（V3.3） ============ -->
-  <div id="dailyQuizContainer"></div>
 
   <!-- ============ Tab 3: 统计 ============ -->
   <div class="tab-panel" id="panel-stats">
@@ -827,15 +773,6 @@ const WORD_POOL = [
   {w:"witness",p:"/ˈwɪtnəs/",m:"n. 目击者 v. 目睹",c:"witness an event"},
   {w:"worthwhile",p:"/ˌwɜːθˈwaɪl/",m:"adj. 值得的",c:"be worthwhile"},
 ];
-// Shuffle WORD_POOL for random order
-(function(){
-  var pool = WORD_POOL;
-  for (var i = pool.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
-  }
-})();
-
 
 // ============================================================
 // 翻译练习题 (固定题库，从generator中提取)
@@ -987,16 +924,36 @@ function formatDate(d) {
   return d.getFullYear()+'年'+String(d.getMonth()+1).padStart(2,'0')+'月'+String(d.getDate()).padStart(2,'0')+'日';
 }
 
-// 按天数分片获取每日词汇 (第1天80个, 第2天起100个)
-function getDailyVocab(d) {
-  const idx = dayIndex(d);
-  const count = idx === 0 ? 80 : 100; // 5/21 保留80词，5/22起100词
-  const start = (idx * 80) % WORD_POOL.length;
-  const result = [];
-  for (let i = 0; i < count; i++) {
-    result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
+// 基于日期的伪随机数生成器 (保留原始逻辑，确保同一天词汇稳定不变)
+function seededRandom(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = ((h << 5) - h) + seed.charCodeAt(i);
+    h |= 0;
   }
-  return result;
+  return function() {
+    h = (h * 1103515245 + 12345) & 0x7fffffff;
+    return h / 0x7fffffff;
+  };
+}
+
+// 每日词汇: 用 seededRandom 洗牌保证同天词汇与原始一致
+// 5/21（dayIndex=0）取80词，5/22起取100词
+let vocabForDate = {};
+function getDailyVocab(d) {
+  const key = formatDate(d);
+  if (vocabForDate[key]) return vocabForDate[key];
+  const idx = dayIndex(d);
+  const count = idx === 0 ? 80 : 100; // 5/21保留80词，5/22起100词
+  const rng = seededRandom(key);
+  const pool = [...WORD_POOL];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const selected = pool.slice(0, Math.min(count, pool.length));
+  vocabForDate[key] = selected;
+  return selected;
 }
 
 // ============================================================
@@ -1035,7 +992,7 @@ function renderVocab() {
   const page = filteredVocab.slice(start, start + VOCAB_PER_PAGE);
 
   count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
-  badge.textContent = all.length+'词';
+  badge.textContent = `${all.length}词`;
 
   grid.innerHTML = page.map((v, i) => `
     <div class="word-card" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;">
