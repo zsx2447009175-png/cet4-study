@@ -1486,7 +1486,8 @@ const DAILY_PRACTICE_POOL = [
             "enhance","establish","evaluate","exceed","flexible"],
     text: `In modern society, it is crucial to __(1)__ clear goals and work steadily toward them. People who __(2)__ a wealth of experience tend to perform better under pressure. However, we must __(3)__ the potential risks before making major decisions. A __(4)__ approach to problem-solving often yields better results. __(5)__ unnecessary steps in your workflow can __(6)__ overall efficiency. Remember: effort that __(7)__ average will always __(8)__ positive outcomes. Make sure you have __(9)__ resources before starting. The __(10)__ of poor planning can last for years.`,
     answers: {1:"establish",2:"accumulate",3:"evaluate",4:"flexible",5:"Eliminating",6:"enhance",7:"exceeds",8:"demonstrate",9:"adequate",10:"consequence"},
-    analysis: "重点词：establish目标、accumulate经验、evaluate评估、flexible灵活、eliminate消除、enhance提升、exceed超过、demonstrate展示、adequate足够、consequence后果"
+    analysis: "重点词：establish目标、accumulate经验、evaluate评估、flexible灵活、eliminate消除、enhance提升、exceed超过、demonstrate展示、adequate足够、consequence后果",
+    wordReasons: {1:"establish clear goals（建立清晰目标）是固定搭配，常用 it is crucial to establish...",2:"accumulate a wealth of experience（积累丰富经验）为常见表达",3:"evaluate the potential risks（评估潜在风险），before making decisions 提示需先评估",4:"flexible approach（灵活方法），本空需填入形容词修饰 approach",5:"Eliminating unnecessary steps（消除不必要的步骤），动名词做主语需大写",6:"enhance efficiency（提升效率），can do \u2192 填入原形动词",7:"exceeds average（超过平均水平），effort 为单数，动词用三单 exceeds",8:"demonstrate positive outcomes（展现积极成果），will always \u2192 原形动词",9:"adequate resources（充足的资源），have + adj. + n. 结构",10:"consequence of poor planning（糟糕规划的后果），the \u2026 of \u2026 结构"}
   },
   {
     type: "选词填空", typeEn: "Banked Cloze",
@@ -1496,7 +1497,8 @@ const DAILY_PRACTICE_POOL = [
             "contribute","crucial","decline","determine","digital"],
     text: `The __(1)__ age has transformed how we learn and communicate. It is __(2)__ that students __(3)__ strong reading and writing skills early on. Reading is __(4)__ to cognitive development at every age. People who are __(5)__ in their abilities tend to take on greater challenges. In a __(6)__ job market, one must constantly grow. Those who __(7)__ to a team's success are valued most. A person's mindset can __(8)__ their ultimate outcome. Although test scores __(9)__ in some regions, motivation remains key. Everyone is __(10)__ of achieving more than they think.`,
     answers: {1:"digital",2:"crucial",3:"acquire",4:"beneficial",5:"confident",6:"competitive",7:"contribute",8:"determine",9:"decline",10:"capable"},
-    analysis: "核心句型：it is crucial that...（虚拟语气）、contribute to success、determine outcome"
+    analysis: "核心句型：it is crucial that...（虚拟语气）、contribute to success、determine outcome",
+    wordReasons: {1:"digital age（数字时代），常见固定搭配，描述当今时代特征",2:"it is crucial that...（关键的是...），It is + adj. + that 从句结构",3:"acquire skills（获取技能），students acquire...skills 为常见表达",4:"Reading is beneficial to...（阅读对...有益），be beneficial to 固定搭配",5:"confident in their abilities（对自己能力有信心），be confident in 固定搭配",6:"competitive job market（竞争激烈的就业市场），形容词修饰 job market",7:"contribute to a team's success（为团队成功做贡献），contribute to 固定搭配",8:"determine their outcome（决定他们的结果），mindset can determine...主谓结构",9:"test scores decline（考试成绩下降），主谓结构，scores 复数用原形",10:"capable of achieving（有能力实现），be capable of doing 固定搭配"}
   },
   // ---- 段落匹配 ----
   {
@@ -1516,6 +1518,13 @@ const DAILY_PRACTICE_POOL = [
       {q:"C. Environmental awareness is now influencing major corporate decisions.", ans:"⑤"},
       {q:"D. Technological advancement is simultaneously creating and eliminating employment.", ans:"④"},
       {q:"E. Flexible working arrangements are changing the physical structure of workplaces.", ans:"②"}
+    ],
+    matchClues: [
+      "\u2462: Urban green spaces have proven benefits for mental health. Residents with access to parks and nature areas report lower stress levels... \u2014 \u201Caccess to nature\u201D \u5BF9\u5E94 \u201Cgreen spaces\u201D\uFF0C\u201Cimprove emotional well-being\u201D \u5BF9\u5E94 \u201Cbenefits for mental health\u201D\u3001\u201Clower stress\u201D",
+      "\u2460: sleep is as important as diet and exercise...sleep deprivation is linked to increased risk of obesity, heart disease, and depression \u2014 \u201Cinsufficient rest\u201D \u5BF9\u5E94 \u201Csleep deprivation\u201D\uFF0C\u201Cphysical and mental health\u201D \u5BF9\u5E94 obesity/heart disease(physical) + depression(mental)",
+      "\u2464: Sustainable packaging...Consumers increasingly expect brands to reduce plastic use and adopt eco-friendly materials \u2014 \u201Cenvironmental awareness\u201D \u5BF9\u5E94 \u201Csustainable\u201D\u3001\u201Ceco-friendly\u201D\uFF0C\u201Ccorporate decisions\u201D \u5BF9\u5E94 \u201Cbrands\u201D",
+      "\u2463: AI is reshaping the job market...some positions become automated, new roles...are simultaneously emerging \u2014 \u201Ctechnological advancement\u201D \u5BF9\u5E94 \u201CAI\u201D\uFF0C\u201Ccreating and eliminating\u201D \u5BF9\u5E94 \u201Cautomated\u201D + \u201Cemerging\u201D",
+      "\u2461: The rise of remote work...Companies now invest in collaboration tools rather than physical desk space \u2014 \u201Cflexible working arrangements\u201D \u5BF9\u5E94 \u201Cremote work\u201D\uFF0C\u201Cphysical structure\u201D \u5BF9\u5E94 \u201Cphysical desk space\u201D"
     ]
   },
   // ---- 阅读理解 ----
@@ -1529,9 +1538,9 @@ Studies from Carleton University found that procrastinators experience higher le
 
 Experts recommend addressing the emotional roots of procrastination rather than simply setting stricter schedules. Techniques such as "implementation intentions" (stating specifically when and where you will do a task) and self-compassion (treating yourself kindly after setbacks) have shown measurable improvements in follow-through.`,
     questions: [
-      {q:"1. According to the passage, procrastination is primarily caused by:",options:["A. Poor time management skills","B. Physical laziness","C. Difficulty managing negative emotions","D. Lack of clear goals"],ans:"C",explain:"第一段: 'it is more closely related to emotional regulation than time management'"},
-      {q:"2. The phrase 'short-term relief' in paragraph 2 refers to:",options:["A. Completing tasks ahead of schedule","B. The temporary comfort gained from avoiding a task","C. A decrease in overall workload","D. Improved concentration after rest"],ans:"B",explain:"第二段: 'by avoiding the task, one avoids the negative emotion'"},
-      {q:"3. Which of the following is suggested as an effective solution?",options:["A. Working longer hours","B. Setting stricter deadlines","C. Being kind to yourself after failures","D. Avoiding challenging tasks"],ans:"C",explain:"第三段: 'self-compassion have shown measurable improvements'"}
+      {q:"1. According to the passage, procrastination is primarily caused by:",options:["A. Poor time management skills","B. Physical laziness","C. Difficulty managing negative emotions","D. Lack of clear goals"],ans:"C",explain:"第一段: 'it is more closely related to emotional regulation than time management'",wrongReasons:{A:"文章明确说拖延与时间管理无关（more closely related to emotional regulation THAN time management）",B:"文章说拖延不仅仅是懒惰（more than mere laziness），否定它是主要原因",D:"文章未提及缺乏明确目标与拖延的直接关系"}},
+      {q:"2. The phrase 'short-term relief' in paragraph 2 refers to:",options:["A. Completing tasks ahead of schedule","B. The temporary comfort gained from avoiding a task","C. A decrease in overall workload","D. Improved concentration after rest"],ans:"B",explain:"第二段: 'by avoiding the task, one avoids the negative emotion'",wrongReasons:{A:"文章说的是逃避任务获得短期解脱，而非提前完成任务",C:"工作量并未减少，只是暂时回避了负面情绪",D:"文章未提注意力提升，反而是 guilt and worry"}},
+      {q:"3. Which of the following is suggested as an effective solution?",options:["A. Working longer hours","B. Setting stricter deadlines","C. Being kind to yourself after failures","D. Avoiding challenging tasks"],ans:"C",explain:"第三段: 'self-compassion have shown measurable improvements'",wrongReasons:{A:"文章未提延长工作时间，反而建议处理情绪根源",B:"文章明确反对 stricter schedules，建议 addressing emotional roots",D:"文章鼓励面对任务而非逃避（avoiding challenging tasks 与建议相反）"}}
     ]
   },
   {
@@ -1544,9 +1553,9 @@ Research across schools and workplaces consistently shows that individuals with 
 
 Organizations that cultivate a growth mindset culture report higher levels of innovation and employee engagement. Leaders play a crucial role in this by providing specific, constructive feedback rather than praise focused on outcomes, and by openly discussing their own learning journeys and mistakes.`,
     questions: [
-      {q:"1. What distinguishes a growth mindset from a fixed mindset?",options:["A. People with a growth mindset are naturally smarter","B. People with a growth mindset believe abilities can improve with effort","C. Fixed mindset holders work harder","D. Growth mindset is only relevant to schools"],ans:"B",explain:"第一段: 'intelligence and talent...can be developed through effort and learning'"},
-      {q:"2. According to the passage, growth mindset individuals perform better because they:",options:["A. Have higher IQs","B. Receive better teaching","C. Persist through challenges and learn from errors","D. Avoid high-pressure situations"],ans:"C",explain:"第二段: 'they persist through difficulties and learn from mistakes'"},
-      {q:"3. How can leaders promote a growth mindset in organizations?",options:["A. By rewarding only successful outcomes","B. By giving specific, constructive feedback and sharing their own learning experiences","C. By hiring only growth mindset individuals","D. By reducing workload pressure"],ans:"B",explain:"第三段: 'providing specific, constructive feedback...and by openly discussing their own learning journeys'"}
+      {q:"1. What distinguishes a growth mindset from a fixed mindset?",options:["A. People with a growth mindset are naturally smarter","B. People with a growth mindset believe abilities can improve with effort","C. Fixed mindset holders work harder","D. Growth mindset is only relevant to schools"],ans:"B",explain:"第一段: 'intelligence and talent...can be developed through effort and learning'",wrongReasons:{A:"文章明确说 intelligence 不是固定的（not fixed traits），growth mindset 的人并非天生聪明",C:"文章说 fixed mindset 的人容易放弃（give up easily），并未说他们更努力",D:"文章提到 growth mindset 适用于 schools AND workplaces，并非仅限学校"}},
+      {q:"2. According to the passage, growth mindset individuals perform better because they:",options:["A. Have higher IQs","B. Receive better teaching","C. Persist through challenges and learn from errors","D. Avoid high-pressure situations"],ans:"C",explain:"第二段: 'they persist through difficulties and learn from mistakes'",wrongReasons:{A:"文章明确指出 they outperform...NOT because they are naturally more talented",B:"文章未提及教学质量差异",D:"文章说他们面对困难（they persist through difficulties），而非逃避高压"}},
+      {q:"3. How can leaders promote a growth mindset in organizations?",options:["A. By rewarding only successful outcomes","B. By giving specific, constructive feedback and sharing their own learning experiences","C. By hiring only growth mindset individuals","D. By reducing workload pressure"],ans:"B",explain:"第三段: 'providing specific, constructive feedback...and by openly discussing their own learning journeys'",wrongReasons:{A:"文章反对 praise focused on outcomes，提倡 constructive feedback",C:"文章未提只招聘 growth mindset 的人",D:"文章未提减轻工作压力"}}
     ]
   },
   // ---- 翻译 ----
@@ -1594,9 +1603,9 @@ const CET4_PAST_PAPERS = [
     title: "2023\u5E746\u6708 \u00B7 \u9605\u8BFB\u7406\u89E3\uFF08\u8282\u9009\uFF09",
     passage: "For decades, coffee has been blamed for all kinds of health problems. However, a growing body of research suggests that moderate coffee consumption may actually offer several health benefits. Studies indicate that regular coffee drinkers have a lower risk of developing type 2 diabetes, Parkinson's disease, and certain types of liver disease.\n\nThe key ingredient appears to be chlorogenic acid, an antioxidant found in coffee beans. This compound may help improve insulin sensitivity and reduce inflammation. Caffeine itself\u2014despite its reputation for causing jitteriness and sleep disruption\u2014has been shown to enhance cognitive performance, mood, and athletic endurance when consumed in appropriate amounts.\n\nThat said, health experts caution that the benefits apply to moderate consumption: roughly 3\u20134 cups per day for most adults. Excessive intake can lead to anxiety, heart palpitations, and disrupted sleep. Pregnant women and individuals with certain health conditions are generally advised to limit or avoid coffee entirely.",
     questions: [
-      {q:"1. What does recent research suggest about coffee?",options:["A. It causes more harm than previously thought","B. Moderate intake may have health benefits","C. It should be consumed only in the morning","D. It has no effect on chronic diseases"],ans:"B",explain:"'a growing body of research suggests that moderate coffee consumption may actually offer several health benefits'"},
-      {q:"2. What is the role of chlorogenic acid?",options:["A. It enhances athletic performance","B. It disrupts sleep patterns","C. It may improve insulin sensitivity and reduce inflammation","D. It increases caffeine absorption"],ans:"C",explain:"'This compound may help improve insulin sensitivity and reduce inflammation'"},
-      {q:"3. Who is advised to limit coffee consumption?",options:["A. Regular office workers","B. Athletes in training","C. Pregnant women and those with certain conditions","D. People over age 60"],ans:"C",explain:"'Pregnant women and individuals with certain health conditions are generally advised to limit or avoid coffee entirely'"}
+      {q:"1. What does recent research suggest about coffee?",options:["A. It causes more harm than previously thought","B. Moderate intake may have health benefits","C. It should be consumed only in the morning","D. It has no effect on chronic diseases"],ans:"B",explain:"'a growing body of research suggests that moderate coffee consumption may actually offer several health benefits'",wrongReasons:{A:"文章说咖啡可能有益而非更有害（may actually offer health benefits）",C:"文章未提只能在早上喝咖啡",D:"文章列举了降低糖尿病、帕金森等慢性病风险，说明有影响"}},
+      {q:"2. What is the role of chlorogenic acid?",options:["A. It enhances athletic performance","B. It disrupts sleep patterns","C. It may improve insulin sensitivity and reduce inflammation","D. It increases caffeine absorption"],ans:"C",explain:"'This compound may help improve insulin sensitivity and reduce inflammation'",wrongReasons:{A:"运动表现是咖啡因的作用，不是绿原酸的作用",B:"扰乱睡眠也是咖啡因的副作用，不是绿原酸",D:"文章未提绿原酸影响咖啡因吸收"}},
+      {q:"3. Who is advised to limit coffee consumption?",options:["A. Regular office workers","B. Athletes in training","C. Pregnant women and those with certain conditions","D. People over age 60"],ans:"C",explain:"'Pregnant women and individuals with certain health conditions are generally advised to limit or avoid coffee entirely'",wrongReasons:{A:"办公室职员不是建议限制的对象",B:"运动员不是建议限制的对象",D:"文章未特别提及60岁以上人群"}}
     ]
   },
   {
@@ -1615,6 +1624,13 @@ const CET4_PAST_PAPERS = [
       {q:"C. Reforestation efforts have produced positive changes in rainfall in some areas.", ans:"\u2463"},
       {q:"D. Tropical forests contribute to rainfall far inland through atmospheric moisture transport.", ans:"\u2461"},
       {q:"E. Preserving forests should be a climate priority comparable to cutting emissions.", ans:"\u2464"}
+    ],
+    matchClues: [
+      "\u2461: Deforestation disrupts this cycle...reduction in transpiration leads to decreased rainfall, increased temperatures... \u2014 \u201Ccutting down forests\u201D \u5BF9\u5E94 \u201Cdeforestation\u201D\uFF0C\u201Cdrier and hotter\u201D \u5BF9\u5E94 \u201Cdecreased rainfall, increased temperatures\u201D",
+      "\u2460: forests play a far more significant role in the global water cycle than previously understood \u2014 \u201Cgreater impact\u201D \u5BF9\u5E94 \u201Cfar more significant role\u201D\uFF0C\u201Cwater distribution\u201D \u5BF9\u5E94 \u201Cglobal water cycle\u201D",
+      "\u2462: tree-planting initiatives have led to measurable improvements in local precipitation patterns \u2014 \u201Creforestation\u201D \u5BF9\u5E94 \u201Ctree-planting\u201D\uFF0C\u201Cpositive changes in rainfall\u201D \u5BF9\u5E94 \u201Cimprovements in precipitation\u201D",
+      "\u2460: moisture released by trees forms clouds that travel thousands of kilometers inland, delivering rain to areas far from any ocean source \u2014 \u201Ctropical forests\u201D \u5BF9\u5E94 \u201Ctropical regions\u201D + \u201CAmazon\u201D\uFF0C\u201Crainfall far inland\u201D \u5BF9\u5E94 \u201Cdelivering rain far inland\u201D",
+      "\u2463: protecting existing forests must be treated as a climate priority equivalent to reducing carbon emissions \u2014 \u201Cclimate priority comparable to cutting emissions\u201D \u5BF9\u5E94 \u201Cclimate priority equivalent to reducing carbon emissions\u201D"
     ]
   },
   {
@@ -1630,9 +1646,9 @@ const CET4_PAST_PAPERS = [
     title: "2022\u5E746\u6708 \u00B7 \u9605\u8BFB\u7406\u89E3\uFF08\u8282\u9009\uFF09",
     passage: "The concept of \"digital minimalism,\" advanced by author Cal Newport, proposes that individuals should be more intentional about which digital tools they use and how they use them. Rather than adopting every new technology by default, digital minimalists carefully select tools that serve their values and goals\u2014and consciously eliminate the rest.\n\nNewport argues that the compulsive use of smartphones and social media has eroded people's capacity for solitude and deep work. Constant connectivity, he says, fragments attention and prevents the kind of sustained focus necessary for meaningful achievement. The solution, he contends, is not to abandon technology entirely, but to redefine one's relationship with it.\n\nA key practice in digital minimalism is a \"digital declutter\": a 30-day break from optional digital technologies, followed by a careful reintroduction of only those tools that provide genuine value. Proponents report that this reset allows them to rediscover offline activities\u2014reading, exercise, face-to-face conversation\u2014that provide deeper satisfaction than passive screen time.",
     questions: [
-      {q:"1. What does 'digital minimalism' advocate?",options:["A. Abandoning all digital tools","B. Using only the newest technology","C. Deliberately choosing only tools that align with personal values","D. Reducing time online to one hour per day"],ans:"C",explain:"'carefully select tools that serve their values and goals\u2014and consciously eliminate the rest'"},
-      {q:"2. According to Newport, what is the main problem with constant connectivity?",options:["A. It makes people physically inactive","B. It fragments attention and prevents deep focus","C. It leads to financial overspending","D. It causes social isolation"],ans:"B",explain:"'fragments attention and prevents the kind of sustained focus necessary for meaningful achievement'"},
-      {q:"3. What does a 'digital declutter' involve?",options:["A. Deleting all apps permanently","B. A temporary break from optional technology followed by selective reintroduction","C. Switching to a basic phone","D. Using only productivity tools"],ans:"B",explain:"'a 30-day break from optional digital technologies, followed by a careful reintroduction of only those tools that provide genuine value'"}
+      {q:"1. What does 'digital minimalism' advocate?",options:["A. Abandoning all digital tools","B. Using only the newest technology","C. Deliberately choosing only tools that align with personal values","D. Reducing time online to one hour per day"],ans:"C",explain:"'carefully select tools that serve their values and goals\u2014and consciously eliminate the rest'",wrongReasons:{A:"文章明确说不是完全放弃技术（the solution is not to abandon technology entirely）",B:"文章反对盲目采用新技术（Rather than adopting every new technology by default）",D:"文章未提具体限制到每天一小时"}},
+      {q:"2. According to Newport, what is the main problem with constant connectivity?",options:["A. It makes people physically inactive","B. It fragments attention and prevents deep focus","C. It leads to financial overspending","D. It causes social isolation"],ans:"B",explain:"'fragments attention and prevents the kind of sustained focus necessary for meaningful achievement'",wrongReasons:{A:"文章未提及身体活动减少",C:"文章未提及财务过度支出",D:"文章未提及社交孤立"}},
+      {q:"3. What does a 'digital declutter' involve?",options:["A. Deleting all apps permanently","B. A temporary break from optional technology followed by selective reintroduction","C. Switching to a basic phone","D. Using only productivity tools"],ans:"B",explain:"'a 30-day break from optional digital technologies, followed by a careful reintroduction of only those tools that provide genuine value'",wrongReasons:{A:"不是永久删除（permanently），而是30天暂时休息（30-day break）",C:"文章未提换基础手机",D:"不是只使用生产力工具，而是只保留真正有价值的工具"}}
     ]
   },
   {
@@ -1649,7 +1665,8 @@ const CET4_PAST_PAPERS = [
     words: ["anticipate","broaden","demonstrate","effective","essential","generate","global","inevitable","reflect","sustain"],
     text: "Environmental sustainability has become an __(1)__ topic for __(2)__ policymakers. Experts argue that it is __(3)__ that current consumption patterns will lead to resource depletion if left unchecked. Governments must __(4)__ innovative solutions to __(5)__ clean energy production. Education plays an equally important role\u2014schools that __(6)__ students' understanding of ecological systems help __(7)__ long-term environmental awareness. Effective policies must __(8)__ on the real needs of communities. Research has also shown that community-based programs are highly __(9)__ in encouraging green behavior. Leaders who __(10)__ commitment through action, rather than words alone, earn greater public trust.",
     answers: {1:"essential",2:"global",3:"inevitable",4:"generate",5:"sustain",6:"broaden",7:"reflect",8:"anticipate",9:"effective",10:"demonstrate"},
-    analysis: "\u6CE8\u610F\uFF1Agenerate solutions\uFF08\u4EA7\u751F\u89E3\u51B3\u65B9\u6848\uFF09\u3001sustain production\uFF08\u7EF4\u6301\u751F\u4EA7\uFF09\u3001broaden understanding\uFF08\u62D3\u5C55\u7406\u89E3\uFF09\u5747\u4E3A\u56DB\u7EA7\u9AD8\u9891\u642D\u914D"
+    analysis: "\u6CE8\u610F\uFF1Agenerate solutions\uFF08\u4EA7\u751F\u89E3\u51B3\u65B9\u6848\uFF09\u3001sustain production\uFF08\u7EF4\u6301\u751F\u4EA7\uFF09\u3001broaden understanding\uFF08\u62D3\u5C55\u7406\u89E3\uFF09\u5747\u4E3A\u56DB\u7EA7\u9AD8\u9891\u642D\u914D",
+    wordReasons: {1:"essential topic（必不可少的话题），形容词修饰名词 topic",2:"global policymakers（全球决策者），形容词修饰名词",3:"it is inevitable that...（...是不可避免的），it is + adj. + that 从句",4:"generate solutions（产生解决方案），governments must \u2192 原形动词",5:"sustain production（维持生产），to \u2192 不定式接原形",6:"broaden understanding（拓宽理解），schools that...复数主语 \u2192 原形",7:"reflect awareness（反映意识），help do 结构，接原形动词",8:"anticipate needs（预期需求），must \u2192 情态动词后接原形",9:"effective in encouraging（在鼓励方面有效），be + adj. + in doing 结构",10:"demonstrate commitment（展示承诺），leaders who...复数 \u2192 原形"}
   }
 ];
 
@@ -1853,7 +1870,8 @@ function submitQuiz(part) {
         correct++;
         detail += '<div style="font-size:13px;color:#2e7d32;margin-bottom:3px;">\u2705 (' + k + ') <strong>' + rightAns + '</strong></div>';
       } else {
-        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:3px;">\u274C (' + k + ') \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u586B') + '</em> \u2192 \u6B63\u786E\u7B54\u6848\uFF1A<strong>' + rightAns + '</strong></div>';
+        var reason = (data.wordReasons && data.wordReasons[k]) ? data.wordReasons[k] : '';
+        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:6px;padding:6px 10px;background:#fff5f5;border-radius:6px;border-left:3px solid #ffcdd2;">\u274C (' + k + ') \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u586B') + '</em> \u2192 \u6B63\u786E\u7B54\u6848\uFF1A<strong>' + rightAns + '</strong>' + (reason ? '<br><span style="font-size:11px;color:#b71c1c;">\uD83D\uDCD6 ' + reason + '</span>' : '') + '</div>';
       }
     });
     totalScore = correct;
@@ -1869,11 +1887,12 @@ function submitQuiz(part) {
     data.questions.forEach(function(q, i) {
       var sel = document.getElementById(pid + '_q' + i);
       var userAns = sel ? sel.value : '';
+      var clue = (data.matchClues && data.matchClues[i]) ? data.matchClues[i] : '';
       if (userAns === q.ans) {
         correct++;
-        detail += '<div style="font-size:13px;color:#2e7d32;margin-bottom:3px;">\u2705 ' + q.q + ' \u2192 <strong>' + q.ans + '</strong></div>';
+        detail += '<div style="font-size:13px;color:#2e7d32;margin-bottom:6px;padding:6px 10px;background:#f1f8e9;border-radius:6px;border-left:3px solid #c8e6c9;">\u2705 ' + q.q + ' \u2192 <strong>' + q.ans + '</strong>' + (clue ? '<br><span style="font-size:11px;color:#33691e;">\uD83D\uDD0D \u5339\u914D\u4F9D\u636E\uFF1A' + clue + '</span>' : '') + '</div>';
       } else {
-        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:3px;">\u274C ' + q.q + ' \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u9009') + '</em> \u2192 \u6B63\u786E\uFF1A<strong>' + q.ans + '</strong></div>';
+        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:6px;padding:6px 10px;background:#fff5f5;border-radius:6px;border-left:3px solid #ffcdd2;">\u274C ' + q.q + ' \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u9009') + '</em> \u2192 \u6B63\u786E\uFF1A<strong>' + q.ans + '</strong>' + (clue ? '<br><span style="font-size:11px;color:#b71c1c;">\uD83D\uDD0D \u5339\u914D\u4F9D\u636E\uFF1A' + clue + '</span>' : '') + '</div>';
       }
     });
     totalScore = correct * 2;
@@ -1894,9 +1913,10 @@ function submitQuiz(part) {
       }
       if (userAns === q.ans) {
         correct++;
-        detail += '<div style="font-size:13px;color:#2e7d32;margin-bottom:8px;">\u2705 ' + q.q + ' <strong>' + q.ans + '</strong><br><span style="font-size:11px;color:#888;">' + q.explain + '</span></div>';
+        detail += '<div style="font-size:13px;color:#2e7d32;margin-bottom:8px;padding:6px 10px;background:#f1f8e9;border-radius:6px;border-left:3px solid #c8e6c9;">\u2705 ' + q.q + ' <strong>' + q.ans + '</strong><br><span style="font-size:11px;color:#33691e;">\uD83D\uDCD6 ' + q.explain + '</span></div>';
       } else {
-        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:8px;">\u274C ' + q.q + ' \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u9009') + '</em> \u2192 \u6B63\u786E\uFF1A<strong>' + q.ans + '</strong><br><span style="font-size:11px;color:#888;">' + q.explain + '</span></div>';
+        var wrongInfo = (q.wrongReasons && q.wrongReasons[userAns]) ? '<br><span style="font-size:11px;color:#b71c1c;">\u274C \u4E3A\u4EC0\u4E48\u4F60\u7684\u7B54\u6848\u4E0D\u5BF9\uFF1A' + q.wrongReasons[userAns] + '</span>' : '';
+        detail += '<div style="font-size:13px;color:#c62828;margin-bottom:8px;padding:6px 10px;background:#fff5f5;border-radius:6px;border-left:3px solid #ffcdd2;">\u274C ' + q.q + ' \u4F60\u7684\u7B54\u6848\uFF1A<em>' + (userAns || '\u672A\u9009') + '</em> \u2192 \u6B63\u786E\uFF1A<strong>' + q.ans + '</strong><br><span style="font-size:11px;color:#888;">\uD83D\uDCD6 ' + q.explain + '</span>' + wrongInfo + '</div>';
       }
     });
     var perQ = Math.round(10 / total);
@@ -1910,6 +1930,23 @@ function submitQuiz(part) {
     html += '<div style="font-size:16px;font-weight:700;color:var(--pink-600);margin-bottom:12px;">\u2705 \u5DF2\u63D0\u4EA4\uFF0C\u53C2\u8003\u8BD1\u6587\u5982\u4E0B</div>';
     if (userTrans && userTrans.value.trim()) {
       html += '<div style="margin-bottom:10px;padding:10px;background:white;border-radius:8px;font-size:12px;color:#888;">\uD83D\uDCDD \u4F60\u7684\u7FFB\u8BD1\uFF1A<br>' + userTrans.value.replace(/\\n/g,'<br>') + '</div>';
+      // 关键词检查
+      if (data.keyPoints && data.keyPoints.length) {
+        var kpHtml = '<div style="margin-bottom:10px;padding:10px;background:white;border-radius:8px;font-size:12px;">';
+        kpHtml += '<div style="font-weight:700;color:var(--pink-600);margin-bottom:6px;">\uD83D\uDD0D \u5173\u952E\u8BCD\u68C0\u67E5\uFF1A</div>';
+        var kpFound = 0;
+        data.keyPoints.forEach(function(kp) {
+          var parts = kp.split(' \u2192 ');
+          var word = parts.length > 1 ? parts[1].trim().split(' / ')[0].trim().toLowerCase() : '';
+          var found = word && userTrans.value.toLowerCase().indexOf(word) >= 0;
+          if (found) kpFound++;
+          kpHtml += '<div style="margin-bottom:3px;font-size:12px;">' + (found ? '\u2705' : '\u274C') + ' ' + kp + '</div>';
+        });
+        var rate = Math.round(kpFound / data.keyPoints.length * 100);
+        kpHtml += '<div style="margin-top:6px;font-size:13px;font-weight:700;color:' + (rate >= 60 ? '#2e7d32' : '#c62828') + ';">\uD83C\uDFAF \u5173\u952E\u8BCD\u8986\u76D6\u7387\uFF1A' + kpFound + '/' + data.keyPoints.length + ' (' + rate + '%)</div>';
+        kpHtml += '</div>';
+        html += kpHtml;
+      }
     } else {
       html += '<div style="margin-bottom:10px;padding:10px;background:white;border-radius:8px;font-size:12px;color:#999;font-style:italic;">\u4F60\u8FD8\u6CA1\u6709\u8F93\u5165\u7FFB\u8BD1\u54E6~\uFF08\u53EF\u4EE5\u5148\u5199\u518D\u63D0\u4EA4\uFF09</div>';
     }
@@ -1920,6 +1957,23 @@ function submitQuiz(part) {
     html += '<div style="font-size:16px;font-weight:700;color:var(--pink-600);margin-bottom:12px;">\u2705 \u5DF2\u63D0\u4EA4\uFF0C\u53C2\u8003\u8303\u6587\u5982\u4E0B</div>';
     if (userEssay && userEssay.value.trim()) {
       html += '<div style="margin-bottom:10px;padding:10px;background:white;border-radius:8px;font-size:12px;color:#888;">\uD83D\uDCDD \u4F60\u7684\u4F5C\u6587\uFF1A<br>' + userEssay.value.replace(/\\n/g,'<br>') + '</div>';
+      // 结构分析
+      var essay = userEssay.value;
+      var wordCount = essay.split(/\\s+/).filter(function(w){return w.length>0;}).length;
+      var lines = essay.split(/\\n+/).filter(function(l){return l.trim().length>0;});
+      var paraCount = lines.length;
+      if (paraCount < 2) { paraCount = essay.split(/\\n\\s*\\n/).length; }
+      var transWords = ['first','second','third','finally','moreover','however','therefore','in conclusion','to sum up','on the one hand','on the other hand','furthermore','nevertheless','in addition','consequently'];
+      var foundTrans = [];
+      var lowerE = essay.toLowerCase();
+      transWords.forEach(function(tw){ if (lowerE.indexOf(tw) >= 0) foundTrans.push(tw); });
+      var analysisHtml = '<div style="margin-bottom:10px;padding:10px;background:white;border-radius:8px;font-size:12px;">';
+      analysisHtml += '<div style="font-weight:700;color:var(--pink-600);margin-bottom:6px;">\uD83D\uDCCA \u5199\u4F5C\u5206\u6790\u5361\uFF1A</div>';
+      analysisHtml += '<div style="margin-bottom:3px;">\uD83D\uDCCF \u5B57\u6570\u4F30\u7B97\uFF1A<strong>' + wordCount + ' \u8BCD</strong> ' + (wordCount >= 120 ? (wordCount <= 180 ? '\u2705 \u7B26\u5408\u56DB\u7EA7\u8981\u6C42' : '\u26A0\uFE0F \u7565\u8D85\u8981\u6C42') : '\u26A0\uFE0F \u504F\u77ED\uFF0C\u5EFA\u8BAE120-180\u8BCD') + '</div>';
+      analysisHtml += '<div style="margin-bottom:3px;">\uD83D\uDCC4 \u6BB5\u843D\u6570\uFF1A<strong>' + paraCount + ' \u6BB5</strong> ' + (paraCount >= 3 ? '\u2705 \u7ED3\u6784\u5408\u7406' : '\u26A0\uFE0F \u5EFA\u8BAE3-4\u6BB5\uFF08\u5F15\u8A00-\u6B63\u6587-\u7ED3\u8BBA\uFF09') + '</div>';
+      analysisHtml += '<div style="margin-bottom:3px;">\uD83D\uDD17 \u8FC7\u6E21\u8BCD\u68C0\u6D4B\uFF1A' + (foundTrans.length > 0 ? '<span style="color:#2e7d32;">\u2705 \u53D1\u73B0 ' + foundTrans.length + ' \u4E2A\uFF1A' + foundTrans.join(', ') + '</span>' : '<span style="color:#ef6c00;">\u274C \u672A\u68C0\u6D4B\u5230\u8FC7\u6E21\u8BCD\uFF0C\u5EFA\u8BAE\u6DFB\u52A0 First/Second/However/Therefore/In conclusion</span>') + '</div>';
+      analysisHtml += '</div>';
+      html += analysisHtml;
     }
     html += '<div style="font-size:13px;line-height:1.9;padding:10px;background:white;border-radius:8px;white-space:pre-line;">' + data.reference + '</div>';
     if (data.tips) html += '<div style="margin-top:10px;padding:8px;background:white;border-radius:6px;font-size:12px;color:var(--text-light);">\uD83D\uDCDD ' + data.tips + '</div>';
