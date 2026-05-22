@@ -413,19 +413,13 @@ textarea:disabled { opacity: 0.85; }
     <div class="stats-card">
       <h3>📊 今日学习概览</h3>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="statVocab">-</div><div class="stat-lbl">核心词汇</div></div>
-        <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
-        <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
-        <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVocab">-</div><div class="stat-lbl">今日词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statQuiz">0/2</div><div class="stat-lbl">答题进度</div></div>
+        <div class="stat-item"><div class="stat-num" id="statBookmarks">0</div><div class="stat-lbl">收藏生词</div></div>
+        <div class="stat-item"><div class="stat-num" id="statStreak">-</div><div class="stat-lbl">学习天数</div></div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="section-title"><span class="icon">🏆</span>历史成绩</div>
-      <div id="historyScores" style="color:var(--text-light);font-size:14px;">
-        <p>暂无历史记录，快去模拟考吧！</p>
-      </div>
-    </div>
 
     <div class="card">
       <div class="section-title"><span class="icon">💡</span>学习建议</div>
@@ -437,9 +431,7 @@ textarea:disabled { opacity: 0.85; }
 
     <div class="card" style="text-align:center;">
       <div class="section-title" style="justify-content:center;"><span class="icon">💕</span>来自树新的一句话</div>
-      <p style="color:var(--pink-500);font-size:16px;font-weight:600;line-height:1.8;">
-      "学习虽然辛苦，但想到你能用到这个小站，<br>一切都值得。加油，你永远是我的骄傲 ❤️"
-      </p>
+      <p id="sweetNoteText" style="color:var(--pink-500);font-size:16px;font-weight:600;line-height:1.8;">“加载中...”</p>
       <p style="color:var(--text-light);font-size:12px;margin-top:8px;">
       —— <span id="sweetNoteDate"></span>
       </p>
@@ -1079,7 +1071,8 @@ function renderVocab() {
   grid.innerHTML = page.map(function(v, i) {
     var tag = v.m ? v.m.split(' ')[0].replace(/[,;]/g,'') : '';
     return '<div class="word-card wcard" onclick="toggleMeaning(this)" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;cursor:pointer;">' +
-      '<span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#' + (start + i + 1) + '</span>' +
+      '<span class="word-num" style="position:absolute;top:12px;left:14px;font-size:11px;color:#ccc;font-weight:700;">#' + (start + i + 1) + '</span>' +
+      '<span class="bookmark-star" data-word="' + v.w.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();toggleBookmark(this.getAttribute('data-word'),this)" style="position:absolute;top:10px;right:14px;font-size:18px;color:#ffc107;cursor:pointer;user-select:none;" title="收藏这个单词">☆</span>' +
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">' +
         '<div class="word-title-row" style="display:flex;align-items:center;gap:8px;">' +
           '<span class="word-en" onclick="event.stopPropagation();speakWord(\'' + v.w.replace(/'/g,"\\'") + '\')" title="\u{1F50A} \u70B9\u51FB\u64AD\u653E\u53D1\u97F3" style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;cursor:pointer;">' + v.w + ' <span class="audio-icon" style="font-size:14px;color:#999;vertical-align:middle;">\u{1F50A}</span></span>' +
@@ -1121,6 +1114,23 @@ function speakWord(word) {
   u.rate = 0.85;
   window.speechSynthesis.speak(u);
 }
+// 初始化所有收藏星标的状态
+function initBookmarkStars() {
+  try {
+    var list = JSON.parse(localStorage.getItem('cet4_bookmarks') || '[]');
+    var stars = document.querySelectorAll('.bookmark-star');
+    for (var i = 0; i < stars.length; i++) {
+      var w = stars[i].getAttribute('data-word');
+      if (list.indexOf(w) >= 0) {
+        stars[i].textContent = '★';
+        stars[i].title = '取消收藏';
+      } else {
+        stars[i].textContent = '☆';
+        stars[i].title = '收藏这个单词';
+      }
+    }
+  } catch(e) {}
+}
 
 function changeDay(delta) {
   const next = new Date(currentDate);
@@ -1136,15 +1146,12 @@ function changeDay(delta) {
 function updateUI() {
   var _el;
   if ((_el = document.getElementById('dateLabel'))) _el.textContent = formatDate(currentDate);
-  if ((_el = document.getElementById('sweetNoteDate'))) _el.textContent = formatDate(TODAY);
   if ((_el = document.getElementById('examDateLabel'))) _el.textContent = formatDate(currentDate);
-  // 更新天数和寄语
-  var dn = dayIndex(currentDate) + 1;
-  var sweet = document.getElementById('sweet-note');
-  if (sweet) sweet.textContent = getDailyQuote(currentDate);
+  if ((_el = document.getElementById('sweetNoteDate'))) _el.textContent = formatDate(currentDate);
   renderVocab();
-  if ((_el = document.getElementById('statVocab'))) _el.textContent = getCurrentVocab().length;
-  renderHistoryScores();
+  // 初始化收藏星标状态
+  initBookmarkStars();
+  updateStatsRow();
 
   // === 分叉逻辑：day 0 保留模拟考，day 1+ 使用每日一练 ===
   var idx = dayIndex(currentDate);
@@ -1922,12 +1929,116 @@ function submitQuiz(part) {
   resultEl.style.display = 'block';
   // 滚动到结果区
   resultEl.scrollIntoView({behavior:'smooth',block:'center'});
+  // 记录答题状态，更新统计栏进度
+  markQuizDone(part);
 }
 
 // ============================================================
 // 统计 Tab：每日题型实时更新
 // ============================================================
+// ============================================================
+// 甜言蜜语池 — 每天一句送给女朋友
+// ============================================================
+var SWEET_NOTES = [
+  "\u6BCF\u5929\u770B\u5230\u4F60\u8BA4\u771F\u5B66\u4E60\u7684\u6837\u5B50\uFF0C\u6211\u90FD\u89C9\u5F97\u7279\u522B\u5E78\u798F\u3002\u56DB\u7EA7\u6211\u4EEC\u4E00\u8D77\u8FC7\uFF01",
+  "\u80CC\u5355\u8BCD\u867D\u7136\u67AF\u71E5\uFF0C\u4F46\u6BCF\u4E00\u4E2A\u8BB0\u4F4F\u7684\u8BCD\uFF0C\u90FD\u662F\u4F60\u901A\u5411\u68A6\u60F3\u7684\u4E00\u6B65\u3002",
+  "\u4F60\u77E5\u9053\u5417\uFF1F\u4F60\u4E13\u6CE8\u5B66\u4E60\u7684\u4FA7\u8138\uFF0C\u662F\u6211\u89C1\u8FC7\u6700\u7F8E\u7684\u98CE\u666F\u3002",
+  "\u56DB\u7EA7\u53EA\u662F\u4E00\u4E2A\u5C0F\u76EE\u6807\uFF0C\u4F46\u4F60\u7684\u52AA\u529B\u8BA9\u6211\u89C9\u5F97\u4F60\u4EC0\u4E48\u90FD\u80FD\u505A\u5230\u3002",
+  "\u4ECA\u5929\u53C8\u662F\u5145\u5B9E\u7684\u4E00\u5929\uFF0C\u4F60\u7684\u575A\u6301\u8BA9\u6211\u5F88\u611F\u52A8\u3002\u52A0\u6CB9\uFF0C\u6211\u7684\u5973\u5B69\uFF01",
+  "\u5B66\u4E60\u7684\u8DEF\u4E0A\u4F60\u4ECE\u4E0D\u5B64\u5355\uFF0C\u56E0\u4E3A\u6211\u6C38\u8FDC\u5728\u4F60\u8EAB\u8FB9\u3002",
+  "\u6BCF\u4E00\u5929\u7684\u8FDB\u6B65\u90FD\u503C\u5F97\u5E86\u795D\uFF0C\u4F60\u6BD4\u6628\u5929\u66F4\u5389\u5BB3\u4E86\uFF01",
+  "\u6211\u6700\u559C\u6B22\u770B\u4F60\u6253\u5F00\u8FD9\u4E2A\u5C0F\u7AD9\u7684\u6837\u5B50\uFF0C\u90A3\u8BA9\u6211\u89C9\u5F97\u4E00\u5207\u90FD\u503C\u5F97\u3002",
+  "\u522B\u6025\uFF0C\u6162\u6162\u6765\uFF0C\u6BCF\u5929\u4E00\u70B9\u70B9\uFF0C\u79EF\u7D2F\u8D77\u6765\u5C31\u662F\u5DE8\u5927\u7684\u8FDB\u6B65\u3002",
+  "\u4F60\u7684\u7B11\u5BB9\u662F\u6211\u5199\u4EE3\u7801\u5199\u5230\u51CC\u6668\u7684\u52A8\u529B\uFF0C\u4F60\u7684\u52AA\u529B\u4E5F\u4F1A\u6709\u56DE\u62A5\u7684\u3002",
+  "\u56DB\u7EA7\u8FC7\u540E\u6211\u4EEC\u53BB\u5403\u4F60\u6700\u559C\u6B22\u7684\u706B\u9505\uFF0C\u6211\u8BF7\u5BA2\uFF01\u8FD9\u662F\u7EA6\u5B9A\u54E6\uFF5E",
+  "\u4F60\u662F\u6211\u89C1\u8FC7\u6700\u52AA\u529B\u7684\u4EBA\uFF0C\u522B\u4EBA\u90FD\u5728\u8E29\u539F\u5730\uFF0C\u4F60\u5DF2\u7ECF\u5728\u5954\u8DD1\u4E86\u3002",
+  "\u4ECA\u5929\u7684\u4F60\u6BD4\u6628\u5929\u591A\u8BB0\u4F4F\u4E86\u597D\u51E0\u4E2A\u5355\u8BCD\uFF0C\u8FD9\u5C31\u662F\u80DC\u5229\uFF01",
+  "\u7B49\u4F60\u8003\u5B8C\u56DB\u7EA7\uFF0C\u6211\u4EEC\u53BB\u65C5\u884C\uFF0C\u53BB\u4F60\u4E00\u76F4\u60F3\u53BB\u7684\u5730\u65B9\u3002",
+  "\u6211\u5F88\u5E78\u8FD0\u80FD\u966A\u4F60\u8D70\u8FC7\u8FD9\u6BB5\u65C5\u7A0B\uFF0C\u6BCF\u4E00\u5929\u90FD\u662F\u73CD\u8D35\u7684\u56DE\u5FC6\u3002",
+  "\u4F60\u772F\u7740\u773C\u775B\u770B\u5C4F\u5E55\u7684\u6837\u5B50\u771F\u53EF\u7231\uFF0C\u8BB0\u5F97\u591A\u7728\u7728\u773C\u5594\uFF5E",
+  "\u522B\u7ED9\u81EA\u5DF1\u592A\u5927\u538B\u529B\uFF0C\u4F60\u5DF2\u7ECF\u505A\u5F97\u5F88\u597D\u4E86\u3002\u8FD9\u53EA\u662F\u4E00\u573A\u8003\u8BD5\uFF0C\u4F60\u6BD4\u5B83\u91CD\u8981\u5F97\u591A\u3002",
+  "\u6BCF\u6B21\u770B\u5230\u4F60\u7684\u5B66\u4E60\u8BB0\u5F55\u5728\u66F4\u65B0\uFF0C\u6211\u5C31\u89C9\u5F97\u505A\u8FD9\u4E2A\u5C0F\u7AD9\u662F\u6211\u505A\u8FC7\u6700\u5BF9\u7684\u4E8B\u3002",
+  "\u4F60\u662F\u6211\u7684\u5C0F\u592A\u9633\uFF0C\u7167\u4EAE\u6211\u7684\u6BCF\u4E00\u5929\u3002\u52A0\u6CB9\u5B66\u4E60\uFF0C\u4E5F\u8981\u5F00\u5FC3\u5594\uFF5E",
+  "\u611F\u8C22\u4F60\u8BA9\u6211\u53C2\u4E0E\u4F60\u7684\u6210\u957F\uFF0C\u8FD9\u662F\u6211\u6700\u5F15\u4EE5\u4E3A\u50B2\u7684\u4E8B\u3002",
+  "\u4ECA\u5929\u7684\u4F60\u6709\u6CA1\u6709\u559D\u6C34\uFF1F\u5B66\u4E60\u5F52\u5B66\u4E60\uFF0C\u8EAB\u4F53\u4E5F\u8981\u7167\u987E\u597D\u3002",
+  "\u5FD9\u5B8C\u8FD9\u6BB5\u65F6\u95F4\uFF0C\u6211\u4EEC\u4E00\u8D77\u770B\u4F60\u6700\u559C\u6B22\u7684\u7535\u5F71\uFF0C\u6211\u5DF2\u7ECF\u5728\u60F3\u8981\u770B\u54EA\u90E8\u4E86\u3002",
+  "\u4F60\u8BF4\u8FC7\u7684\u68A6\u60F3\u6211\u90FD\u8BB0\u5F97\uFF0C\u56DB\u7EA7\u53EA\u662F\u7B2C\u4E00\u6B65\uFF0C\u540E\u9762\u7684\u8DEF\u6211\u4EEC\u4E00\u8D77\u8D70\u3002",
+  "\u4F60\u7684\u8BA4\u771F\u548C\u6267\u7740\u662F\u6211\u6700\u5D07\u62DC\u7684\u54C1\u8D28\uFF0C\u4E0D\u8981\u6000\u7591\u81EA\u5DF1\u3002",
+  "\u8FD9\u4E2A\u5C0F\u7AD9\u6BCF\u5929\u90FD\u5728\u53D8\u5F97\u66F4\u597D\uFF0C\u5C31\u50CF\u4F60\u4E00\u6837\uFF0C\u6BCF\u5929\u90FD\u5728\u53D8\u5F97\u66F4\u68D2\u3002"
+];
+
+function getDailySweetNote(d) {
+  var idx = dayIndex(d);
+  if (idx < 0) return SWEET_NOTES[0];
+  return SWEET_NOTES[idx % SWEET_NOTES.length];
+}
+
+// ============================================================
+// 生词收藏功能 — 点击星标收藏/取消，localStorage 存储
+// ============================================================
+function getBookmarks() {
+  try {
+    return JSON.parse(localStorage.getItem('cet4_bookmarks') || '[]');
+  } catch(e) { return []; }
+}
+function saveBookmarks(list) {
+  localStorage.setItem('cet4_bookmarks', JSON.stringify(list));
+}
+function toggleBookmark(word, el) {
+  var list = getBookmarks();
+  var idx = list.indexOf(word);
+  if (idx >= 0) {
+    list.splice(idx, 1);
+    if (el) { el.textContent = '\u2606'; el.title = '\u6536\u85CF\u8FD9\u4E2A\u5355\u8BCD'; }
+  } else {
+    list.push(word);
+    if (el) { el.textContent = '\u2605'; el.title = '\u53D6\u6D88\u6536\u85CF'; }
+  }
+  saveBookmarks(list);
+  updateStatsRow();
+}
+
+// ============================================================
+// 实时统计更新
+// ============================================================
+function updateStatsRow() {
+  var _el;
+  var idx = dayIndex(currentDate);
+  if ((_el = document.getElementById('statVocab'))) _el.textContent = getCurrentVocab().length;
+  if ((_el = document.getElementById('statStreak'))) _el.textContent = idx + 1;
+  if ((_el = document.getElementById('statBookmarks'))) _el.textContent = getBookmarks().length;
+
+  // 答题进度：检查 localStorage 中是否已提交
+  try {
+    var data = JSON.parse(localStorage.getItem('cet4_quiz_state') || '{}');
+    var todayKey = currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0')+'-'+String(currentDate.getDate()).padStart(2,'0');
+    var today = data[todayKey] || { quizA: false, quizB: false };
+    var done = (today.quizA ? 1 : 0) + (today.quizB ? 1 : 0);
+    if ((_el = document.getElementById('statQuiz'))) _el.textContent = done + '/2';
+  } catch(e) {
+    if ((_el = document.getElementById('statQuiz'))) _el.textContent = '0/2';
+  }
+
+  // 更新甜言蜜语
+  if ((_el = document.getElementById('sweetNoteText'))) {
+    _el.innerHTML = '\u201C' + getDailySweetNote(currentDate) + '\u201D';
+  }
+}
+
+// 答题提交后记录状态
+function markQuizDone(part) {
+  try {
+    var data = JSON.parse(localStorage.getItem('cet4_quiz_state') || '{}');
+    var todayKey = currentDate.getFullYear()+'-'+String(currentDate.getMonth()+1).padStart(2,'0')+'-'+String(currentDate.getDate()).padStart(2,'0');
+    if (!data[todayKey]) data[todayKey] = { quizA: false, quizB: false };
+    data[todayKey][part] = true;
+    localStorage.setItem('cet4_quiz_state', JSON.stringify(data));
+    updateStatsRow();
+  } catch(e) {}
+}
+
 function updateDailyStats() {
+  updateStatsRow();
   var d = currentDate;
   var idx = dayIndex(d);
   if (idx === 0) return; // day 0 不改统计
