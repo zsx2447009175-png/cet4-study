@@ -1237,6 +1237,9 @@ function renderExamQuestions() {
       <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
       <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
       <div class="q-score" id="sc-p1q${i+1}"></div>
+      <div class="answer-reveal" id="rev-p1q${i+1}">
+        <div class="ans-block"><div class="ans-lbl">✅ 正确答案</div><div class="ans-txt">${p.ans}</div></div>
+      </div>
     </div>
   `).join('');
   html += `</div>`;
@@ -1360,6 +1363,8 @@ function submitExam() {
     }
     const ta = document.getElementById(`p1q${i+1}`);
     if (ta) ta.className = got === 2 ? 'correct' : got === 1 ? 'partial' : 'wrong';
+    var rev = document.getElementById('rev-p1q'+(i+1));
+    if (rev) rev.style.display = 'block';
   });
 
   // Part 2
