@@ -282,11 +282,6 @@ textarea:disabled { opacity: 0.85; }
 .stat-num { font-size: 28px; font-weight: 800; color: var(--pink-500); }
 .stat-lbl { font-size: 12px; color: var(--text-light); margin-top: 2px; }
 
-
-/* 释义显隐动画 */
-.wc-hidden { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-.wc-visible { max-height: 500px !important; }
-
 /* Footer */
 .footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-light); margin-top: 10px; }
 .footer .heart { color: var(--pink-500); animation: heartbeat 1.4s ease-in-out infinite; display: inline-block; }
@@ -404,7 +399,7 @@ textarea:disabled { opacity: 0.85; }
     <div class="stats-card">
       <h3>📊 今日学习概览</h3>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="statVocab">80</div><div class="stat-lbl">核心词汇</div></div>
+        <div class="stat-item"><div class="stat-num" id="statVocab">100</div><div class="stat-lbl">核心词汇</div></div>
         <div class="stat-item"><div class="stat-num" id="statPhrases">10</div><div class="stat-lbl">词组练习</div></div>
         <div class="stat-item"><div class="stat-num" id="statSentences">5</div><div class="stat-lbl">句子翻译</div></div>
         <div class="stat-item"><div class="stat-num" id="statPara">1</div><div class="stat-lbl">段落翻译</div></div>
@@ -832,13 +827,11 @@ const WORD_POOL = [
   {w:"witness",p:"/ˈwɪtnəs/",m:"n. 目击者 v. 目睹",c:"witness an event"},
   {w:"worthwhile",p:"/ˌwɜːθˈwaɪl/",m:"adj. 值得的",c:"be worthwhile"},
 ];
-// Seeded shuffle based on start date - same order every day
+// Shuffle WORD_POOL for random order
 (function(){
   var pool = WORD_POOL;
-  var seed = 20260521; // fixed seed for consistent order
-  function srand() { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; }
   for (var i = pool.length - 1; i > 0; i--) {
-    var j = Math.floor(srand() * (i + 1));
+    var j = Math.floor(Math.random() * (i + 1));
     var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
   }
 })();
@@ -999,8 +992,7 @@ function getDailyVocab(d) {
   const idx = dayIndex(d);
   const start = (idx * 80) % WORD_POOL.length;
   const result = [];
-  var cnt = dayIndex(d) === 0 ? 80 : 100;
-  for (var i = 0; i < cnt; i++) {
+  for (let i = 0; i < 100; i++) {
     result.push(WORD_POOL[(start + i) % WORD_POOL.length]);
   }
   return result;
@@ -1042,31 +1034,22 @@ function renderVocab() {
   const page = filteredVocab.slice(start, start + VOCAB_PER_PAGE);
 
   count.textContent = `共 ${filteredVocab.length} 个单词，第 ${start + 1}-${Math.min(start + VOCAB_PER_PAGE, filteredVocab.length)} 个${currentDate.toDateString() !== TODAY.toDateString() ? ' · 查看历史记录' : ''}`;
-  badge.textContent = (dayIndex(currentDate)===0?80:100)+'词';
+  badge.textContent = all.length+'词';
 
-    grid.innerHTML = page.map(function(v, i) {
-    var num = start + i + 1;
-    var pos = v.m ? v.m.split(' ')[0].replace(/[,;]/g,'') : '';
-    var h = '';
-    h += '<div class="word-card" style="background:var(--w);border-radius:16px;padding:16px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;cursor:pointer;" onclick="toggleMeaning(this)">';
-    h += '<span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#' + num + '</span>';
-    h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
-    h += '<span style="font-size:22px;font-weight:800;color:#1a1a2e;">' + v.w + '</span>';
-    h += '<span onclick="event.stopPropagation();speakWord(this.dataset.w)" data-w="' + v.w + '" style="font-size:18px;cursor:pointer;opacity:0.6;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6" title="点击发音">🔊</span>';
-    if (pos) h += '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;">' + pos + '</span>';
-    h += '</div>';
-    h += '<div style="font-size:13px;color:#999;margin-bottom:4px;">' + v.p + '</div>';
-    h += '<div class="wc-hidden" style="max-height:0;overflow:hidden;transition:max-height 0.4s ease;">';
-    h += '<div style="height:1px;background:linear-gradient(90deg,transparent,#e0e0e0,transparent);margin:8px 0;"></div>';
-    h += '<div style="font-size:16px;color:#333;font-weight:600;margin-bottom:6px;">' + v.m + '</div>';
-    if (v.ex) h += '<div style="font-size:13px;color:#555;font-style:italic;line-height:1.7;margin-bottom:4px;">"' + v.ex + '"</div>';
-    if (v.excn) h += '<div style="font-size:12px;color:#999;margin-bottom:4px;">' + v.excn + '</div>';
-    if (v.c) h += '<div style="font-size:12px;color:#ec407a;padding:2px 0;">📌 ' + v.c + '</div>';
-    h += '</div>';
-    h += '<div class="wc-tip" style="font-size:11px;color:#ccc;text-align:center;margin-top:4px;">👆 点击展开释义</div>';
-    h += '</div>';
-    return h;
-  }).join('');
+  grid.innerHTML = page.map((v, i) => `
+    <div class="word-card" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;">
+      <span class="word-num" style="position:absolute;top:12px;right:14px;font-size:11px;color:#ccc;font-weight:700;">#${start + i + 1}</span>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+        <div style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;">${v.w}</div>
+        ${v.m ? '<span style="font-size:11px;background:#e8eaf6;color:#3949ab;padding:2px 10px;border-radius:10px;font-weight:600;white-space:nowrap;margin-top:4px;">' + v.m.split(' ')[0].replace(/[,;]/g,'') + '</span>' : ''}
+      </div>
+      <div style="font-size:13px;color:#999;margin-bottom:12px;letter-spacing:0.5px;">${v.p}</div>
+      <div style="font-size:16px;color:#333;font-weight:600;margin-bottom:8px;">${v.m}</div>
+      ${v.ex ? '<div style="height:1px;background:linear-gradient(90deg,transparent,#e0e0e0,transparent);margin:10px 0;"></div><div style="font-size:13px;color:#555;font-style:italic;line-height:1.7;margin-bottom:4px;">"' + v.ex + '"</div>' : ''}
+      ${v.excn ? '<div style="font-size:12px;color:#999;margin-bottom:8px;">' + v.excn + '</div>' : ''}
+      ${v.c ? '<div style="font-size:12px;color:#ec407a;padding:4px 0;">📌 ' + v.c + '</div>' : ''}
+    </div>
+  `).join('');
 
   if (totalPages <= 1) { pagination.innerHTML = ''; return; }
   pagination.innerHTML = `
@@ -1099,7 +1082,7 @@ function updateUI() {
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  document.getElementById('statVocab').textContent = dayIndex(currentDate) === 0 ? 80 : 100;
+  document.getElementById('statVocab').textContent = 100;
   renderHistoryScores();
 }
 
@@ -1162,9 +1145,6 @@ function renderExamQuestions() {
       <div class="q-label"><span class="q-num">${i+1}</span> ${p.zh}</div>
       <textarea id="p1q${i+1}" placeholder="输入英文..." rows="1"></textarea>
       <div class="q-score" id="sc-p1q${i+1}"></div>
-      <div class="answer-reveal" id="rev-p1q${i+1}">
-        <div class="ans-block"><div class="ans-lbl">✅ 参考答案</div><div class="ans-txt">${p.ans}</div></div>
-      </div>
     </div>
   `).join('');
   html += `</div>`;
@@ -1213,21 +1193,6 @@ function renderExamQuestions() {
 // ============================================================
 // 评分逻辑
 // ============================================================
-/* === 发音 & 释义显隐 === */
-function speakWord(word) {
-  if (!window.speechSynthesis) return;
-  speechSynthesis.cancel();
-  var u = new SpeechSynthesisUtterance(word);
-  u.lang = 'en-US'; u.rate = 0.85; u.pitch = 1;
-  speechSynthesis.speak(u);
-}
-function toggleMeaning(el) {
-  var h = el.querySelector('.wc-hidden');
-  if (h) h.classList.toggle('wc-visible');
-  var tip = el.querySelector('.wc-tip');
-  if (tip) tip.style.display = h && h.classList.contains('wc-visible') ? 'none' : 'block';
-}
-
 function contains(text, word) {
   return text.toLowerCase().includes(word.toLowerCase());
 }
@@ -1293,18 +1258,16 @@ function submitExam() {
   // Part 1
   let p1total = 0;
   exerciseData.phrases.forEach((ph, i) => {
-    var got = scorePhrase('p1q'+(i+1), ph.key);
+    const got = scorePhrase(`p1q${i+1}`, ph.key);
     p1total += got;
-    var sc = document.getElementById('sc-p1q'+(i+1));
+    const sc = document.getElementById(`sc-p1q${i+1}`);
     if (sc) {
       sc.style.display = 'block';
       sc.className = 'q-score ' + (got === 2 ? 's-full' : got === 1 ? 's-partial' : 's-zero');
-      sc.innerHTML = '得 <b>'+got+'</b> / 2 分';
+      sc.innerHTML = `得 <b>${got}</b> / 2 分`;
     }
-    var ta = document.getElementById('p1q'+(i+1));
+    const ta = document.getElementById(`p1q${i+1}`);
     if (ta) ta.className = got === 2 ? 'correct' : got === 1 ? 'partial' : 'wrong';
-    var rev = document.getElementById('rev-p1q'+(i+1));
-    if (rev) rev.style.display = 'block';
   });
 
   // Part 2
