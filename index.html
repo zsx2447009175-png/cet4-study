@@ -1072,7 +1072,7 @@ function renderVocab() {
     var tag = v.m ? v.m.split(' ')[0].replace(/[,;]/g,'') : '';
     return '<div class="word-card wcard" onclick="toggleMeaning(this)" style="background:var(--w);border-radius:16px;padding:20px 18px 18px;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06),0 0 0 1px rgba(0,0,0,0.02);border-left:0;position:relative;overflow:hidden;cursor:pointer;">' +
       '<span class="word-num" style="position:absolute;top:12px;left:14px;font-size:11px;color:#ccc;font-weight:700;">#' + (start + i + 1) + '</span>' +
-      '<span class="bookmark-star" data-word="' + v.w.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();toggleBookmark(this.getAttribute('data-word'),this)" style="position:absolute;top:10px;right:14px;font-size:18px;color:#ffc107;cursor:pointer;user-select:none;" title="收藏这个单词">☆</span>' +
+      '<span class="bookmark-star" data-word="' + v.w.replace(/"/g,'&quot;') + '" onclick="event.stopPropagation();toggleBookmark(this.getAttribute(\'data-word\'),this)" style="position:absolute;top:10px;right:14px;font-size:18px;color:#ffc107;cursor:pointer;user-select:none;" title="收藏这个单词">☆</span>' +
       '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">' +
         '<div class="word-title-row" style="display:flex;align-items:center;gap:8px;">' +
           '<span class="word-en" onclick="event.stopPropagation();speakWord(\'' + v.w.replace(/'/g,"\\'") + '\')" title="\u{1F50A} \u70B9\u51FB\u64AD\u653E\u53D1\u97F3" style="font-size:22px;font-weight:800;color:#1a1a2e;letter-spacing:0.3px;cursor:pointer;">' + v.w + ' <span class="audio-icon" style="font-size:14px;color:#999;vertical-align:middle;">\u{1F50A}</span></span>' +
