@@ -1032,15 +1032,16 @@ function changeDay(delta) {
 }
 
 function updateUI() {
-  document.getElementById('dateLabel').textContent = formatDate(currentDate);
-  document.getElementById('sweetNoteDate').textContent = formatDate(TODAY);
-  document.getElementById('examDateLabel').textContent = formatDate(currentDate);
+  var _el;
+  if ((_el = document.getElementById('dateLabel'))) _el.textContent = formatDate(currentDate);
+  if ((_el = document.getElementById('sweetNoteDate'))) _el.textContent = formatDate(TODAY);
+  if ((_el = document.getElementById('examDateLabel'))) _el.textContent = formatDate(currentDate);
   // 更新天数和寄语
   var dn = dayIndex(currentDate) + 1;
   var sweet = document.getElementById('sweet-note');
   if (sweet) sweet.textContent = getDailyQuote(currentDate);
   renderVocab();
-  document.getElementById('statVocab').textContent = getCurrentVocab().length;
+  if ((_el = document.getElementById('statVocab'))) _el.textContent = getCurrentVocab().length;
   renderHistoryScores();
   renderDailyQuiz();
   updateDailyStats();
