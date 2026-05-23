@@ -307,6 +307,75 @@ textarea:disabled { opacity: 0.85; }
 .word-en:hover .audio-icon { color: #ec407a; transform: scale(1.2); display: inline-block; }
 .audio-icon { display: inline-block; transition: all 0.15s; }
 
+
+/* ================================================================ */
+/* 复习 Tab 样式 (V3.4)                                               */
+/* ================================================================ */
+.review-option-btn {
+  display: block; width: 100%; padding: 14px 16px;
+  border: 2px solid var(--pink-200);
+  border-radius: 12px; background: var(--white);
+  color: var(--text); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: var(--transition); font-family: inherit;
+  text-align: center; line-height: 1.5;
+}
+.review-option-btn:hover {
+  border-color: var(--pink-400); background: var(--pink-50);
+  transform: translateY(-2px); box-shadow: 0 4px 12px rgba(236,64,122,0.15);
+}
+.review-option-btn:active { transform: scale(0.97); }
+.review-option-btn.correct-choice {
+  border-color: #43a047; background: #e8f5e9;
+  color: #2e7d32; box-shadow: 0 0 0 4px rgba(67,160,71,0.2);
+  pointer-events: none;
+}
+.review-option-btn.wrong-choice {
+  border-color: #e53935; background: #ffebee;
+  color: #c62828; box-shadow: 0 0 0 4px rgba(229,57,53,0.2);
+  pointer-events: none;
+}
+.review-option-btn.correct-reveal {
+  border-color: #43a047; background: #c8e6c9;
+  color: #2e7d32; pointer-events: none;
+}
+.review-feedback-correct {
+  background: #e8f5e9; border-left: 4px solid #43a047;
+}
+.review-feedback-wrong {
+  background: #ffebee; border-left: 4px solid #e53935;
+}
+.review-next-btn {
+  background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+  color: white; border: none; border-radius: 50px;
+  padding: 12px 36px; font-size: 15px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 4px 16px rgba(106,27,154,0.4);
+  transition: var(--transition);
+}
+.review-next-btn:hover { transform: translateY(-2px); }
+.review-next-btn:active { transform: scale(0.97); }
+.review-wrong-word {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; margin-bottom: 8px;
+  background: #fff5f5; border-radius: 10px;
+  border-left: 4px solid #e53935;
+}
+.review-wrong-word .rw-word {
+  font-size: 18px; font-weight: 800; color: var(--pink-700);
+}
+.review-wrong-word .rw-meaning {
+  font-size: 14px; color: var(--text); font-weight: 600;
+}
+.review-wrong-word .rw-wrong-count {
+  font-size: 11px; color: #e53935; font-weight: 700;
+  background: #ffcdd2; padding: 2px 10px; border-radius: 12px;
+}
+@media(max-width:480px){
+  .review-option-btn { font-size: 14px; padding: 12px; }
+  #reviewWord { font-size: 28px; }
+  #reviewOptions { grid-template-columns: 1fr; }
+}
+
 </style>
 </head>
 <body>
@@ -329,13 +398,88 @@ textarea:disabled { opacity: 0.85; }
 
   <!-- Tab Nav -->
   <nav class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('vocab')"><span class="tab-icon">📝</span>词汇</button>
+    <button class="tab-btn active" id="tab-review" onclick="switchTab('review')"><span class="tab-icon">🔄</span>复习</button>
+    <button class="tab-btn" onclick="switchTab('vocab')"><span class="tab-icon">📝</span>词汇</button>
     <button class="tab-btn" id="tab-exam" onclick="switchTab('exam')"><span class="tab-icon">✍️</span>模拟考</button>
     <button class="tab-btn" onclick="switchTab('stats')"><span class="tab-icon">📊</span>统计</button>
   </nav>
 
   <!-- ============ Tab 1: 词汇 ============ -->
-  <div class="tab-panel active" id="panel-vocab">
+
+  <!-- ============ Tab 0: 复习 ============ -->
+  <div class="tab-panel active" id="panel-review">
+    <!-- 状态 A: 已完成，无需复习 -->
+    <div id="reviewDoneState" style="display:none;">
+      <div class="card" style="text-align:center;padding:40px 20px;">
+        <div style="font-size:48px;margin-bottom:16px;">🎉</div>
+        <h2 style="font-size:22px;color:var(--pink-700);margin-bottom:8px;">太棒了！昨日词汇全部掌握</h2>
+        <p style="color:var(--text-light);font-size:14px;margin-bottom:20px;">你已经完全掌握了 <strong id="reviewDoneDate"></strong> 的所有词汇，无需复习！</p>
+        <div style="font-size:48px;">💯</div>
+      </div>
+    </div>
+    <!-- 状态 B: 复习前导页 -->
+    <div id="reviewPre" style="display:none;">
+      <div class="card exam-pre">
+        <div class="exam-icon">🔄</div>
+        <h2>词汇复习</h2>
+        <p style="color:var(--text-light);margin:8px 0;">巩固昨天的学习成果</p>
+        <div class="exam-info">
+          <ul style="list-style:none;padding:0;">
+            <li>📝 <strong>内容：</strong>昨日学习词汇 (<span id="reviewDateLabel"></span>)</li>
+            <li>🎯 <strong>形式：</strong>看英文选中文释义（4选1）</li>
+            <li>📊 <strong>数量：</strong><span id="reviewWordCount">--</span> 个单词</li>
+            <li>💡 <strong>说明：</strong>优先复习薄弱词汇，直到全部掌握</li>
+          </ul>
+        </div>
+        <button class="btn-start" id="btnStartReview" onclick="startReview()">🚀 开始复习</button>
+        <p id="reviewHistoryHint" style="font-size:12px;color:var(--text-light);margin-top:12px;"></p>
+      </div>
+    </div>
+    <!-- 状态 C: 复习进行中 -->
+    <div id="reviewBody" style="display:none;">
+      <div class="exam-header" style="background:linear-gradient(135deg,#6a1b9a,#8e24aa);">
+        <div>
+          <div class="exam-title">🔄 复习中 · <span id="reviewTitleDate"></span>词汇</div>
+          <div style="font-size:11px;opacity:0.7;" id="reviewProgress">第 1 / 80 题</div>
+        </div>
+        <div class="timer-box" style="background:rgba(255,255,255,0.15);">
+          <div class="timer-lbl">进度</div>
+          <div id="reviewProgBar" style="font-size:18px;font-weight:900;">0%</div>
+          <div class="timer-prog-wrap"><div id="reviewProgFill" style="height:100%;border-radius:2px;background:#ce93d8;transition:width 0.3s;width:0%;"></div></div>
+        </div>
+      </div>
+      <div class="card" id="reviewQuizCard" style="text-align:center;padding:30px 20px;min-height:280px;">
+        <div style="font-size:13px;color:var(--text-light);margin-bottom:12px;" id="reviewQNumber">第 1 题</div>
+        <div style="font-size:36px;font-weight:800;color:var(--pink-700);margin-bottom:8px;letter-spacing:1px;" id="reviewWord"></div>
+        <div style="font-size:14px;color:var(--text-light);margin-bottom:24px;" id="reviewPron"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:500px;margin:0 auto;" id="reviewOptions"></div>
+        <div id="reviewFeedback" style="display:none;margin-top:20px;padding:14px;border-radius:12px;animation:fadeIn 0.3s ease;"></div>
+        <div id="reviewNextBtn" style="display:none;margin-top:16px;"></div>
+      </div>
+    </div>
+    <!-- 状态 D: 复习结果 -->
+    <div id="reviewResult" style="display:none;">
+      <div class="result-card" id="reviewResultCard">
+        <h2 id="reviewResultTitle">复习完成 🎉</h2>
+        <div class="big-score" id="reviewResultScore">0<span>%</span></div>
+        <div class="grade-chip" id="reviewResultMsg"></div>
+        <div class="score-detail">
+          <div class="sd-item"><div class="sd-num" id="reviewCorrect">0</div><div class="sd-lbl">正确</div></div>
+          <div class="sd-item"><div class="sd-num" id="reviewWrong">0</div><div class="sd-lbl">错误</div></div>
+          <div class="sd-item"><div class="sd-num" id="reviewTotal">0</div><div class="sd-lbl">总题数</div></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:12px;">
+        <button class="btn-start" id="btnReviewAgain" onclick="startReviewAgain()" style="display:none;font-size:15px;padding:12px 36px;">🔄 继续复习（仅错题）</button>
+      </div>
+      <div class="card" id="reviewWrongList" style="display:none;margin-top:14px;">
+        <div class="section-title"><span class="icon">❌</span>本次错误词汇</div>
+        <div id="reviewWrongWords"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-vocab">
     <div class="card">
       <div class="section-title"><span class="icon">📝</span>今日核心词汇 <span class="badge" id="vocabBadge">80词</span></div>
       <div class="search-box">
@@ -1175,6 +1319,19 @@ function updateUI() {
     renderDailyQuiz();
     updateDailyStats();
   }
+
+  // === 复习 Tab 可见性控制 (V3.4) ===
+  var tabReview = document.getElementById('tab-review');
+  if (tabReview) {
+    if (idx < 1) { tabReview.style.display = 'none'; }
+    else {
+      tabReview.style.display = '';
+      var reviewPanel = document.getElementById('panel-review');
+      if (reviewPanel && reviewPanel.classList.contains('active')) {
+        renderReviewPanel();
+      }
+    }
+  }
 }
 
 // ============================================================
@@ -1460,20 +1617,21 @@ function renderHistoryScores() {
 // Tab 切换
 // ============================================================
 function switchTab(name) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('panel-' + name).classList.add('active');
-  const map = { vocab:0, exam:1, stats:2 };
+  var map = { review:0, vocab:1, exam:2, stats:3 };
   document.querySelectorAll('.tab-btn')[map[name]].classList.add('active');
+  if (name === 'review') { renderReviewPanel(); }
 }
 
 // ============================================================
 // 初始化
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
-  // 确保今天的词汇已生成
+document.addEventListener('DOMContentLoaded', function() {
   getDailyVocab(TODAY);
   updateUI();
+  if (dayIndex(TODAY) >= 1) { switchTab('review'); }
 });
 
 // ============================================================
@@ -2120,6 +2278,292 @@ function getTodayFocus(type) {
     '\u4F5C\u6587': '\u6BB5\u843D\u7ED3\u6784\u6E05\u6670 + \u8BBA\u636E\u4E3E\u4F8B + \u8BCD\u6C47\u591A\u6837\u5316'
   };
   return map[type] || '\u8BCD\u6C47\u79EF\u7D2F + \u9898\u578B\u4E13\u9879';
+}
+
+
+// ============================================================
+// 复习模式 (V3.4) — 昨日词汇选择题复习系统
+// ============================================================
+var reviewState = {
+  words: [], currentIndex: 0,
+  correctCount: 0, wrongCount: 0,
+  wrongWords: [], isActive: false,
+  isReviewAgain: false
+};
+
+function getReviewData() {
+  try { return JSON.parse(localStorage.getItem('cet4_review_data') || '{}'); }
+  catch(e) { return {}; }
+}
+function saveReviewData(data) {
+  try { localStorage.setItem('cet4_review_data', JSON.stringify(data)); } catch(e) {}
+}
+function updateWordErrorCount(dateKeyStr, word, increment) {
+  var data = getReviewData();
+  if (!data[dateKeyStr]) data[dateKeyStr] = { words: {}, completedRound: 0 };
+  if (!data[dateKeyStr].words) data[dateKeyStr].words = {};
+  var prev = data[dateKeyStr].words[word] || 0;
+  data[dateKeyStr].words[word] = prev + (increment ? 1 : 0);
+  saveReviewData(data);
+}
+function markDateMastered(dateKeyStr) {
+  var data = getReviewData();
+  if (!data[dateKeyStr]) data[dateKeyStr] = { words: {}, completedRound: 0 };
+  data[dateKeyStr].completedRound = (data[dateKeyStr].completedRound || 0) + 1;
+  data[dateKeyStr].lastMastered = true;
+  saveReviewData(data);
+}
+function getPreviousDate() {
+  var prev = new Date(currentDate);
+  prev.setDate(prev.getDate() - 1);
+  return prev;
+}
+function getPreviousDayVocab() {
+  return getDailyVocab(getPreviousDate());
+}
+function isPreviousDayMastered() {
+  var prevKey = dateKey(getPreviousDate());
+  var data = getReviewData();
+  return !!(data[prevKey] && data[prevKey].lastMastered);
+}
+function getReviewHistorySummary() {
+  var prevKey = dateKey(getPreviousDate());
+  var data = getReviewData();
+  if (!data[prevKey] || !data[prevKey].words) return '';
+  var words = data[prevKey].words;
+  var keys = Object.keys(words), total = keys.length, wrongTotal = 0;
+  for (var i = 0; i < keys.length; i++) { if (words[keys[i]] > 0) wrongTotal++; }
+  var completed = data[prevKey].completedRound || 0;
+  var parts = [];
+  if (completed > 0) parts.push('已完成 ' + completed + ' 轮复习');
+  if (wrongTotal > 0) parts.push('还有 ' + wrongTotal + ' 个薄弱词汇');
+  return parts.join('，');
+}
+function generateOptions(correctWord, count) {
+  count = count || 3;
+  var pool = WORD_POOL.filter(function(w) { return w.w !== correctWord.w; });
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  var options = [correctWord].concat(pool.slice(0, count));
+  for (var i = options.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = options[i]; options[i] = options[j]; options[j] = tmp;
+  }
+  return options;
+}
+function sortWordsForReview(words, dateKeyStr) {
+  var data = getReviewData();
+  var wordData = (data[dateKeyStr] && data[dateKeyStr].words) ? data[dateKeyStr].words : {};
+  var weighted = words.map(function(w) {
+    return { word: w, wrongCount: wordData[w.w] || 0 };
+  });
+  weighted.sort(function(a, b) {
+    if (a.wrongCount !== b.wrongCount) return b.wrongCount - a.wrongCount;
+    return Math.random() - 0.5;
+  });
+  return weighted.map(function(item) { return item.word; });
+}
+function startReview() {
+  var prevDate = getPreviousDate();
+  var prevKey = dateKey(prevDate);
+  var allWords = getPreviousDayVocab();
+  reviewState = {
+    words: sortWordsForReview(allWords, prevKey),
+    currentIndex: 0, correctCount: 0, wrongCount: 0,
+    wrongWords: [], isActive: true, isReviewAgain: false
+  };
+  var pre = document.getElementById('reviewPre');
+  var body = document.getElementById('reviewBody');
+  var result = document.getElementById('reviewResult');
+  var done = document.getElementById('reviewDoneState');
+  if (pre) pre.style.display = 'none';
+  if (body) body.style.display = 'block';
+  if (result) result.style.display = 'none';
+  if (done) done.style.display = 'none';
+  var titleEl = document.getElementById('reviewTitleDate');
+  if (titleEl) titleEl.textContent = formatDate(prevDate);
+  renderReviewQuestion();
+}
+function startReviewAgain() {
+  if (reviewState.wrongWords.length === 0) return;
+  var prevKey = dateKey(getPreviousDate());
+  var wrongNames = reviewState.wrongWords.map(function(item) { return item.word; });
+  var wrongVocab = WORD_POOL.filter(function(w) { return wrongNames.indexOf(w.w) >= 0; });
+  reviewState = {
+    words: sortWordsForReview(wrongVocab, prevKey),
+    currentIndex: 0, correctCount: 0, wrongCount: 0,
+    wrongWords: [], isActive: true, isReviewAgain: true
+  };
+  document.getElementById('reviewResult').style.display = 'none';
+  document.getElementById('reviewBody').style.display = 'block';
+  renderReviewQuestion();
+}
+function renderReviewQuestion() {
+  if (reviewState.currentIndex >= reviewState.words.length) { finishReview(); return; }
+  var word = reviewState.words[reviewState.currentIndex];
+  var total = reviewState.words.length, cur = reviewState.currentIndex + 1;
+  var progressEl = document.getElementById('reviewProgress');
+  if (progressEl) progressEl.textContent = '第 ' + cur + ' / ' + total + ' 题';
+  var pct = Math.round((reviewState.currentIndex / total) * 100);
+  var progBar = document.getElementById('reviewProgBar');
+  var progFill = document.getElementById('reviewProgFill');
+  if (progBar) progBar.textContent = pct + '%';
+  if (progFill) progFill.style.width = pct + '%';
+  var qNum = document.getElementById('reviewQNumber');
+  if (qNum) qNum.textContent = '第 ' + cur + ' 题';
+  var wEl = document.getElementById('reviewWord');
+  if (wEl) wEl.textContent = word.w;
+  var pEl = document.getElementById('reviewPron');
+  if (pEl) pEl.textContent = word.p || '';
+  var options = generateOptions(word, 3);
+  var optHTML = '';
+  for (var i = 0; i < options.length; i++) {
+    var opt = options[i];
+    var escapedWord = opt.w.replace(/'/g, "\\'");
+    var escapedAttr = opt.w.replace(/"/g, '&quot;');
+    optHTML += '<button class="review-option-btn" onclick="selectReviewOption(this,\\'' + escapedWord + '\\')" data-word="' + escapedAttr + '">' + opt.m + '</button>';
+  }
+  var oEl = document.getElementById('reviewOptions');
+  if (oEl) oEl.innerHTML = optHTML;
+  var fb = document.getElementById('reviewFeedback');
+  if (fb) { fb.style.display = 'none'; fb.innerHTML = ''; }
+  var nb = document.getElementById('reviewNextBtn');
+  if (nb) { nb.style.display = 'none'; nb.innerHTML = ''; }
+}
+function selectReviewOption(btn, selectedWord) {
+  var allBtns = document.querySelectorAll('#reviewOptions .review-option-btn');
+  for (var i = 0; i < allBtns.length; i++) { allBtns[i].style.pointerEvents = 'none'; }
+  var currentWord = reviewState.words[reviewState.currentIndex];
+  var isCorrect = (selectedWord === currentWord.w);
+  var prevKey = dateKey(getPreviousDate());
+  for (var i = 0; i < allBtns.length; i++) {
+    if (allBtns[i].getAttribute('data-word') === currentWord.w) {
+      allBtns[i].classList.add('correct-reveal');
+    }
+  }
+  var fb = document.getElementById('reviewFeedback');
+  if (!fb) return;
+  fb.style.display = 'block';
+  if (isCorrect) {
+    btn.classList.add('correct-choice');
+    reviewState.correctCount++;
+    fb.className = 'review-feedback-correct';
+    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u2705</div><div style="font-size:16px;font-weight:700;color:#2e7d32;">回答正确！</div><div style="font-size:13px;color:#4caf50;margin-top:4px;">' + currentWord.m + '</div>';
+    updateWordErrorCount(prevKey, currentWord.w, false);
+    setTimeout(function() { reviewState.currentIndex++; renderReviewQuestion(); }, 800);
+  } else {
+    btn.classList.add('wrong-choice');
+    reviewState.wrongCount++;
+    reviewState.wrongWords.push({ word: currentWord.w, correctMeaning: currentWord.m });
+    updateWordErrorCount(prevKey, currentWord.w, true);
+    fb.className = 'review-feedback-wrong';
+    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u274C</div><div style="font-size:16px;font-weight:700;color:#c62828;">回答错误</div><div style="font-size:14px;color:#333;margin-top:8px;font-weight:600;">正确答案：' + currentWord.m + '</div>' + (currentWord.c ? '<div style="font-size:12px;color:#ec407a;margin-top:4px;">\uD83D\uDCCC ' + currentWord.c + '</div>' : '');
+    var nb = document.getElementById('reviewNextBtn');
+    if (nb) {
+      nb.style.display = 'block';
+      nb.innerHTML = '<button class="review-next-btn" onclick="goToNextReviewQuestion()">下一题 \u25B6</button>';
+    }
+  }
+}
+function goToNextReviewQuestion() { reviewState.currentIndex++; renderReviewQuestion(); }
+function finishReview() {
+  reviewState.isActive = false;
+  var total = reviewState.words.length, correct = reviewState.correctCount;
+  var wrong = reviewState.wrongCount, pct = Math.round((correct / total) * 100);
+  var prevKey = dateKey(getPreviousDate());
+  var body = document.getElementById('reviewBody');
+  var result = document.getElementById('reviewResult');
+  if (body) body.style.display = 'none';
+  if (!result) return;
+  result.style.display = 'block';
+  var cardEl = document.getElementById('reviewResultCard');
+  var titleEl = document.getElementById('reviewResultTitle');
+  var msgEl = document.getElementById('reviewResultMsg');
+  var againBtn = document.getElementById('btnReviewAgain');
+  if (pct === 100) {
+    if (cardEl) cardEl.className = 'result-card excellent';
+    if (titleEl) titleEl.textContent = '完美通关 \uD83C\uDF1F';
+    if (msgEl) msgEl.textContent = '太棒了！昨天的单词全部掌握！';
+    if (againBtn) againBtn.style.display = 'none';
+    markDateMastered(prevKey);
+  } else if (pct >= 80) {
+    if (cardEl) cardEl.className = 'result-card good';
+    if (titleEl) titleEl.textContent = '表现不错 \uD83D\uDC4D';
+    if (msgEl) msgEl.textContent = '很不错，继续加油！';
+    if (againBtn) againBtn.style.display = 'block';
+  } else if (pct >= 60) {
+    if (cardEl) cardEl.className = 'result-card fair';
+    if (titleEl) titleEl.textContent = '仍需努力 \uD83D\uDCDA';
+    if (msgEl) msgEl.textContent = '还需要多背背哦，不要灰心！';
+    if (againBtn) againBtn.style.display = 'block';
+  } else {
+    if (cardEl) cardEl.className = 'result-card poor';
+    if (titleEl) titleEl.textContent = '需要加强 \uD83D\uDCAA';
+    if (msgEl) msgEl.textContent = '错误较多，建议再背一轮昨天的词汇！';
+    if (againBtn) againBtn.style.display = 'block';
+  }
+  var scoreEl = document.getElementById('reviewResultScore');
+  if (scoreEl) scoreEl.innerHTML = pct + '<span>%</span>';
+  var rcEl = document.getElementById('reviewCorrect');
+  if (rcEl) rcEl.textContent = correct;
+  var rwEl = document.getElementById('reviewWrong');
+  if (rwEl) rwEl.textContent = wrong;
+  var rtEl = document.getElementById('reviewTotal');
+  if (rtEl) rtEl.textContent = total;
+  var wrongListEl = document.getElementById('reviewWrongList');
+  var wrongWordsEl = document.getElementById('reviewWrongWords');
+  if (reviewState.wrongWords.length > 0) {
+    if (wrongListEl) wrongListEl.style.display = 'block';
+    if (wrongWordsEl) {
+      var data = getReviewData();
+      var html = '';
+      for (var i = 0; i < reviewState.wrongWords.length; i++) {
+        var item = reviewState.wrongWords[i];
+        var cnt = (data[prevKey] && data[prevKey].words && data[prevKey].words[item.word]) || 1;
+        html += '<div class="review-wrong-word"><div><div class="rw-word">' + item.word + '</div><div class="rw-meaning">' + item.correctMeaning + '</div></div><div class="rw-wrong-count">错误 ' + cnt + ' 次</div></div>';
+      }
+      wrongWordsEl.innerHTML = html;
+    }
+  } else {
+    if (wrongListEl) wrongListEl.style.display = 'none';
+  }
+}
+function renderReviewPanel() {
+  var idx = dayIndex(currentDate);
+  if (idx < 1) return;
+  var doneEl = document.getElementById('reviewDoneState');
+  var preEl = document.getElementById('reviewPre');
+  var bodyEl = document.getElementById('reviewBody');
+  var resultEl = document.getElementById('reviewResult');
+  if (reviewState.isActive) {
+    if (doneEl) doneEl.style.display = 'none';
+    if (preEl) preEl.style.display = 'none';
+    if (bodyEl) bodyEl.style.display = 'block';
+    if (resultEl) resultEl.style.display = 'none';
+    return;
+  }
+  if (isPreviousDayMastered()) {
+    if (doneEl) doneEl.style.display = 'block';
+    if (preEl) preEl.style.display = 'none';
+    if (bodyEl) bodyEl.style.display = 'none';
+    if (resultEl) resultEl.style.display = 'none';
+    var doneDateEl = document.getElementById('reviewDoneDate');
+    if (doneDateEl) doneDateEl.textContent = formatDate(getPreviousDate());
+    return;
+  }
+  if (doneEl) doneEl.style.display = 'none';
+  if (preEl) preEl.style.display = 'block';
+  if (bodyEl) bodyEl.style.display = 'none';
+  if (resultEl) resultEl.style.display = 'none';
+  var allWords = getPreviousDayVocab();
+  var dlEl = document.getElementById('reviewDateLabel');
+  if (dlEl) dlEl.textContent = formatDate(getPreviousDate());
+  var cEl = document.getElementById('reviewWordCount');
+  if (cEl) cEl.textContent = allWords.length;
+  var hEl = document.getElementById('reviewHistoryHint');
+  if (hEl) { var s = getReviewHistorySummary(); hEl.textContent = s ? '上次复习：' + s : ''; }
 }
 
 </script>
