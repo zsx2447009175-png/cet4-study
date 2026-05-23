@@ -2425,9 +2425,9 @@ function renderReviewQuestion() {
   var optHTML = '';
   for (var i = 0; i < options.length; i++) {
     var opt = options[i];
-    var escapedWord = opt.w.replace(/'/g, "\\'");
+    var escapedWord = opt.w.replace(/'/g, "\'");
     var escapedAttr = opt.w.replace(/"/g, '&quot;');
-    optHTML += '<button class="review-option-btn" onclick="selectReviewOption(this,\\'' + escapedWord + '\\')" data-word="' + escapedAttr + '">' + opt.m + '</button>';
+    optHTML += '<button class="review-option-btn" onclick="selectReviewOption(this,\'' + escapedWord + '\')" data-word="' + escapedAttr + '">' + opt.m + '</button>';
   }
   var oEl = document.getElementById('reviewOptions');
   if (oEl) oEl.innerHTML = optHTML;
