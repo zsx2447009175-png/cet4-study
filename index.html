@@ -2284,6 +2284,10 @@ function getTodayFocus(type) {
 // ============================================================
 // 复习模式 (V3.4) — 昨日词汇选择题复习系统
 // ============================================================
+// dateKey helper (removed by build_v3.py, needed by review + saveExamScore)
+function dateKey(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 var reviewState = {
   words: [], currentIndex: 0,
   correctCount: 0, wrongCount: 0,
