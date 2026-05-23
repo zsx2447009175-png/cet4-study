@@ -1326,10 +1326,7 @@ function updateUI() {
     if (idx < 1) { tabReview.style.display = 'none'; }
     else {
       tabReview.style.display = '';
-      var reviewPanel = document.getElementById('panel-review');
-      if (reviewPanel && reviewPanel.classList.contains('active')) {
-        renderReviewPanel();
-      }
+      renderReviewPanel();
     }
   }
 }
@@ -2376,7 +2373,8 @@ function startReview() {
   reviewState = {
     words: sortWordsForReview(allWords, prevKey),
     currentIndex: 0, correctCount: 0, wrongCount: 0,
-    wrongWords: [], isActive: true, isReviewAgain: false
+    wrongWords: [], isActive: true, isReviewAgain: false,
+    reviewDateKey: dateKey(currentDate)
   };
   var pre = document.getElementById('reviewPre');
   var body = document.getElementById('reviewBody');
@@ -2398,7 +2396,8 @@ function startReviewAgain() {
   reviewState = {
     words: sortWordsForReview(wrongVocab, prevKey),
     currentIndex: 0, correctCount: 0, wrongCount: 0,
-    wrongWords: [], isActive: true, isReviewAgain: true
+    wrongWords: [], isActive: true, isReviewAgain: true,
+    reviewDateKey: dateKey(currentDate)
   };
   document.getElementById('reviewResult').style.display = 'none';
   document.getElementById('reviewBody').style.display = 'block';
@@ -2537,6 +2536,11 @@ function finishReview() {
 function renderReviewPanel() {
   var idx = dayIndex(currentDate);
   if (idx < 1) return;
+  // 如果日期变了，重置进行中的复习状态
+  if (reviewState.isActive && reviewState.reviewDateKey !== dateKey(currentDate)) {
+    reviewState.isActive = false;
+    reviewState.words = [];
+  }
   var doneEl = document.getElementById('reviewDoneState');
   var preEl = document.getElementById('reviewPre');
   var bodyEl = document.getElementById('reviewBody');
