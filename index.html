@@ -2453,7 +2453,7 @@ function selectReviewOption(btn, selectedWord) {
     btn.classList.add('correct-choice');
     reviewState.correctCount++;
     fb.className = 'review-feedback-correct';
-    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u2705</div><div style="font-size:16px;font-weight:700;color:#2e7d32;">回答正确！</div><div style="font-size:13px;color:#4caf50;margin-top:4px;">' + currentWord.m + '</div>';
+    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u2705</div><div style="font-size:16px;font-weight:700;color:#2e7d32;">回答正确！</div><div style="font-size:14px;color:#333;margin-top:6px;font-weight:600;">' + currentWord.m + '</div>' + (currentWord.p ? '<div style="font-size:12px;color:#999;margin-top:2px;">' + currentWord.p + '</div>' : '') + (currentWord.ex ? '<div style="font-size:13px;color:#555;margin-top:8px;background:#f5f5f5;padding:10px 12px;border-radius:8px;line-height:1.7;">\uD83D\uDCD6 ' + currentWord.ex + (currentWord.excn ? '<br><span style="color:#888;">\u2B50 ' + currentWord.excn + '</span>' : '') + '</div>' : '') + (currentWord.c ? '<div style="font-size:12px;color:#ec407a;margin-top:4px;">\uD83D\uDCCC ' + currentWord.c + '</div>' : '');
     updateWordErrorCount(prevKey, currentWord.w, false);
     setTimeout(function() { reviewState.currentIndex++; renderReviewQuestion(); }, 800);
   } else {
@@ -2462,7 +2462,7 @@ function selectReviewOption(btn, selectedWord) {
     reviewState.wrongWords.push({ word: currentWord.w, correctMeaning: currentWord.m });
     updateWordErrorCount(prevKey, currentWord.w, true);
     fb.className = 'review-feedback-wrong';
-    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u274C</div><div style="font-size:16px;font-weight:700;color:#c62828;">回答错误</div><div style="font-size:14px;color:#333;margin-top:8px;font-weight:600;">正确答案：' + currentWord.m + '</div>' + (currentWord.c ? '<div style="font-size:12px;color:#ec407a;margin-top:4px;">\uD83D\uDCCC ' + currentWord.c + '</div>' : '');
+    fb.innerHTML = '<div style="font-size:28px;margin-bottom:6px;">\u274C</div><div style="font-size:16px;font-weight:700;color:#c62828;">回答错误</div><div style="font-size:14px;color:#333;margin-top:6px;font-weight:600;">正确答案：' + currentWord.m + '</div>' + (currentWord.p ? '<div style="font-size:12px;color:#999;margin-top:2px;">' + currentWord.p + '</div>' : '') + (currentWord.ex ? '<div style="font-size:13px;color:#555;margin-top:8px;background:#fff;padding:10px 12px;border-radius:8px;line-height:1.7;border:1px solid #eee;">\uD83D\uDCD6 ' + currentWord.ex + (currentWord.excn ? '<br><span style="color:#888;">\u2B50 ' + currentWord.excn + '</span>' : '') + '</div>' : '') + (currentWord.c ? '<div style="font-size:12px;color:#ec407a;margin-top:4px;">\uD83D\uDCCC ' + currentWord.c + '</div>' : '');
     var nb = document.getElementById('reviewNextBtn');
     if (nb) {
       nb.style.display = 'block';
