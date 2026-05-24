@@ -2602,6 +2602,482 @@ function renderReviewPanel() {
   if (hEl) { var s = getReviewHistorySummary(); hEl.textContent = s ? '上次复习：' + s : ''; }
 }
 
+
+// ============================================================
+// V3.5 — 扩充四级真题库（12道，5/24起使用）
+// ============================================================
+const CET4_REAL_PAPERS = [
+  // ---- 1. 阅读理解：2019.6 ----
+  {
+    id: "r2019_6",
+    year: "2019年6月", type: "阅读理解",
+    title: "2019年6月 · 阅读理解",
+    instruction: "阅读短文，回答以下问题",
+    passage: `In an age of social media and constant connectivity, the fear of missing out—commonly known as FOMO—has become a defining anxiety of modern life. People scroll through their feeds watching others attend parties, travel to exotic places, and enjoy seemingly perfect lives, all while sitting alone on their sofas.
+
+Psychologists define FOMO as "a pervasive apprehension that others might be having rewarding experiences from which one is absent." Research has linked it to increased smartphone use, reduced enjoyment of present experiences, and lower overall life satisfaction.
+
+What makes FOMO particularly insidious is that it creates a self-reinforcing loop: feeling left out leads to more social media browsing, which exposes you to more curated highlights of others' lives, which makes you feel more left out. Breaking this loop requires conscious effort—putting down the phone, engaging fully with the present moment, and recognizing that social media shows a selective, often idealized version of reality.
+
+Experts recommend a technique called "savoring"—deliberately appreciating what you have rather than lamenting what you lack. Studies show that people who regularly practice gratitude and savoring report higher levels of happiness and lower levels of FOMO, regardless of how much time they spend online.`,
+    questions: [
+      {q:"1. What does FOMO primarily refer to?",
+       options:["A. Fear of social rejection","B. Anxiety about missing rewarding experiences others seem to have","C. Concern about smartphone overuse","D. Worry about poor internet connection"],
+       ans:"B",
+       explain:"第一段：FOMO is 'a pervasive apprehension that others might be having rewarding experiences from which one is absent'",
+       wrongReasons:{A:"文章未提社交拒绝，而是他人的rewarding experiences",C:"智能手机过度使用是FOMO的结果，不是定义",D:"文章未提网络连接问题"}},
+      {q:"2. Why is FOMO described as 'self-reinforcing'?",
+       options:["A. It leads people to post more on social media","B. It makes people enjoy offline activities more","C. It creates a cycle where checking social media worsens the feeling","D. It encourages people to travel more frequently"],
+       ans:"C",
+       explain:"第三段：feeling left out → more browsing → more curated highlights → more left out",
+       wrongReasons:{A:"文章是浏览而非发布，且是恶性循环",B:"相反，FOMO降低了对当下活动的享受",D:"文章未提旅行频率增加"}},
+      {q:"3. What do experts recommend to combat FOMO?",
+       options:["A. Deleting all social media accounts","B. Limiting internet to one hour per day","C. Practicing gratitude and appreciating what you have","D. Spending more time with friends offline"],
+       ans:"C",
+       explain:"第四段：'savoring—deliberately appreciating what you have...people who regularly practice gratitude and savoring report higher happiness'",
+       wrongReasons:{A:"文章未建议删除账号，而是改变心态",B:"文章未提具体时间限制",D:"文章未提线下陪伴，而是感恩练习"}}
+    ],
+    passageCn: "在社交媒体和持续连接的时代，对错过的恐惧——通常被称为FOMO——已成为现代生活的一种典型焦虑。人们滚动浏览动态，看着别人参加派对、前往异国旅行、享受看似完美的生活，而自己却独坐沙发上。\n\n心理学家将FOMO定义为"一种普遍的担忧——他人正在享有自己缺席的有价值体验"。研究将其与智能手机使用增加、对当下体验享受减少以及整体生活满意度降低联系起来。\n\n使FOMO尤为危险的是它形成了自我强化的循环：感到被遗忘导致更多地浏览社交媒体，从而暴露在更多精心策划的他人精彩生活片段中，这又使你感到更加被遗忘。打破这个循环需要有意识的努力——放下手机，全身心投入当下，并认识到社交媒体展示的是现实的选择性、往往理想化的版本。\n\n专家推荐一种叫做'品味'的技术——有意识地欣赏你所拥有的，而非哀叹你所缺乏的。研究表明，无论在线花费多少时间，定期练习感恩和品味的人报告了更高的幸福感和更低的FOMO水平。"
+  },
+  // ---- 2. 段落匹配：2020.12 ----
+  {
+    id: "m2020_12",
+    year: "2020年12月", type: "段落匹配",
+    title: "2020年12月 · 段落匹配",
+    instruction: "阅读下方5个段落，将题目陈述（A-E）与正确段落编号（①-⑤）匹配",
+    paragraphs: [
+      "① The gig economy—characterized by short-term contracts and freelance work rather than permanent jobs—has grown substantially over the past decade. Platforms like Uber, Airbnb, and Fiverr have enabled millions of workers to earn income on a flexible schedule.",
+      "② Despite its appeal, the gig economy raises serious concerns about worker welfare. Gig workers are typically classified as independent contractors rather than employees, which means they lack access to benefits such as health insurance, paid leave, and unemployment protection.",
+      "③ Some researchers argue that the gig economy is not a new phenomenon, but rather a digital extension of a labor market that has always included temporary and part-time work. What is new is the scale and the technology that coordinates it.",
+      "④ Several governments have begun to respond. The European Union has introduced legislation requiring platforms to prove that workers are not employees, shifting the burden of classification from the worker to the company. California passed a similar law in 2019.",
+      "⑤ The long-term trajectory of the gig economy remains unclear. Some predict it will continue to grow as automation displaces traditional jobs; others believe that improved regulation will push platforms to offer better protections, shrinking the gap between gig and conventional employment."
+    ],
+    questions: [
+      {q:"A. Gig workers generally do not enjoy the same legal protections as regular employees.", ans:"②"},
+      {q:"B. Technology has expanded the scale of flexible work, though the concept itself is not new.", ans:"③"},
+      {q:"C. Some governments are placing responsibility on companies to classify workers correctly.", ans:"④"},
+      {q:"D. The future direction of gig work depends on forces like automation and regulation.", ans:"⑤"},
+      {q:"E. Flexible digital platforms have enabled a significant increase in contract-based work.", ans:"①"}
+    ],
+    matchClues: [
+      "②: gig workers lack access to benefits such as health insurance...classified as independent contractors — 'not enjoy same legal protections' 对应 'lack access to benefits'",
+      "③: not a new phenomenon...What is new is the scale and technology — 'concept not new' 对应 'not a new phenomenon'，'technology expanded scale' 对应 'the scale and technology'",
+      "④: legislation requiring platforms to prove workers are not employees, shifting the burden — 'placing responsibility on companies' 对应 'shifting the burden...to the company'",
+      "⑤: trajectory unclear...automation displaces jobs / regulation will push platforms — 'future depends on automation and regulation' 与段落直接对应",
+      "①: gig economy grown substantially...Platforms like Uber, Airbnb...flexible schedule — 'flexible digital platforms' 对应 'Platforms'，'significant increase' 对应 'grown substantially'"
+    ]
+  },
+  // ---- 3. 选词填空：2021.6 ----
+  {
+    id: "c2021_6",
+    year: "2021年6月", type: "选词填空",
+    title: "2021年6月 · 选词填空",
+    instruction: "从下方词库中选择合适的单词填入空格（每词只用一次，注意形态变化）",
+    words: ["address","appeal","capable","challenge","diverse","expand","facilitate","inevitable","promote","rely"],
+    text: "One of the most pressing issues facing modern education is how to __(1)__ the needs of an increasingly __(2)__ student population. Schools today must __(3)__ learning for students with different cultural backgrounds, learning styles, and abilities. While technology can __(4)__ educational access, many schools still __(5)__ heavily on traditional teaching methods. Critics argue that this approach is unlikely to __(6)__ student creativity or prepare them for a rapidly changing job market. Experts suggest that teachers who __(7)__ to students' lived experiences tend to be most effective. Every student is __(8)__ of growth, but unlocking that potential remains a __(9)__. It may seem __(10)__ that some students fall behind, but with proper support, outcomes can change.",
+    answers: {1:"address",2:"diverse",3:"facilitate",4:"expand",5:"rely",6:"promote",7:"appeal",8:"capable",9:"challenge",10:"inevitable"},
+    analysis: "核心搭配：address the needs（解决需求）、facilitate learning（促进学习）、expand access（扩大获取途径）、rely on（依赖）、promote creativity（激励创造力）、appeal to（吸引/迎合）、capable of（有能力）",
+    wordReasons: {
+      1:"address the needs（解决/处理需求），固定搭配 address + 问题/需求",
+      2:"diverse student population（多样化的学生群体），形容词修饰名词",
+      3:"facilitate learning（促进/推动学习），facilitate + 名词常见搭配",
+      4:"expand access（扩大获取途径），technology can expand educational access 常见表达",
+      5:"rely on traditional methods（依赖传统方法），rely on 固定搭配，heavily rely on 强调程度",
+      6:"promote student creativity（激励/促进创造力），promote + 抽象名词",
+      7:"appeal to students' experiences（迎合/吸引学生经历），appeal to 固定搭配",
+      8:"capable of growth（有能力成长），be capable of 固定搭配",
+      9:"remains a challenge（仍是一个挑战），remain + 名词表语",
+      10:"inevitable that some fall behind（不可避免有些落后），it is inevitable that 虚拟/客观句"
+    },
+    passageCn: "现代教育面临的最紧迫问题之一是如何应对日益多样化的学生群体的需求。今天的学校必须为具有不同文化背景、学习风格和能力的学生提供便利。虽然技术可以扩大教育获取途径，但许多学校仍然严重依赖传统教学方法。批评者认为，这种方法不太可能促进学生的创造力，也无法为他们准备好应对快速变化的就业市场。专家建议，能够迎合学生实际生活经历的教师往往最为有效。每个学生都有成长的能力，但挖掘这一潜力仍然是一个挑战。一些学生落后似乎是不可避免的，但有了适当的支持，结果可以改变。"
+  },
+  // ---- 4. 翻译：2022.6 ----
+  {
+    id: "t2022_6",
+    year: "2022年6月", type: "翻译",
+    title: "2022年6月 · 翻译真题",
+    instruction: "将下面的中文段落翻译成英文（参考用时15分钟）",
+    source: "中国的茶文化历史悠久，是中华文明的重要组成部分。从古代丝绸之路到现代的茶馆文化，茶不仅是一种饮料，更是人与人之间交流和沟通的媒介。饮茶在中国有着独特的礼仪，主人向客人奉茶是表达热情好客的传统方式。如今，茶文化已走向世界，成为各国人民了解中国文化的重要窗口。",
+    reference: "China's tea culture has a long history and is an important component of Chinese civilization. From the ancient Silk Road to modern teahouse culture, tea is not merely a beverage but also a medium for communication and connection between people. Drinking tea in China has unique rituals: serving tea to guests is a traditional way of expressing hospitality. Today, tea culture has spread across the world, becoming an important window through which people of all nations can understand Chinese culture.",
+    keyPoints: ["历史悠久 → has a long history","重要组成部分 → important component","丝绸之路 → Silk Road","媒介 → medium","礼仪 → rituals / etiquette","热情好客 → hospitality","走向世界 → spread across the world","了解中国文化 → understand Chinese culture"]
+  },
+  // ---- 5. 作文：2023.12 ----
+  {
+    id: "w2023_12",
+    year: "2023年12月", type: "作文",
+    title: "2023年12月 · 作文真题",
+    instruction: "根据以下提示写一篇120-180词的英文短文",
+    prompt: "题目：The Role of Artificial Intelligence in Education\n\n提示：\n1. AI在教育中的积极作用\n2. AI可能带来的问题或挑战\n3. 你的观点和建议",
+    outline: [
+      "Para 1（引入）: Artificial intelligence is rapidly transforming the way we learn and teach...",
+      "Para 2（优势）: AI offers personalized learning paths, instant feedback, and access to vast educational resources...",
+      "Para 3（挑战）: However, over-reliance on AI may weaken critical thinking; issues of data privacy and equity arise...",
+      "Para 4（观点）: In my view, AI should serve as a tool that complements, not replaces, human educators..."
+    ],
+    reference: "Artificial intelligence is rapidly transforming the way we learn and teach. From intelligent tutoring systems to automated grading, AI has begun to reshape every corner of education.\n\nThe benefits are significant. AI enables personalized learning, adapting content to each student's pace and level. It provides instant feedback, allowing learners to correct mistakes in real time. Platforms powered by AI give students in remote areas access to world-class educational resources that were previously out of reach.\n\nHowever, challenges exist. Excessive dependence on AI may weaken students' ability to think independently and solve problems creatively. Questions of data privacy and digital equity—ensuring all students have equal access to technology—remain unresolved.\n\nIn my view, AI should serve as a powerful tool that complements, not replaces, human educators. The best outcomes will come from combining AI's efficiency with teachers' empathy, creativity, and mentorship. With thoughtful integration, AI can truly democratize education.",
+    tips: "四级作文评分关注：引题有新意（避免 with the development of...）、论据具体（举例用数字或事实）、结尾升华（从个体到社会/全球视角）"
+  },
+  // ---- 6. 阅读理解：2021.12 ----
+  {
+    id: "r2021_12",
+    year: "2021年12月", type: "阅读理解",
+    title: "2021年12月 · 阅读理解",
+    instruction: "阅读短文，回答以下问题",
+    passage: `The relationship between sleep and academic performance has been studied extensively. Researchers at the University of Washington found that students who slept fewer than six hours per night had significantly lower grades than those who slept seven to nine hours—regardless of the amount of time they spent studying.
+
+The mechanism is straightforward: sleep plays a critical role in memory consolidation. During slow-wave sleep, the brain replays newly learned information and transfers it from short-term to long-term memory. Without adequate sleep, this process is interrupted, making it harder to retain information.
+
+Sleep deprivation also impairs executive function—the cognitive processes responsible for planning, decision-making, and self-regulation. Students who are sleep-deprived are more likely to procrastinate, make careless errors, and struggle to organize complex tasks.
+
+One surprising finding: many students believe that "pulling an all-nighter" before an exam is effective. In reality, one full night of sleep after studying is more beneficial than cramming throughout the night, as sleep—not additional study time—is what locks information into memory.`,
+    questions: [
+      {q:"1. What was the key finding about sleep and grades?",
+       options:["A. Students who study more always get better grades","B. Sleeping less than six hours lowers grades regardless of study time","C. Grades depend mainly on the quality of teaching","D. Seven hours is the minimum needed for any academic benefit"],
+       ans:"B",
+       explain:"第一段：'students who slept fewer than six hours...significantly lower grades...regardless of the amount of time they spent studying'",
+       wrongReasons:{A:"研究表明学习时间不是关键，睡眠才是",C:"文章未提教学质量",D:"文章说七至九小时较佳，但重点是少于六小时的影响"}},
+      {q:"2. What happens during slow-wave sleep according to the passage?",
+       options:["A. The brain clears unnecessary memories","B. Dreams help process emotional trauma","C. Newly learned information is transferred to long-term memory","D. The brain increases its glucose consumption"],
+       ans:"C",
+       explain:"第二段：'brain replays newly learned information and transfers it from short-term to long-term memory'",
+       wrongReasons:{A:"文章未提清除记忆",B:"文章未提梦境与情绪处理",D:"文章未提葡萄糖消耗"}},
+      {q:"3. Why is 'pulling an all-nighter' ineffective?",
+       options:["A. Students cannot concentrate late at night","B. Sleep—not extra study time—is what consolidates memory","C. Exams are usually scheduled in the morning","D. All-nighters reduce motivation the next day"],
+       ans:"B",
+       explain:"最后段：'sleep—not additional study time—is what locks information into memory'",
+       wrongReasons:{A:"文章未讨论夜晚专注力问题",C:"考试时间与记忆巩固无关",D:"文章未提动力减少"}}
+    ],
+    passageCn: "睡眠与学业表现之间的关系已被广泛研究。华盛顿大学的研究人员发现，每晚睡眠少于六小时的学生成绩明显低于睡眠七至九小时的学生——无论他们花了多少时间学习。\n\n机制很简单：睡眠在记忆巩固中起着关键作用。在慢波睡眠期间，大脑重演新学到的信息，并将其从短期记忆转移到长期记忆。没有充足的睡眠，这一过程就会中断，使保留信息变得更加困难。\n\n睡眠不足还会损害执行功能——负责规划、决策和自我调节的认知过程。睡眠不足的学生更容易拖延、犯粗心错误，并难以组织复杂的任务。\n\n一个令人惊讶的发现：许多学生认为考前'通宵复习'是有效的。事实上，学习后一整夜的睡眠比整夜临时抱佛脚更有益，因为是睡眠——而非额外的学习时间——将信息锁入记忆。"
+  },
+  // ---- 7. 段落匹配：2019.12 ----
+  {
+    id: "m2019_12",
+    year: "2019年12月", type: "段落匹配",
+    title: "2019年12月 · 段落匹配",
+    instruction: "阅读下方5个段落，将题目陈述（A-E）与正确段落编号（①-⑤）匹配",
+    paragraphs: [
+      "① Researchers have found that spending time in nature reduces cortisol levels—the body's primary stress hormone—and lowers heart rate and blood pressure. Even brief exposure to green spaces can produce measurable physiological benefits.",
+      "② Despite growing evidence of nature's health benefits, urban residents spend an average of 90% of their time indoors. City planners and public health experts are increasingly advocating for the integration of green spaces into urban design.",
+      "③ The concept of 'forest bathing,' or shinrin-yoku in Japanese, originated in Japan in the 1980s as a form of preventive medicine. It involves slow, mindful walks through forests, with the goal of absorbing the sights, sounds, and scents of the natural environment.",
+      "④ Some researchers attribute nature's calming effects to a phenomenon called 'soft fascination.' Unlike the intense concentration required by tasks like reading or driving, natural environments engage attention gently, allowing the mind to rest and restore itself.",
+      "⑤ Companies have begun to recognize the benefits of nature exposure for employee wellbeing. Some workplaces now incorporate biophilic design—featuring indoor plants, natural lighting, and views of green spaces—reporting improvements in productivity and reduced absenteeism."
+    ],
+    questions: [
+      {q:"A. A traditional Japanese wellness practice involves slow walks in forested areas.", ans:"③"},
+      {q:"B. Incorporating nature into office environments can improve worker health and output.", ans:"⑤"},
+      {q:"C. Natural environments restore mental energy by engaging attention in a gentle, effortless way.", ans:"④"},
+      {q:"D. Physical health benefits from nature exposure include measurable reductions in stress indicators.", ans:"①"},
+      {q:"E. Urban planners are increasingly trying to bring natural elements into city environments.", ans:"②"}
+    ],
+    matchClues: [
+      "③: shinrin-yoku in Japanese...slow, mindful walks through forests — 'traditional Japanese' 对应 'originated in Japan'，'wellness practice' 对应 'preventive medicine'，'forested areas' 对应 'forests'",
+      "⑤: biophilic design...improvements in productivity and reduced absenteeism — 'office environments' 对应 'workplaces'，'worker health and output' 对应 'wellbeing...productivity'",
+      "④: soft fascination...allows the mind to rest and restore — 'restore mental energy' 对应 'mind to rest and restore'，'gentle' 对应 'gently'",
+      "①: reduces cortisol levels...lowers heart rate and blood pressure — 'reductions in stress indicators' 对应 'reduces cortisol...heart rate'，'measurable' 直接出现",
+      "②: city planners...advocating for integration of green spaces into urban design — 'urban planners...natural elements into city' 与原文直接对应"
+    ]
+  },
+  // ---- 8. 翻译：2021.6 ----
+  {
+    id: "t2021_6",
+    year: "2021年6月", type: "翻译",
+    title: "2021年6月 · 翻译真题",
+    instruction: "将下面的中文段落翻译成英文（参考用时15分钟）",
+    source: "中国的航天事业取得了举世瞩目的成就。从第一颗人造卫星上天到载人航天飞行，再到月球探测和火星探索，中国航天人一步一个脚印，实现了一个又一个重大突破。这些成就不仅展示了中国的科技实力，也激励了一代又一代的年轻人投身科学研究。中国将继续和平利用太空资源，为人类探索宇宙作出更大贡献。",
+    reference: "China's space program has achieved remarkable accomplishments that have drawn worldwide attention. From launching its first artificial satellite to crewed spaceflight, lunar exploration, and Mars exploration, Chinese space scientists and engineers have advanced step by step, achieving one major breakthrough after another. These achievements not only demonstrate China's scientific and technological strength, but also inspire generation after generation of young people to devote themselves to scientific research. China will continue to make peaceful use of space resources and make greater contributions to humanity's exploration of the universe.",
+    keyPoints: ["举世瞩目 → drawn worldwide attention","载人航天 → crewed spaceflight","月球探测 → lunar exploration","火星探索 → Mars exploration","一步一个脚印 → step by step","科技实力 → scientific and technological strength","和平利用 → make peaceful use of","探索宇宙 → exploration of the universe"]
+  },
+  // ---- 9. 作文：2022.6 ----
+  {
+    id: "w2022_6",
+    year: "2022年6月", type: "作文",
+    title: "2022年6月 · 作文真题",
+    instruction: "根据以下提示写一篇120-180词的英文短文",
+    prompt: "题目：Should College Students Be Encouraged to Start Businesses?\n\n提示：\n1. 大学生创业的优势\n2. 大学生创业面临的挑战\n3. 你的建议",
+    outline: [
+      "Para 1（引入）: In recent years, entrepreneurship has become increasingly popular among college students...",
+      "Para 2（优势）: Starting a business allows students to apply classroom knowledge, develop leadership, and potentially achieve financial independence...",
+      "Para 3（挑战）: However, college students face significant challenges: limited experience, lack of funding, and the pressure to balance studies...",
+      "Para 4（建议）: I believe colleges should support entrepreneurship through mentorship and funding programs while ensuring academic performance is maintained..."
+    ],
+    reference: "In recent years, entrepreneurship has become increasingly popular among college students, driven by inspiring success stories and expanding startup ecosystems.\n\nStarting a business offers real advantages. It allows students to apply academic knowledge to real-world problems, develop leadership and communication skills, and explore career paths beyond traditional employment. For some, it may even lead to financial independence and significant societal impact.\n\nHowever, the challenges are considerable. Most students lack business experience and startup funding. Balancing entrepreneurial pursuits with coursework can be overwhelming, and the high failure rate of startups means most ventures will not succeed.\n\nMy recommendation is that universities actively support student entrepreneurship through mentorship programs, business incubators, and seed funding—while encouraging students to treat their ventures as learning experiences rather than all-or-nothing bets. With the right support, entrepreneurship can be a valuable complement to formal education.",
+    tips: "建议段不要用 'I think' 而用 'I recommend / I suggest / In my view'；优势段用平行结构（allows...develops...explores...）提升逻辑感"
+  },
+  // ---- 10. 阅读理解：2022.6 ----
+  {
+    id: "r2022_6b",
+    year: "2022年6月", type: "阅读理解",
+    title: "2022年6月 · 阅读理解（第2篇）",
+    instruction: "阅读短文，回答以下问题",
+    passage: `The concept of emotional intelligence (EI)—the ability to perceive, use, understand, and manage emotions—has gained considerable attention in both academic and corporate circles since psychologist Daniel Goleman popularized it in the 1990s.
+
+Research suggests that EI may be as important as, or in some contexts more important than, traditional IQ in predicting job performance, particularly in leadership roles. Leaders with high emotional intelligence are better at building relationships, resolving conflicts, motivating teams, and adapting to change.
+
+A frequently cited study found that among the competencies that distinguish star performers from average workers, emotional intelligence accounted for roughly two-thirds—a finding that has proven robust across industries and cultures.
+
+Critics, however, argue that EI is difficult to measure consistently and that some assessments may simply reflect personality traits or social skills that could be captured by other established measures. The debate over whether EI is truly distinct from personality and cognitive ability continues.
+
+Despite this debate, the practical applications of EI training in workplaces have shown promising results. Programs that teach skills such as active listening, empathy, and conflict resolution have been associated with improved team cohesion and lower employee turnover.`,
+    questions: [
+      {q:"1. What does the passage say about EI in leadership contexts?",
+       options:["A. It is less important than IQ for leaders","B. It is the sole predictor of leadership success","C. Leaders with high EI outperform others in key relational skills","D. EI is mainly relevant to creative industries"],
+       ans:"C",
+       explain:"第二段：'Leaders with high emotional intelligence are better at building relationships, resolving conflicts, motivating teams, and adapting to change'",
+       wrongReasons:{A:"文章说EI可能和IQ一样重要甚至更重要（as important as, or more important than）",B:"文章说EI是重要因素之一，非唯一预测因素",D:"文章说EI在各行业和文化中均适用（across industries and cultures）"}},
+      {q:"2. What did the study about 'star performers' find?",
+       options:["A. EI accounts for about one-third of high performance","B. High performers have higher IQs than average workers","C. EI accounted for roughly two-thirds of what distinguishes top performers","D. Star performers rely mainly on technical skills"],
+       ans:"C",
+       explain:"第三段：'emotional intelligence accounted for roughly two-thirds'",
+       wrongReasons:{A:"是三分之二，不是三分之一",B:"文章未比较IQ差异，而是强调EI的贡献",D:"文章强调EI而非技术技能是区别因素"}},
+      {q:"3. What is the main criticism of EI according to the passage?",
+       options:["A. EI training programs are too expensive","B. EI is not useful in the real world","C. EI may not be truly distinct from personality and cognitive measures","D. EI research has only been conducted in the US"],
+       ans:"C",
+       explain:"第四段：'difficult to measure consistently...may simply reflect personality traits or social skills...whether EI is truly distinct from personality and cognitive ability'",
+       wrongReasons:{A:"文章未提成本问题",B:"相反，文章说EI training有promising results",D:"文章强调研究'robust across industries and cultures'，非单一国家"}}
+    ],
+    passageCn: "情绪智力（EI）——感知、利用、理解和管理情绪的能力——自心理学家丹尼尔·戈尔曼在1990年代将其推广以来，在学术界和企业界都受到了相当大的关注。\n\n研究表明，在预测工作表现方面，特别是在领导角色中，EI可能与传统智商一样重要，甚至在某些情况下更为重要。具有高情绪智力的领导者更善于建立关系、解决冲突、激励团队和适应变化。\n\n一项经常被引用的研究发现，在区分明星表现者与普通工作者的能力中，情绪智力约占三分之二——这一发现在各行业和文化中均表现稳健。\n\n然而，批评者认为EI难以一致性地测量，一些评估可能只是反映了其他既定测量方法可以捕捉到的个性特征或社交技能。关于EI是否真正区别于个性和认知能力的争论仍在继续。\n\n尽管存在这种争论，EI培训在工作场所的实际应用已显示出令人鼓舞的结果。教授积极倾听、共情和冲突解决等技能的计划与团队凝聚力改善和员工离职率降低有关。"
+  },
+  // ---- 11. 选词填空：2020.6 ----
+  {
+    id: "c2020_6",
+    year: "2020年6月", type: "选词填空",
+    title: "2020年6月 · 选词填空",
+    instruction: "从下方词库中选择合适的单词填入空格（每词只用一次，注意形态变化）",
+    words: ["abundant","attribute","consume","cultivate","dedicate","innovative","potential","preserve","reduce","transform"],
+    text: "Many communities are finding __(1)__ ways to deal with food waste, which is a growing global concern. On average, households __(2)__ more food than they realize, throwing away items that could still be used. Environmentalists argue that we must __(3)__ our consumption habits to __(4)__ natural resources. Food waste not only wastes __(5)__ energy and water used in production, but also contributes to greenhouse gas emissions. Urban farms and composting programs __(6)__ waste into useful soil nutrients. Cities that __(7)__ community gardens help residents __(8)__ a deeper connection to sustainable food systems. Many researchers __(9)__ the success of these programs to strong community engagement. Given the __(10)__ of available solutions, there is little excuse for inaction.",
+    answers: {1:"innovative",2:"consume",3:"transform",4:"preserve",5:"abundant",6:"transform",7:"cultivate",8:"dedicate",9:"attribute",10:"abundance"},
+    analysis: "注意：transform 出现两次（3和6），意为'改变/转变'；cultivate gardens（培育花园）；attribute success to（将成功归因于）；dedicate（使专注于）",
+    wordReasons: {
+      1:"innovative ways（创新方式），形容词修饰 ways，首选 innovative",
+      2:"households consume food（家庭消耗食物），consume + 食物/资源是固定搭配",
+      3:"transform habits（改变习惯），we must + 原形，transform 表根本性改变",
+      4:"preserve natural resources（保护自然资源），减少消耗以保护资源",
+      5:"abundant energy（大量能源），形容词修饰 energy，描述浪费量大",
+      6:"transform waste into nutrients（将废物转化为养分），transform...into 固定搭配",
+      7:"cultivate community gardens（培育社区花园），cities that + 复数谓语动词 cultivate",
+      8:"dedicate a connection（使专注于联系），help residents do 结构，dedicate oneself to",
+      9:"attribute success to engagement（将成功归因于参与），attribute...to 固定搭配",
+      10:"abundance of available solutions（大量可用解决方案），given the abundance of 固定搭配"
+    },
+    passageCn: "许多社区正在寻找创新方式来应对食物浪费问题，这是一个日益严重的全球问题。平均而言，家庭消耗的食物比他们意识到的要多，扔掉仍然可以使用的物品。环保主义者认为，我们必须改变消费习惯以保护自然资源。食物浪费不仅浪费了生产中使用的大量能源和水，还助长了温室气体排放。城市农场和堆肥计划将废物转化为有用的土壤营养物质。培育社区花园的城市帮助居民与可持续食品系统建立更深的联系。许多研究人员将这些项目的成功归因于强大的社区参与度。鉴于大量可用解决方案的存在，不采取行动几乎没有借口。"
+  },
+  // ---- 12. 段落匹配：2021.12 ----
+  {
+    id: "m2021_12",
+    year: "2021年12月", type: "段落匹配",
+    title: "2021年12月 · 段落匹配",
+    instruction: "阅读下方5个段落，将题目陈述（A-E）与正确段落编号（①-⑤）匹配",
+    paragraphs: [
+      "① Microplastics—tiny fragments of plastic less than five millimeters in size—have been detected in oceans, rivers, soil, and even the air we breathe. Scientists are increasingly concerned about their effects on ecosystems and human health.",
+      "② The primary sources of microplastics include the breakdown of larger plastic debris, synthetic clothing fibers released during washing, and microbeads once widely used in cosmetics and personal care products.",
+      "③ Research on the health effects of microplastics in humans is still in early stages. While laboratory studies suggest that microplastics can cause inflammation and disrupt hormonal systems in animals, the long-term effects on humans remain unclear.",
+      "④ In response to growing evidence, several countries have banned the use of microbeads in cosmetics. The United Kingdom, United States, and Canada have all passed legislation prohibiting their sale, citing environmental and health concerns.",
+      "⑤ Experts emphasize that reducing plastic production overall is the only long-term solution to microplastic pollution. Recycling alone cannot address the problem, as even recyclable plastics shed microparticles during their lifecycle."
+    ],
+    questions: [
+      {q:"A. The health risks microplastics pose to humans have not yet been fully established.", ans:"③"},
+      {q:"B. Reducing total plastic production is considered the most effective long-term approach.", ans:"⑤"},
+      {q:"C. Several countries have outlawed certain plastic ingredients in cosmetic products.", ans:"④"},
+      {q:"D. Microplastics originate from multiple sources including clothing and consumer products.", ans:"②"},
+      {q:"E. Microplastics have spread into virtually every part of the natural environment.", ans:"①"}
+    ],
+    matchClues: [
+      "③: health effects...still in early stages...long-term effects on humans remain unclear — 'not yet fully established' 对应 'remain unclear'",
+      "⑤: reducing plastic production...only long-term solution — 'most effective long-term approach' 对应 'only long-term solution'",
+      "④: several countries have banned microbeads in cosmetics...legislation — 'outlawed...cosmetic products' 对应 'banned...cosmetics'",
+      "②: primary sources...synthetic clothing fibers...microbeads...cosmetics — 'multiple sources including clothing and consumer products' 直接对应",
+      "①: detected in oceans, rivers, soil, and even the air — 'spread into virtually every part of the natural environment' 对应 'oceans, rivers, soil, air'"
+    ]
+  }
+];
+
+// ============================================================
+// V3.5 倒计时 + 随机抽3题（dayIndex >= 3）
+// ============================================================
+var _quizTimerInterval = null;
+var _quizTimeLeft = 0;       // 秒
+var _quizStarted = false;
+var _quizPapers = [];        // 本日抽取的3道题
+var _quizSubmitted = {};     // {0:true, 1:true, 2:true}
+
+// seededRandom（复用与词汇相同的种子逻辑）
+function quizSeededRandom(seed) {
+  var x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+// 从 CET4_REAL_PAPERS 中按日期种子随机抽取 n 道题（不重复）
+function pickDailyPapers(d, n) {
+  var seed = dayIndex(d) * 137 + 42;
+  var pool = CET4_REAL_PAPERS.slice();
+  // Fisher-Yates 洗牌
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(quizSeededRandom(seed + i) * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  return pool.slice(0, n);
+}
+
+// ============================================================
+// 新版渲染每日一练（dayIndex >= 3 时调用）
+// ============================================================
+function renderDailyQuiz_v2() {
+  var container = document.getElementById('dailyQuizContainer');
+  if (!container) return;
+  var d = currentDate;
+  _quizPapers = pickDailyPapers(d, 3);
+  _quizSubmitted = {};
+  _quizStarted = false;
+  _quizTimeLeft = 45 * 60; // 45分钟
+
+  var html = '';
+  // 标题区 + 开始按钮
+  html += '<div class="card" style="margin-bottom:16px;text-align:center;">';
+  html += '<div class="section-title"><span class="icon">📋</span>每日一练 · 真题精选';
+  html += '<span class="badge" style="background:#3949ab;color:white;font-size:11px;">' + formatDate(d) + '</span></div>';
+  html += '<div style="font-size:13px;color:var(--text-light);margin:8px 0 12px;">共 3 道四级真题 · 45 分钟限时</div>';
+
+  // 题目预览列表
+  html += '<div style="margin-bottom:16px;">';
+  for (var i = 0; i < _quizPapers.length; i++) {
+    var p = _quizPapers[i];
+    html += '<div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:6px;">';
+    html += '<span style="background:linear-gradient(135deg,#3949ab,#5c6bc0);color:white;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">' + (i+1) + '</span>';
+    html += '<span style="font-size:13px;color:var(--text);">' + p.year + ' · <strong>' + p.type + '</strong></span>';
+    html += '</div>';
+  }
+  html += '</div>';
+
+  // 倒计时显示（初始隐藏）
+  html += '<div id="quizTimerBar" style="display:none;margin:0 auto 16px;max-width:300px;">';
+  html += '<div style="font-size:13px;color:var(--text-light);margin-bottom:6px;">⏱ 剩余时间</div>';
+  html += '<div id="quizTimerDisplay" style="font-size:28px;font-weight:900;color:#3949ab;letter-spacing:2px;font-family:monospace;">45:00</div>';
+  html += '<div id="quizTimerBar2" style="height:6px;background:#e8eaf6;border-radius:3px;margin-top:8px;"><div id="quizTimerFill" style="height:100%;width:100%;background:linear-gradient(90deg,#3949ab,#5c6bc0);border-radius:3px;transition:width 1s linear;"></div></div>';
+  html += '</div>';
+
+  // 开始答题按钮
+  html += '<button id="startQuizBtn" onclick="startDailyQuiz()" style="background:linear-gradient(135deg,#3949ab,#5c6bc0);color:white;border:none;border-radius:24px;padding:12px 32px;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(57,73,171,0.3);">🚀 开始答题</button>';
+  html += '</div>';
+
+  // 题目卡片区（初始隐藏）
+  html += '<div id="quizPapersArea" style="display:none;">';
+  for (var j = 0; j < _quizPapers.length; j++) {
+    html += buildRealPaperCard(_quizPapers[j], j);
+  }
+  html += '</div>';
+
+  container.innerHTML = html;
+}
+
+// 构建单道真题卡片
+function buildRealPaperCard(data, idx) {
+  var colors = [
+    'linear-gradient(135deg,#3949ab,#5c6bc0)',
+    'linear-gradient(135deg,#00897b,#26a69a)',
+    'linear-gradient(135deg,#e65100,#ef6c00)'
+  ];
+  var html = '<div class="card" style="margin-bottom:16px;" id="paperCard' + idx + '">';
+  html += '<div class="section-title"><span class="icon">' + ['📖','📝','✏️'][idx] + '</span>第' + ['一','二','三'][idx] + '题 · ' + data.year + ' · ' + data.type;
+  html += '<span class="badge" style="background:' + colors[idx] + ';color:white;font-size:11px;">#' + (idx+1) + '</span></div>';
+
+  if (data.type === '选词填空') {
+    html += buildClozeHTML(data, 'R' + idx);
+  } else if (data.type === '段落匹配') {
+    html += buildMatchingHTML(data, 'R' + idx);
+  } else if (data.type === '阅读理解') {
+    html += buildReadingHTML(data, 'R' + idx);
+  } else if (data.type === '翻译') {
+    html += buildTranslationHTML(data, 'R' + idx);
+  } else if (data.type === '作文') {
+    html += buildWritingHTML(data, 'R' + idx);
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// 开始答题
+function startDailyQuiz() {
+  if (_quizStarted) return;
+  _quizStarted = true;
+  // 隐藏开始按钮，显示倒计时和题目
+  var btn = document.getElementById('startQuizBtn');
+  if (btn) btn.style.display = 'none';
+  var timerBar = document.getElementById('quizTimerBar');
+  if (timerBar) timerBar.style.display = 'block';
+  var papersArea = document.getElementById('quizPapersArea');
+  if (papersArea) papersArea.style.display = 'block';
+
+  // 开始倒计时
+  _quizTimeLeft = 45 * 60;
+  updateTimerDisplay();
+  _quizTimerInterval = setInterval(function() {
+    _quizTimeLeft--;
+    updateTimerDisplay();
+    if (_quizTimeLeft <= 0) {
+      clearInterval(_quizTimerInterval);
+      _quizTimerInterval = null;
+      autoSubmitAll();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  var mins = Math.floor(_quizTimeLeft / 60);
+  var secs = _quizTimeLeft % 60;
+  var display = (mins < 10 ? '0' : '') + mins + ':' + (secs < 10 ? '0' : '') + secs;
+  var el = document.getElementById('quizTimerDisplay');
+  if (el) {
+    el.textContent = display;
+    if (_quizTimeLeft <= 300) {
+      el.style.color = '#d32f2f';  // 最后5分钟变红
+    } else if (_quizTimeLeft <= 600) {
+      el.style.color = '#e65100';  // 最后10分钟变橙
+    }
+  }
+  // 进度条
+  var fill = document.getElementById('quizTimerFill');
+  if (fill) {
+    var pct = (_quizTimeLeft / (45 * 60)) * 100;
+    fill.style.width = pct + '%';
+    if (_quizTimeLeft <= 300) fill.style.background = 'linear-gradient(90deg,#d32f2f,#ef5350)';
+  }
+}
+
+function autoSubmitAll() {
+  // 时间到，自动提交所有未提交的题
+  var display = document.getElementById('quizTimerDisplay');
+  if (display) { display.textContent = '⏰ 时间到！'; display.style.color = '#d32f2f'; }
+  for (var i = 0; i < _quizPapers.length; i++) {
+    submitRealPaper(i);
+  }
+}
+
+// 提交单道真题
+function submitRealPaper(idx) {
+  if (_quizSubmitted[idx]) return; // 已提交过
+  _quizSubmitted[idx] = true;
+  var data = _quizPapers[idx];
+  var part = 'R' + idx;
+  submitQuiz(part);
+  // 更新统计
+  markQuizDone('R' + idx);
+}
+
+// ============================================================
+// 覆盖 renderDailyQuiz：根据 dayIndex 分叉
+// ============================================================
+var _originalRenderDailyQuiz = renderDailyQuiz;
+renderDailyQuiz = function() {
+  var d = currentDate;
+  var idx = dayIndex(d);
+  if (idx >= 3) {
+    renderDailyQuiz_v2();
+  } else {
+    _originalRenderDailyQuiz();
+  }
+};
+
 </script>
 </body>
 </html>
