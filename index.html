@@ -952,32 +952,20 @@ function getDailyVocab(d) {
   if (vocabForDate[key]) return vocabForDate[key];
 
   const idx = dayIndex(d);
-  if (idx === 0) {
-    // 5/21: 固定 80 词，从 WORD_POOL 开头取（A→B 顺序）
-    vocabForDate[key] = WORD_POOL.slice(0, 80);
+  if (idx < 3) {
+    // 5/21-5/23: PRESERVED_DAYS
+    vocabForDate[key] = PRESERVED_DAYS[idx];
     return vocabForDate[key];
   }
 
-  // 5/22+: 随机 100 词，排除之前用过的词
-  const used = new Set();
-  for (let i = 0; i < idx; i++) {
-    const prevDate = new Date(START_DATE.getTime() + i * MS_DAY);
-    const prevKey = prevDate.getFullYear()+'-'+String(prevDate.getMonth()+1).padStart(2,'0')+'-'+String(prevDate.getDate()).padStart(2,'0');
-    if (vocabForDate[prevKey]) {
-      vocabForDate[prevKey].forEach(function(w) { used.add(w.w); });
-    } else {
-      // 如果之前的还没生成，先触发生成
-      getDailyVocab(prevDate).forEach(function(w) { used.add(w.w); });
-    }
-  }
-
-  const available = WORD_POOL.filter(function(w) { return !used.has(w.w); });
+  // 5/24+: random 100 from pool
+  const pool = WORD_POOL.slice();
   const rng = seededRandom(key);
-  for (let i = available.length - 1; i > 0; i--) {
+  for (let i = pool.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
-    var tmp = available[i]; available[i] = available[j]; available[j] = tmp;
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
   }
-  vocabForDate[key] = available.slice(0, Math.min(100, available.length));
+  vocabForDate[key] = pool.slice(0, 100);
   return vocabForDate[key];
 }
 
