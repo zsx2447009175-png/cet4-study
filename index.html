@@ -2624,14 +2624,27 @@ function quizSeededRandom(seed) {
   return x - Math.floor(x);
 }
 
+// seeded Fisher-Yates shuffle (for quiz paper selection)
+function quizSeededShuffle(arr, seed) {
+  var a = arr.slice();
+  seed = seed & 0xffffffff;
+  for (var i = a.length - 1; i > 0; i--) {
+    seed = (seed * 1664525 + 1013904223) & 0xffffffff;
+    var j = Math.abs(seed) % (i + 1);
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+// 分轮顺序遍历：每轮把题库完整用一遍（每轮用不同seed打乱），保证同轮内不重题
 function pickDailyPapers(d, n) {
   var idx = dayIndex(d);
-  var start = (idx - 3) * n % CET4_REAL_PAPERS.length;
-  var result = [];
-  for (var i = 0; i < n; i++) {
-    result.push(CET4_REAL_PAPERS[(start + i) % CET4_REAL_PAPERS.length]);
-  }
-  return result;
+  var total = CET4_REAL_PAPERS.length;
+  var perRound = Math.floor(total / n); // 每轮天数
+  var roundNum = Math.floor((idx - 3) / perRound); // 第几轮
+  var posInRound = (idx - 3) % perRound; // 这轮第几天
+  var shuffled = quizSeededShuffle(CET4_REAL_PAPERS, roundNum * 999983 + 42);
+  return shuffled.slice(posInRound * n, posInRound * n + n);
 }
 
 // ============================================================
